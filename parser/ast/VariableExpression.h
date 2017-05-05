@@ -17,8 +17,8 @@ public:
 	}
 
 	std::string to_s(){ 
-		// return name;
-		return name + " [ze" + Variables::get(name)->to_s() + "]";
+		return name;
+		// return name + "[" + Variables::get(name)->asString() + "]";
 	}
 	~VariableExpression();
 };

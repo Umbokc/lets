@@ -17,7 +17,7 @@ public:
 	}
 	
 	std::string asString(){
-		return  value;
+		return value;
 	}
 
 	std::string to_s(){
