@@ -1,13 +1,14 @@
-#ifndef NUMBERVALUE
-#define NUMBERVALUE
+#ifndef NUMBERVALUE_H
+#define NUMBERVALUE_H
 class NumberValue : public Value{
 	double value;
 public:
+
 	NumberValue(double value){
 		this->value = value;
 	}
 
-	double asDouble(){
+	double asNumber(){
 		return value;
 	} 
 	

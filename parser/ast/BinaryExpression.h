@@ -1,5 +1,5 @@
-#ifndef BINARYEXPRESSION
-#define BINARYEXPRESSION
+#ifndef BINARYEXPRESSION_H
+#define BINARYEXPRESSION_H
 
 class BinaryExpression : public Expression{
 private:
@@ -14,15 +14,15 @@ public:
 		expr2 = e2;
 	}
 
-	Value* eval(){
-		Value* value1 = expr1->eval();
-		Value* value2 = expr2->eval();
+	Value * eval(){
+		Value *value1 = expr1->eval();
+		Value *value2 = expr2->eval();
 
 		if(Value* v1 = dynamic_cast<StringValue*>(value1)){
-			std::string string1 = value1->asString();
+			std::string string1 = v1->asString();
 			switch(operation){
 				case '*' :{
-					int iteration = (int) value2->asDouble();
+					int iteration = (int) value2->asNumber();
 					std::string buffer = string1;
 					for (int i = 0; i < iteration; ++i){
 						buffer += string1;
@@ -33,9 +33,9 @@ public:
 				default: return new StringValue(string1 + value2->asString());
 			}
 		}
-
-		double e1 = value1->asDouble();
-		double e2 = value2->asDouble();
+		
+		double e1 = value1->asNumber();
+		double e2 = value2->asNumber();
 
 		switch(operation){
 			case '*' : return new NumberValue(e1 * e2);
@@ -54,8 +54,8 @@ public:
 };
 
 BinaryExpression::~BinaryExpression(){
-	// delete[] expr1;
-	// delete[] expr2;
+	delete[] expr1;
+	delete[] expr2;
 }
 
 #endif

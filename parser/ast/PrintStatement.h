@@ -1,5 +1,5 @@
-#ifndef PRINTSTATEMENT
-#define PRINTSTATEMENT
+#ifndef PRINTSTATEMENT_H
+#define PRINTSTATEMENT_H
 
 class PrintStatement : public Statement{
 private:

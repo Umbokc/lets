@@ -1,6 +1,5 @@
-#ifndef VALUEEXPRESSION
-#define VALUEEXPRESSION
-#include <sstream>
+#ifndef VALUEEXPRESSION_H
+#define VALUEEXPRESSION_H
 
 class ValueExpression : public Expression{
 private:
@@ -22,6 +21,7 @@ public:
 	std::string to_s(){
 		return value->asString();
 	}
+	
 };
 
 #endif

@@ -1,5 +1,5 @@
-#ifndef VARIABLEXPRESSION
-#define VARIABLEXPRESSION
+#ifndef VARIABLEXPRESSION_H
+#define VARIABLEXPRESSION_H
 
 
 class VariableExpression : public Expression{
@@ -19,6 +19,7 @@ public:
 	std::string to_s(){ 
 		return name;
 		// return name + "[" + Variables::get(name)->asString() + "]";
+		// return name + "[" + dtos(Variables::get(name)->asNumber()) + "]";
 	}
 	~VariableExpression();
 };

@@ -1,9 +1,5 @@
-#ifndef VARIABLES
-#define VARIABLES
-
-#define _USE_MATH_DEFINES
-#include <cmath>
-#include <map>
+#ifndef VARIABLES_H
+#define VARIABLES_H
 
 static std::map<std::string, Value*> variables = {
 	{"PI", new NumberValue(M_PI)},
@@ -11,10 +7,21 @@ static std::map<std::string, Value*> variables = {
 	{"GOLDEN_RATIO", new NumberValue(1.618)}
 };
 
-static Value* ZERO = new NumberValue(0);
+static std::stack<std::map<std::string, Value*>> thestack;
+
+static NumberValue* ZERO = new NumberValue(0);
 
 class Variables{
+private:
 public:
+
+	static void push(){
+		thestack.push(std::map<std::string, Value*>(variables));
+	}
+
+	static void pop(){
+		variables = thestack.top();
+	}
 
 	static bool isExists(std::string key){
 		return variables.find(key) != variables.end();

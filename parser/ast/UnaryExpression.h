@@ -1,5 +1,5 @@
-#ifndef UNARYEXPRESSION
-#define UNARYEXPRESSION
+#ifndef UNARYEXPRESSION_H
+#define UNARYEXPRESSION_H
 
 class UnaryExpression : public Expression{
 private:
@@ -13,21 +13,23 @@ public:
 	}
 
 	Value* eval(){
+		Value* value1 = expr1->eval();
 		switch(operation){
-			case '-' : return new NumberValue(-expr1->eval()->asDouble());
+			case '-' : return new NumberValue(-value1->asNumber());
 			case '+' :
-				default: return expr1->eval();
+			default: return value1;
 		}
+		
 	}
 
-	std::string to_s(){ 
-		return operation + expr1->to_s();
+	std::string to_s(){
+		return "[" + ctos(operation) + expr1->to_s() + "]";
 	}
 	~UnaryExpression();
 };
 
 UnaryExpression::~UnaryExpression(){
-	// delete[] expr1;
+	delete[] expr1;
 }
 
 #endif

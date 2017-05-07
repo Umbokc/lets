@@ -1,3 +1,20 @@
-str = "a" * 3 + "bg" * 2
-print str + "\n"
+a = "print"
+echo(a)
 
+def name (a,b){
+	print "a = " + a + "\n"
+	print "b = " + b + "\n"
+}
+
+def sum(a,b) return a + b
+
+name(1, "as")
+echo(a)
+
+print sum(sum("",sum(10, 15)), "\n")
+
+arr = array(1, "text")
+// echo(arr)
+arr[0] = 100
+
+echo(arr)

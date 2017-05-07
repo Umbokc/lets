@@ -1,5 +1,5 @@
-#ifndef STRINGVALUE
-#define STRINGVALUE
+#ifndef STRINGVALUE_H
+#define STRINGVALUE_H
 
 class StringValue : public Value{
 	std::string value;
@@ -8,7 +8,7 @@ public:
 		this->value = value;
 	}
 	
-	double asDouble(){
+	double asNumber(){
 		// try{
 			return atof(&value[0u]);
 		// } catch {

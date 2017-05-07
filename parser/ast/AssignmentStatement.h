@@ -1,5 +1,5 @@
-#ifndef ASSIGNMENTSTATEMENT
-#define ASSIGNMENTSTATEMENT
+#ifndef ASSIGNMENTSTATEMENT_H
+#define ASSIGNMENTSTATEMENT_H
 
 class AssignmentStatement : public Statement{
 private:

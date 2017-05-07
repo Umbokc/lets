@@ -1,5 +1,5 @@
-#ifndef EXPRESSION
-#define EXPRESSION
+#ifndef EXPRESSION_H
+#define EXPRESSION_H
 
 class Expression{
 public:

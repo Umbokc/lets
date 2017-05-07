@@ -1,5 +1,5 @@
-#ifndef TOKEN
-#define TOKEN
+#ifndef TOKEN_H
+#define TOKEN_H
 
 class Token {
 private:
@@ -30,6 +30,5 @@ public:
 Token::~Token(){
 
 }
-
 
 #endif
