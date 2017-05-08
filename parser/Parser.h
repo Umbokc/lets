@@ -3,9 +3,13 @@
 
 using namespace std;
 
+void error_pars(string text, Token te){
+	error(te.position() + " " + text);
+}
+
 class Parser {
 private:
-	Token T_EOF_ = Token(_EOF_, "");
+	Token T_EOF_ = Token(_EOF_, "", -1,-1);
 	vector<Token> tokens;
 	int pos, size;
 public:
@@ -54,10 +58,11 @@ private:
 		if(match(_BREAK_)) 		return new BreakStatement();
 		if(match(_CONTINUE_)) return new ContinueStatement();
 		if(match(_RETURN_)) 	return new ReturnStatement(expression());
+		// if(match(_USE_)) 			return new UseStatement(expression());
 		if(match(_FOR_)) 			return forStatement();
 		if(match(_DEF_)) 			return functionDefine();
 		if (lookMatch(0, _WORD_) && lookMatch(1,_LPAREN_)) {
-			return new FunctionStatement(thefunction());
+			return new FunctionStatement(thefunction());	
 		}
 
 		return assignmentStatement();
@@ -76,8 +81,7 @@ private:
 			consume(_EQ_);
 			return new ArrayAssignmentStatement(array, expression());
 		}
-
-		throw runtime_error("Unknown statement");
+		error_pars("Unknown statement", get(0));
 	}
 
 	Statement *ifElse(){
@@ -110,11 +114,16 @@ private:
 
 	Statement *forStatement(){
 		
+		match(_LPAREN_); // не обязательные скобки
+		
 		Statement *initialization = assignmentStatement();
 		consume(_COMMA_);
 		Expression *termintion = expression();
 		consume(_COMMA_);
 		Statement *incement = assignmentStatement();
+		
+		match(_RPAREN_); // не обязательные скобки
+
 		Statement *statement = statementOrBlock();
 
 		return new ForStatement(initialization, termintion, incement, statement);
@@ -175,10 +184,23 @@ private:
 	}
 
 	Expression *expression(){
-		return logicalOr();
+		return ternary();
 	}
 
-	Expression *logicalOr(){		
+	Expression *ternary() {
+		Expression *result = logicalOr();
+
+		if (match(_QUESTION_)) {
+			Expression *trueExpr = expression();
+			consume(_COLON_);
+			Expression *falseExpr = expression();
+			return new TernaryExpression(result, trueExpr, falseExpr);
+		}
+
+		return result;
+	}
+
+	Expression *logicalOr(){
 		Expression *result = logicalAnd();
 		while(true){
 			if(match(_BARBAR_)){
@@ -191,15 +213,58 @@ private:
 	}
 
 	Expression *logicalAnd(){
-		Expression *result = equality();
+		Expression *result = bitwiseOr();
 		while(true){
 			if(match(_AMPAMP_)){
-				result = new ConditionalExpression(ConditionalExpression::AND, result, equality());
+				result = new ConditionalExpression(ConditionalExpression::AND, result, bitwiseOr());
 				continue;
 			}
 			break;
 		}
 		return result;
+	}
+
+	Expression *bitwiseOr() {
+
+		Expression *expression = bitwiseXor();
+
+		while (true) {
+			if (match(_BAR_)) {
+				expression = new BinaryExpression(BinaryExpression::OR, expression, bitwiseXor());
+				continue;
+			}
+			break;
+		}
+
+		return expression;
+	}
+
+	Expression *bitwiseXor() {
+		Expression *expression = bitwiseAnd();
+
+		while (true) {
+			if (match(_CARET_)) {
+				expression = new BinaryExpression(BinaryExpression::XOR, expression, bitwiseAnd());
+				continue;
+			}
+			break;
+		}
+
+		return expression;
+	}
+
+	Expression *bitwiseAnd() {
+		Expression *expression = equality();
+
+		while (true) {
+			if (match(_AMP_)) {
+				expression = new BinaryExpression(BinaryExpression::AND, expression, equality());
+				continue;
+			}
+			break;
+		}
+
+		return expression;
 	}
 
 	Expression *equality(){
@@ -214,23 +279,23 @@ private:
 	}
 
 	Expression *conditional(){
-		Expression *result = additive();
+		Expression *result = shift();
 
 		while(true){
 			if(match(_LT_)){
-				result = new ConditionalExpression(ConditionalExpression::LT, result, additive());
+				result = new ConditionalExpression(ConditionalExpression::LT, result, shift());
 				continue;
 			}
 			if(match(_LTEQ_)){
-				result = new ConditionalExpression(ConditionalExpression::LTEQ, result, additive());
+				result = new ConditionalExpression(ConditionalExpression::LTEQ, result, shift());
 				continue;
 			}
 			if(match(_GT_)){
-				result = new ConditionalExpression(ConditionalExpression::GT, result, additive());
+				result = new ConditionalExpression(ConditionalExpression::GT, result, shift());
 				continue;
 			}
 			if(match(_GTEQ_)){
-				result = new ConditionalExpression(ConditionalExpression::GTEQ, result, additive());
+				result = new ConditionalExpression(ConditionalExpression::GTEQ, result, shift());
 				continue;
 			}
 			break;
@@ -239,17 +304,39 @@ private:
 		return result;
 	}
 
+	Expression *shift() {
+		Expression *expression = additive();
+
+		while (true) {
+			if (match(_LTLT_)) {
+				expression = new BinaryExpression(BinaryExpression::LSHIFT, expression, additive());
+				continue;
+			}
+			if (match(_GTGT_)) {
+				expression = new BinaryExpression(BinaryExpression::RSHIFT, expression, additive());
+				continue;
+			}
+			if (match(_GTGTGT_)) {
+				expression = new BinaryExpression(BinaryExpression::URSHIFT, expression, additive());
+				continue;
+			}
+			break;
+		}
+
+		return expression;
+	}
+
 	Expression *additive(){
 
 		Expression *result = multiplicative();
 
 		while(true){
 			if(match(_PLUS_)){
-				result = new BinaryExpression('+', result, multiplicative());			
+				result = new BinaryExpression(BinaryExpression::ADD, result, multiplicative());			
 				continue;
 			}
 			if(match(_MINUS_)){
-				result = new BinaryExpression('-', result, multiplicative());
+				result = new BinaryExpression(BinaryExpression::SUBTRACT, result, multiplicative());
 				continue;
 			}
 
@@ -263,11 +350,15 @@ private:
 		Expression *result = unary();
 		while(true){
 			if(match(_STAR_)){
-				result = new BinaryExpression('*', result, unary());
+				result = new BinaryExpression(BinaryExpression::MULTIPLY, result, unary());
 				continue;
 			}
 			if(match(_SLASH_)){
-				result = new BinaryExpression('/', result, unary());
+				result = new BinaryExpression(BinaryExpression::DIVIDE, result, unary());
+				continue;
+			}
+			if (match(_PERCENT_)) {
+				result = new BinaryExpression(BinaryExpression::REMAINDER, result, unary());
 				continue;
 			}
 			break;
@@ -277,9 +368,14 @@ private:
 
 	Expression *unary(){
 		if(match(_MINUS_)){
-			return new UnaryExpression('-', primary());
+			return new UnaryExpression(UnaryExpression::NEGATE, primary());
 		}
-
+		if (match(_EXCL_)) {
+			return new UnaryExpression(UnaryExpression::NOT, primary());
+		}
+		if (match(_TILDE_)) {
+			return new UnaryExpression(UnaryExpression::COMPLEMENT, primary());
+		}
 		if(match(_PLUS_)){
 			return primary();
 		}
@@ -317,12 +413,12 @@ private:
 			return result;
 		}
 
-		throw runtime_error("Unknown expression:");
+		error_pars("Unknown expression:", get(0));
 	}
 
 	Token consume(TokenType type){
 		Token current = get(0);
-		if(type != current.getType()) throw runtime_error("Token " + current.to_s() + " dosn't match " + TokenTypeText[type]);
+		if(type != current.getType()) error_pars("Token " + current.to_s() + " dosn't match " + TokenTypeText[type], current);
 		pos++;
 		return current;
 	}
@@ -346,7 +442,6 @@ private:
 };
 
 Parser::~Parser(){
-
 }
 
 #endif

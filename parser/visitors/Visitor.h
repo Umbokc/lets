@@ -20,6 +20,7 @@ public:
 	virtual void visit(IfStatement *s) = 0;
 	virtual void visit(PrintStatement *s) = 0;
 	virtual void visit(ReturnStatement *s) = 0;
+	virtual void visit(TernaryExpression *s) = 0;
 	virtual void visit(UnaryExpression *s) = 0;
 	virtual void visit(ValueExpression *s) = 0;
 	virtual void visit(VariableExpression *s) = 0;

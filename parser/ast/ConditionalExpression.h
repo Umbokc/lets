@@ -1,10 +1,10 @@
 #ifndef CONDITIONALEXPRESSION_H
 #define CONDITIONALEXPRESSION_H
 
-ConditionalExpression::ConditionalExpression(Operator o, Expression *e1, Expression *e2){
-	operation = o;
-	expr1 = e1;
-	expr2 = e2;
+ConditionalExpression::ConditionalExpression(Operator operation, Expression *expr1, Expression *expr2){
+	this->operation = operation;
+	this->expr1 = expr1;
+	this->expr2 = expr2;
 }
 
 Value* ConditionalExpression::eval(){

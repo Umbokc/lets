@@ -5,11 +5,14 @@ class Token {
 private:
 	TokenType type;
 	std::string text;
+	int row, col;
 public:
 	Token();
-	Token(TokenType type, std::string text){
+	Token(TokenType type, std::string text, int row, int col) {
 		this->type = type;
 		this->text = text;
+		this->row = row;
+		this->col = col;
 	}
 
 	TokenType getType(){ return type; }
@@ -22,6 +25,17 @@ public:
 		return (TokenTypeText[type] + " " + text); 
 	}
 
+	int getRow() {
+		return row;
+	}
+
+	int getCol() {
+		return col;
+	}
+
+	std::string position() {
+		return "[" + std::to_string(row) + ":" + std::to_string(col) + "]";
+	}
 
 	~Token();
 	

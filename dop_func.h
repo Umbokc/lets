@@ -3,6 +3,8 @@
 
 void dbg (std::string s){	std::cout << "debug: " << s << std::endl; }
 void dbg (char s){	std::cout << "debug: " << s << std::endl; }
+
+
 void dbg (double s){	std::cout << "debug: " << s << std::endl; }
 void dbg (int s){	std::cout << "debug: " << s << std::endl; }
 

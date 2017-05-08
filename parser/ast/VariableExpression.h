@@ -6,7 +6,7 @@ VariableExpression::VariableExpression(std::string name){
 }
 
 Value* VariableExpression::eval(){
-	if(!Variables::isExists(name)) throw runtime_error("Variable does not exists");
+	if(!Variables::isExists(name)) throw ParseException("Variable \"" + name + "\" does not exists");
 	return Variables::get(name);
 }
 

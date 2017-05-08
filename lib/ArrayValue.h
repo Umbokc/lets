@@ -22,7 +22,7 @@ public:
 		if(index < elements.size())
 			return elements[index];
 		
-		throw std::runtime_error("Undefined index of array");
+		throw ParseException("Undefined index of array");
 	}
 
 	void set(int index, Value *value){
@@ -30,7 +30,7 @@ public:
 	}
 
 	double asNumber(){
-		throw std::runtime_error("Cannot cast array to number");
+		throw ParseException("Cannot cast array to number");
 	} 
 	
 	std::string asString(){

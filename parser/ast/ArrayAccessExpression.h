@@ -51,7 +51,7 @@ ArrayValue *ArrayAccessExpression::consumeArray(Value *value){
 	if(Value *v = dynamic_cast<ArrayValue*>(value)){
 		return dynamic_cast<ArrayValue*>(value);
 	} else {
-		throw std::runtime_error("Array expected");
+		throw ParseException("Array expected");
 	}
 }
 

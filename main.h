@@ -13,7 +13,16 @@
 #include <stdarg.h>
 #define _USE_MATH_DEFINES
 #include <cmath>
+#include <ctime>
 
+class ParseException {
+public:
+	std::string message;
+	ParseException(std::string message){
+		this->message = message;
+	}
+	
+};
 
 class Expression;
 class Statement;
@@ -36,6 +45,7 @@ class IfStatement;
 class PrintStatement;
 class ReturnStatement;
 class UnaryExpression;
+class TernaryExpression;
 class ValueExpression;
 class VariableExpression;
 class WhileStatement;
@@ -71,6 +81,7 @@ class WhileStatement;
 #include "parser/ast/ValueExpression.h"
 #include "parser/ast/BinaryExpression.h"
 #include "parser/ast/UnaryExpression.h"
+#include "parser/ast/TernaryExpression.h"
 #include "parser/ast/VariableExpression.h"
 #include "parser/ast/ConditionalExpression.h"
 #include "parser/ast/ArrayAccessExpression.h"
@@ -90,5 +101,6 @@ class WhileStatement;
 #include "parser/visitors/AssignValidator.h"
 
 #include "parser/Parser.h"
+
 
 #endif

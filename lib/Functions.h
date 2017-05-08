@@ -7,7 +7,7 @@ class Sin : public Function{
 public:
 	Sin(){}
 	Value* execute(std::vector<Value *> args){
-		if(args.size() != 1) throw std::runtime_error("One args expected");
+		if(args.size() != 1) throw ParseException("One args expected");
 		return new NumberValue(sin(args[0]->asNumber()));
 	}
 	~Sin();
@@ -17,7 +17,7 @@ class Cos : public Function{
 public:
 	Cos(){}
 	Value* execute(std::vector<Value *> args){
-		if(args.size() != 1) throw std::runtime_error("One args expected");
+		if(args.size() != 1) throw ParseException("One args expected");
 		return new NumberValue(cos(args[0]->asNumber()));
 	}
 	~Cos();
@@ -77,7 +77,7 @@ bool Functions::isExists(std::string key){
 }
 
 Function* Functions::get(std::string key){
-	if(!isExists(key)) throw std::runtime_error("Unknown function " + key);
+	if(!isExists(key)) throw ParseException("Unknown function \"" + key + "\"");
 	return thefunctions[key];
 }
 

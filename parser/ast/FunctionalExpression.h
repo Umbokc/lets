@@ -28,7 +28,7 @@ Value *FunctionalExpression::eval(){
 		
 		UserDefineFunction *userFunction = dynamic_cast<UserDefineFunction*>(function);
 
-		if(size != userFunction->getArgsCount()) throw std::runtime_error("Args count mismatch");
+		if(size != userFunction->getArgsCount()) throw ParseException("Args count mismatch");
 		
 		Variables::push();
 

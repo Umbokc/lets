@@ -48,11 +48,14 @@ public:
 
 class BinaryExpression : public Expression{
 public:
-	char operation;
+	static enum Operator { ADD, SUBTRACT, MULTIPLY, DIVIDE, REMAINDER, AND, OR, XOR, LSHIFT, RSHIFT, URSHIFT} z;
+	string OperatorText[11] =  { "+", "-", "*", "/", "%", "&", "|", "^", "<<", ">>", ">>>" };
+
+	Operator operation;
 	Expression *expr1;
 	Expression *expr2;
 
-	BinaryExpression(char o, Expression *e1, Expression *e2);
+	BinaryExpression(Operator, Expression*, Expression *);
 
 	Value * eval();
 
@@ -80,7 +83,7 @@ public:
 	Expression *expr2;
 	Operator operation;
 
-	ConditionalExpression(Operator o, Expression *e1, Expression *e2);
+	ConditionalExpression(Operator, Expression*, Expression*);
 
 	Value* eval();
 
@@ -112,16 +115,18 @@ public:
 	void accept(Visitor *visitor);
 
 	string to_s();
-
 };
 
 
 class UnaryExpression : public Expression{
 public:
-	char operation;
+	static enum Operator { NEGATE, NOT, COMPLEMENT} z;
+	string OperatorText[3] =  { "-", "!", "~"};
+
+	Operator operation;
 	Expression *expr1;
 
-	UnaryExpression(char o, Expression *e1);
+	UnaryExpression(Operator, Expression *);
 
 	Value* eval();
 
@@ -133,6 +138,28 @@ public:
 };
 UnaryExpression::~UnaryExpression(){
 	delete[] expr1;
+}
+
+
+class TernaryExpression : public Expression{
+public:
+	Expression *condition;
+	Expression *trueExpr, *falseExpr;
+
+	TernaryExpression(Expression *condition, Expression *trueExpr, Expression *falseExpr);
+
+	Value* eval();
+
+	void accept(Visitor *visitor);
+
+	string to_s();
+
+	~TernaryExpression();
+};
+TernaryExpression::~TernaryExpression(){
+	delete[] condition;
+	delete[] trueExpr;
+	delete[] falseExpr;
 }
 
 

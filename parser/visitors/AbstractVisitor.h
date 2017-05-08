@@ -94,6 +94,12 @@ public:
 		s->expr1->accept(this);
 	}
 
+	void visit(TernaryExpression *s){
+		s->condition->accept(this);
+		s->trueExpr->accept(this);
+		s->falseExpr->accept(this);
+	}
+
 	void visit(ValueExpression *s){
 
 	}

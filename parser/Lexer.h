@@ -3,12 +3,13 @@
 
 using namespace std;
 
-static string OPERATOR_CHARS = "+-*/()[]{}=<>!&|,";
+static string OPERATOR_CHARS = "+-*/%()[]{}=<>!&|,^~?:";
 static map<string, TokenType> OPERATORS = {
 	{"+", _PLUS_},
 	{"-", _MINUS_},
 	{"*", _STAR_},
 	{"/", _SLASH_},
+	{"%", _PERCENT_},
 	{"(", _LPAREN_},
 	{")", _RPAREN_},
 	{"[", _LBRACKET_},
@@ -19,26 +20,37 @@ static map<string, TokenType> OPERATORS = {
 	{"<", _LT_},
 	{">", _GT_},
 	{",", _COMMA_},
+	{"^", _CARET_},
+	{"~", _TILDE_},
+	{"?", _QUESTION_},
+	{":", _COLON_},
 
 	{"!", _EXCL_},
 	{"&", _AMP_},
 	{"|", _BAR_},
-	
+
 	{"==", _EQEQ_},
 	{"!=", _EXCLEQ_},
 	{"<=", _LTEQ_},
 	{">=", _GTEQ_},
-	
+
 	{"&&", _AMPAMP_},
-	{"||", _BARBAR_}
+	{"||", _BARBAR_},
+
+	{"<<", _LTLT_},
+	{">>", _GTGT_},
+	{">>>", _GTGTGT_},
 };
+
 
 typedef struct Lexer {
 	string input;
 	vector<Token> tokens;
 	int pos;
+	int row, col;
 	int length;
 }Lexer;
+
 
 // declaration {
 Lexer Lexer_i(string input);
@@ -56,10 +68,15 @@ char Lexer_peek(Lexer *l, int relPos);
 void Lexer_addToken(Lexer *l, TokenType type);
 void Lexer_addToken(Lexer *l, TokenType type, string text);
 // declaration }
+void error_lex(Lexer *l, string text) {
+	error("["+ std::to_string(l->row) +":" + std::to_string(l->col) +"] " + text);
+}
 
 Lexer Lexer_i(string input){
 	Lexer a;
 	a.pos = 0;
+	a.row = 1;
+	a.col = 1;	
 	a.input = input;
 	a.length = input.length();
 	return a;
@@ -78,13 +95,13 @@ vector<Token> Lexer_tokenize(Lexer *l){
 		} else if(current == '#'){
 			Lexer_next(l);
 			Lexer_tokenizeHexNumber(l);
-		
+
 		} else if(current == '"'){
 			Lexer_tokenizeText(l);
-		
+
 		} else if(find_c(OPERATOR_CHARS, current) != -1){
 			Lexer_tokenizeOperator(l);
-		
+
 		} else {
 			Lexer_next(l);
 		}
@@ -98,7 +115,9 @@ void Lexer_tokenizeNumber(Lexer *l){
 	char current = Lexer_peek(l, 0);
 
 	while(true){
-		if (!isdigit(current)){
+		if (current == '.'){
+			if (find_c(buf, '.') != -1) error_lex(l, "Invalid float number");
+		} else if (!isdigit(current)){
 			break;
 		}
 		buf.push_back(current);
@@ -175,9 +194,10 @@ void Lexer_tokenizeWord(Lexer *l){
 		case s2i("break"): 		Lexer_addToken(l, _BREAK_); break;
 		case s2i("continue"): Lexer_addToken(l, _CONTINUE_); break;
 		case s2i("def"): 			Lexer_addToken(l, _DEF_); break;
-		case s2i("return"): 			Lexer_addToken(l, _RETURN_); break;
+		case s2i("return"): 	Lexer_addToken(l, _RETURN_); break;
+		case s2i("use"): 			Lexer_addToken(l, _USE_); break;
 		default:
-			Lexer_addToken(l, _WORD_, buffer); break;
+		Lexer_addToken(l, _WORD_, buffer); break;
 	}
 
 }
@@ -187,6 +207,7 @@ void Lexer_tokenizeText(Lexer *l){
 	string buffer;
 	char current = Lexer_peek(l,0);
 	while(true){
+    if (current == '\0') error_lex(l, "Reached end of file while parsing text string.");
 		if(current == '\\'){
 			current = Lexer_next(l);
 			switch(current){
@@ -217,7 +238,7 @@ void Lexer_tokenizeComment(Lexer *l){
 void Lexer_tokenizeMultilineComment(Lexer *l){
 	char current = Lexer_peek(l, 0);
 	while(true){
-		if(current == '\0') throw runtime_error("Missing close tag");		
+		if(current == '\0') error_lex(l, "Reached end of file while parsing multiline comment");	
 		if(current == '*' && Lexer_peek(l,1) == '/') break;
 		current = Lexer_next(l);
 	}
@@ -226,8 +247,17 @@ void Lexer_tokenizeMultilineComment(Lexer *l){
 }
 
 char Lexer_next(Lexer *l){
-	++l->pos;
-	return Lexer_peek(l, 0);
+	l->pos++;
+	char result = Lexer_peek(l, 0);
+	
+	if(result == '\n'){
+		l->row++;
+		l->col = 1;
+	} else {
+		l->col++;
+	}
+
+	return result;
 }
 
 char Lexer_peek(Lexer *l, int relPos){
@@ -241,8 +271,7 @@ void Lexer_addToken(Lexer *l, TokenType type){
 }
 
 void Lexer_addToken(Lexer *l, TokenType type, string text){
-	l->tokens.push_back(Token(type, text));
+	l->tokens.push_back(Token(type, text, l->row, l->col));
 }
-
 
 #endif

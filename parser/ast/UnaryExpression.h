@@ -1,17 +1,19 @@
 #ifndef UNARYEXPRESSION_H
 #define UNARYEXPRESSION_H
 
-UnaryExpression::UnaryExpression(char o, Expression *e1){
-	operation = o;
-	expr1 = e1;
+UnaryExpression::UnaryExpression(Operator operation, Expression *expr1){
+	this->operation = operation;
+	this->expr1 = expr1;
 }
 
 Value* UnaryExpression::eval(){
-	Value* value1 = expr1->eval();
+	Value* value = expr1->eval();
 	switch(operation){
-		case '-' : return new NumberValue(-value1->asNumber());
-		case '+' :
-		default: return value1;
+		case NEGATE: return new NumberValue(-value->asNumber());
+		case COMPLEMENT: return new NumberValue(~(int)value->asNumber());
+		case NOT: return new NumberValue(value->asNumber() != 0 ? 0 : 1);
+		default:
+			error("Operation " + OperatorText[operation] + " is not supported");
 	}
 	
 }
@@ -21,7 +23,7 @@ void UnaryExpression::accept(Visitor *visitor){
 }
 
 std::string UnaryExpression::to_s(){
-	return "[" + ctos(operation) + expr1->to_s() + "]";
+	return "[" + OperatorText[operation] + expr1->to_s() + "]";
 }
 
 #endif
