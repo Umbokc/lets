@@ -16,7 +16,10 @@ int main(){
 
 	Parser parser = Parser(tokens);
 	Statement* programm = parser.parse();
-	cout << programm->to_s() << endl;
+	// cout << programm->to_s() << endl;
+	programm->accept(new FunctionAdder());
+	// programm->accept(new VariablesPrint());
+	programm->accept(new AssignValidator());
 	programm->execute();
 
 	return 0;

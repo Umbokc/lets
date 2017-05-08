@@ -1,25 +1,22 @@
 #ifndef ASSIGNMENTSTATEMENT_H
 #define ASSIGNMENTSTATEMENT_H
 
-class AssignmentStatement : public Statement{
-private:
-	std::string variable;
-	Expression *expression;
-public:
-	AssignmentStatement(std::string variable, Expression *expression){
-		this->variable = variable;
-		this->expression = expression;
-	}
+AssignmentStatement::AssignmentStatement(std::string variable, Expression *expression){
+	this->variable = variable;
+	this->expression = expression;
+}
 
-	void execute(){
-		Value* result = expression->eval();
-		Variables::set(variable, result);
-	}
-	
-	std::string to_s(){
-		return variable + " = " + expression->to_s();
-	}
+void AssignmentStatement::execute(){
+	Value* result = expression->eval();
+	Variables::set(variable, result);
+}
 
-	~AssignmentStatement();
-};
+void AssignmentStatement::accept(Visitor *visitor){
+	visitor->visit(this);
+}
+
+std::string AssignmentStatement::to_s(){
+	return variable + " = " + expression->to_s();
+}
+
 #endif

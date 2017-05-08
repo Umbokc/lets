@@ -1,23 +1,20 @@
 #ifndef FUNCTIONSTATEMENT_H
 #define FUNCTIONSTATEMENT_H
 
-class FunctionStatement : public Statement{
-private:
-	FunctionalExpression *function;
-public:
+FunctionStatement::FunctionStatement(FunctionalExpression *function){
+	this->function = function;
+}
 
-	FunctionStatement(FunctionalExpression *function){
-		this->function = function;
-	}
+void FunctionStatement::execute(){
+	function->eval();
+}
 
-	void execute(){
-		function->eval();
-	}
-	
-	std::string to_s(){
-		return function->to_s();
-	}
+void FunctionStatement::accept(Visitor *visitor){
+	visitor->visit(this);
+}
 
-	~FunctionStatement();
-};
+std::string FunctionStatement::to_s(){
+	return function->to_s();
+}
+
 #endif

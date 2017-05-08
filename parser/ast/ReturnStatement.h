@@ -1,30 +1,26 @@
 #ifndef RETURNSTATEMENT_H
 #define RETURNSTATEMENT_H
 
-class ReturnStatement : public Statement{
-private:
-	Expression *expression;
-	Value *result;
-public:
+ReturnStatement::ReturnStatement(Expression *expression){
+	this->expression = expression;
+}
 
-	ReturnStatement(Expression *expression){
-		this->expression = expression;
-	}
+Value *ReturnStatement::getResult(){
+	return result;
+}
 
-	Value *getResult(){
-		return result;
-	}
+void ReturnStatement::execute(){
+	result = expression->eval();
+	throw this;
+}
 
-	void execute(){
-		result = expression->eval();
-		throw this;
-	}
-	
-	std::string to_s(){
-		std::string result("return");
-		return result;
-	}
+void ReturnStatement::accept(Visitor *visitor){
+	visitor->visit(this);
+}
 
-	~ReturnStatement();
-};
+std::string ReturnStatement::to_s(){
+	std::string result("return");
+	return result;
+}
+
 #endif

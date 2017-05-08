@@ -5,7 +5,8 @@ class ArrayValue : public Value{
 	std::vector<Value *> elements;
 public:
 
-	ArrayValue(){
+	ArrayValue(int size){
+		elements.resize(size);
 	}
 
 	ArrayValue(std::vector<Value *> elements){
@@ -13,11 +14,15 @@ public:
 	}
 
 	ArrayValue(ArrayValue *array){
-		ArrayValue(array->elements);
+		new ArrayValue(array->elements);
 	}
 
 	Value *get(int index){
-		return elements[index];
+		
+		if(index < elements.size())
+			return elements[index];
+		
+		throw std::runtime_error("Undefined index of array");
 	}
 
 	void set(int index, Value *value){
@@ -30,13 +35,13 @@ public:
 	
 	std::string asString(){
 
-		std::string result = "";
+		std::string result = "[ ";
 
 		for(auto el : elements){
 			result += el->to_s();
+			result += ", ";
 		}
-
-		result.push_back('\n');
+		result += "\b\b ]";
 		
 		return result;
 	} 

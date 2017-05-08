@@ -1,22 +1,21 @@
 #ifndef CONTINUESTATEMENT_H
 #define CONTINUESTATEMENT_H
 
-class ContinueStatement : public Statement{
-private:
-public:
 
-	ContinueStatement(){
-	}
+ContinueStatement::ContinueStatement(){
+}
 
-	void execute(){
-		throw this;
-	}
-	
-	std::string to_s(){
-		std::string result("continue");
-		return result;
-	}
+void ContinueStatement::execute(){
+	throw this;
+}
 
-	~ContinueStatement();
-};
+void ContinueStatement::accept(Visitor *visitor){
+	visitor->visit(this);
+}
+
+std::string ContinueStatement::to_s(){
+	std::string result("continue");
+	return result;
+}
+
 #endif

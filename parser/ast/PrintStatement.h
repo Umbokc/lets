@@ -1,22 +1,22 @@
 #ifndef PRINTSTATEMENT_H
 #define PRINTSTATEMENT_H
 
-class PrintStatement : public Statement{
-private:
-	Expression *expression;
-public:
-	PrintStatement(Expression *expression){
-		this->expression = expression;
-	}
+using namespace std;
 
-	void execute(){
- 		cout << expression->eval()->to_s();
-	}
-	
-	std::string to_s(){
-		return "print " + expression->to_s();
-	}
+PrintStatement::PrintStatement(Expression *expression){
+	this->expression = expression;
+}
 
-	~PrintStatement();
-};
+void PrintStatement::execute(){
+		cout << expression->eval()->to_s();
+}
+
+void PrintStatement::accept(Visitor *visitor){
+	visitor->visit(this);
+}
+
+std::string PrintStatement::to_s(){
+	return "print " + expression->to_s();
+}
+
 #endif

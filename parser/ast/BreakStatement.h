@@ -1,22 +1,20 @@
 #ifndef BREAKSTATEMENT_H
 #define BREAKSTATEMENT_H
 
-class BreakStatement : public Statement{
-private:
-public:
+BreakStatement::BreakStatement(){
+}
 
-	BreakStatement(){
-	}
+void BreakStatement::execute(){
+	throw this;
+}
 
-	void execute(){
-		throw this;
-	}
-	
-	std::string to_s(){
-		std::string result("break");
-		return result;
-	}
+void BreakStatement::accept(Visitor *visitor){
+	visitor->visit(this);
+}
 
-	~BreakStatement();
-};
+std::string BreakStatement::to_s(){
+	std::string result("break");
+	return result;
+}
+
 #endif

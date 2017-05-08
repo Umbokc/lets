@@ -39,36 +39,50 @@ class NewArray : public Function{
 public:
 	NewArray(){}
 	Value* execute(std::vector<Value *> args){
-		return new ArrayValue(args);
+		return createArray(args, 0);
 	}
 	~NewArray();
+private:
+	ArrayValue* createArray(std::vector<Value *> args, int index){
+		
+		int size = (int) args[index]->asNumber();
+		int last = args.size() -1;
+		
+		ArrayValue *array = new ArrayValue(size);
+
+		if(index == last){
+			for (int i = 0; i < size; ++i){
+				array->set(i, F_ZERO);
+			}
+		} else if(index < last) {
+			for (int i = 0; i < size; ++i){
+				array->set(i, createArray(args, index+1));
+			}
+		}
+
+		return array;
+	}
 };
 
 
-static std::map<std::string, Function*> thefunctions = {
+std::map<std::string, Function*> thefunctions = {
 	{"sin", new Sin()},
 	{"cos", new Cos()},
 	{"echo", new Echo()},
-	{"array", new NewArray()},
+	{"newArray", new NewArray()},
 };
 
-class Functions{
-public:
+bool Functions::isExists(std::string key){
+	return thefunctions.find(key) != thefunctions.end();
+}
 
-	static bool isExists(std::string key){
-		return thefunctions.find(key) != thefunctions.end();
-	}
+Function* Functions::get(std::string key){
+	if(!isExists(key)) throw std::runtime_error("Unknown function " + key);
+	return thefunctions[key];
+}
 
-	static Function* get(std::string key){
-		if(!isExists(key)) throw std::runtime_error("Unknown function " + key);
-		return thefunctions[key];
-	}
-
-	static void set(std::string key, Function* function){
-		thefunctions[key] = function;
-	}
-
-	~Functions();
-};
+void Functions::set(std::string key, Function* function){
+	thefunctions[key] = function;
+}
 
 #endif

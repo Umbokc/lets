@@ -6,6 +6,8 @@ void dbg (char s){	std::cout << "debug: " << s << std::endl; }
 void dbg (double s){	std::cout << "debug: " << s << std::endl; }
 void dbg (int s){	std::cout << "debug: " << s << std::endl; }
 
+void error (std::string s){	std::cout << "Error: " << s << std::endl; exit(1); }
+
 constexpr unsigned int s2i(const char* str, int h = 0) { // str2int
     return !str[h] ? 5381 : (s2i(str, h+1) * 33) ^ str[h];
 }
