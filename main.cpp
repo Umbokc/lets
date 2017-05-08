@@ -3,20 +3,37 @@
 using namespace std;
 
 void Lets(string input);
+string f2l(string file);
 
-int main(int argc, char const *argv[]){
+int main(int argc, char const **argv){
 
+	if(argc <= 1){
+		error("Give me code!");
+	}
+
+	for (int i = 1; i < argc; ++i) {
+		if(argc > 2)
+			cout << "File: " << argv[i] << endl;
+		Lets(f2l(argv[i]));
+	}
+
+	return 0;
+}
+
+string f2l(string file){
+	
 	string input;
 	ifstream inf;
-	inf.open ( "programm.lets" );//if (!inf)cerr
+	inf.open ( file );
+
+	if (!inf){
+		error("Cannot open file");
+	}
+
 	getline ( inf, input, '\0' );
 	inf.close();
 
-	// cout << argc << endl;
-
-	Lets(input);
-
-	return 0;
+	return input;
 }
 
 void Lets(string input){
