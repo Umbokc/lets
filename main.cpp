@@ -1,9 +1,8 @@
 #include "main.h"
-
 using namespace std;
 
-void Lets(string input);
-string f2l(string file);
+void Lets(string);
+string f2l(string);
 
 int main(int argc, char const **argv){
 
@@ -20,11 +19,11 @@ int main(int argc, char const **argv){
   return 0;
 }
 
-string f2l(string file){
+string f2l(string filename){
   
   string input;
   ifstream inf;
-  inf.open ( file );
+  inf.open ( filename );
 
   if (!inf){
     error("Cannot open file");
@@ -38,10 +37,11 @@ string f2l(string file){
 
 void Lets(string input){
 
-  Lexer lexer = Lexer_i(input); 
-  vector<Token> tokens = Lexer_tokenize(&lexer);
+  Lexer *lexer = new Lexer(input);
+  vector<Token> tokens = lexer->tokenize();
   // for(Token tk : tokens) cout << tk.to_s() << endl;
-  try{
+  
+  try {
 
     Parser parser = Parser(tokens);
     Statement* programm = parser.parse();

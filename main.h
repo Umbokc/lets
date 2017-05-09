@@ -54,6 +54,10 @@ class WhileStatement;
 
 #include "dop_func.h"
 
+#include "parser/TokenType.h"
+#include "parser/Token.h"
+#include "parser/Lexer.h"
+
 #include "lib/LibClasses.h"
 
 #include "parser/visitors/Visitor.h"
@@ -87,10 +91,6 @@ class WhileStatement;
 #include "parser/ast/ArrayAccessExpression.h"
 #include "parser/ast/ArrayExpression.h"
 #include "parser/ast/FunctionalExpression.h"
-
-#include "parser/TokenType.h"
-#include "parser/Token.h"
-#include "parser/Lexer.h"
 
 #include "parser/ast/Expression.h"
 #include "parser/ast/Statement.h"

@@ -3,26 +3,6 @@
 
 static Value* F_ZERO = new NumberValue(0);
 
-class Sin : public Function{
-public:
-	Sin(){}
-	Value* execute(std::vector<Value *> args){
-		if(args.size() != 1) throw ParseException("One args expected");
-		return new NumberValue(sin(args[0]->asNumber()));
-	}
-	~Sin();
-};
-
-class Cos : public Function{
-public:
-	Cos(){}
-	Value* execute(std::vector<Value *> args){
-		if(args.size() != 1) throw ParseException("One args expected");
-		return new NumberValue(cos(args[0]->asNumber()));
-	}
-	~Cos();
-};
-
 class Echo : public Function{
 public:
 	Echo(){}
@@ -64,10 +44,7 @@ private:
 	}
 };
 
-
 std::map<std::string, Function*> thefunctions = {
-	{"sin", new Sin()},
-	{"cos", new Cos()},
 	{"echo", new Echo()},
 	{"newArray", new NewArray()},
 };
@@ -77,7 +54,7 @@ bool Functions::isExists(std::string key){
 }
 
 Function* Functions::get(std::string key){
-	if(!isExists(key)) throw ParseException("Unknown function \"" + key + "\"");
+	if(!Functions::isExists(key)) throw ParseException("Unknown function \"" + key + "\"");
 	return thefunctions[key];
 }
 
