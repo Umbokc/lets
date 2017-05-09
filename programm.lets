@@ -1,1 +1,14 @@
-print "go\n"
+def ech(a,b){
+	print "" + a + b + "\n"
+}
+
+a = 1
+ech("a = ", a)
+
+def func(a){
+	a = 2
+	ech("a = ", a)
+}
+func(a)
+
+ech("a = ", a)
