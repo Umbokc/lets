@@ -11,7 +11,9 @@ private:
 	int row, col;
 	int length;
 public:
-	Lexer();
+	Lexer(){
+
+	}
 		
 	Lexer(string input){
 		this->pos = 0;
@@ -222,5 +224,9 @@ private:
 		error("["+ std::to_string(row) +":" + std::to_string(col) +"] " + text);
 	}
 };
+
+Lexer::~Lexer(){
+
+}
 
 #endif

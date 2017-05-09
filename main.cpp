@@ -37,8 +37,15 @@ string f2l(string filename){
 
 void Lets(string input){
 
-  Lexer *lexer = new Lexer(input);
-  vector<Token> tokens = lexer->tokenize();
+
+#ifndef USE_LEXER_STRUCT
+  Lexer lexer = Lexer(input); vector<Token> tokens = lexer.tokenize();
+  // class
+#else
+  // struct
+  Lexer lexer = Lexer_i(input); vector<Token> tokens = Lexer_tokenize(&lexer);
+#endif
+
   // for(Token tk : tokens) cout << tk.to_s() << endl;
   
   try {

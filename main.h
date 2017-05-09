@@ -1,6 +1,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+// #define USE_LEXER_STRUCT
+
 #include <iostream>
 #include <cstring>
 #include <cstdlib>	
@@ -54,10 +56,6 @@ class WhileStatement;
 
 #include "dop_func.h"
 
-#include "parser/TokenType.h"
-#include "parser/Token.h"
-#include "parser/Lexer.h"
-
 #include "lib/LibClasses.h"
 
 #include "parser/visitors/Visitor.h"
@@ -91,6 +89,16 @@ class WhileStatement;
 #include "parser/ast/ArrayAccessExpression.h"
 #include "parser/ast/ArrayExpression.h"
 #include "parser/ast/FunctionalExpression.h"
+
+#include "parser/TokenType.h"
+#include "parser/Token.h"
+
+#ifdef USE_LEXER_STRUCT
+	#include "parser/Lexer_struct.h"
+#else
+	#include "parser/Lexer.h"
+#endif
+
 
 #include "parser/ast/Expression.h"
 #include "parser/ast/Statement.h"

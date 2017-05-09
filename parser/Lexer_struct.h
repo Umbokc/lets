@@ -42,7 +42,6 @@ static map<string, TokenType> OPERATORS = {
 	{">>>", _GTGTGT_},
 };
 
-
 typedef struct Lexer {
 	string input;
 	vector<Token> tokens;
