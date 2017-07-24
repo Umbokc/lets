@@ -1,5 +1,5 @@
-#ifndef TOKEN_H
-#define TOKEN_H
+#include <string>
+#include "tokentype.h"
 
 class Token {
 private:
@@ -7,42 +7,39 @@ private:
 	std::string text;
 	int row, col;
 public:
-	Token();
-	Token(TokenType type, std::string text, int row, int col) {
-		this->type = type;
-		this->text = text;
-		this->row = row;
-		this->col = col;
-	}
+	Token(){}
+	// Token(const Token& t){}
+	Token& operator=(const Token& t){return *this;}
 
-	TokenType getType(){ return type; }
-	void setType(TokenType type){ this->type = type; }
+	Token(const TokenType& tt, const std::string& txt,
+				const int& r, const int& c)
+				:type(std::move(tt)), text(std::move(txt)),
+				 row(std::move(r)), col(std::move(c)){}
 
-	std::string getText(){ return text; }
-	void setText(std::string text){ this->text = text; }
+	// type get/set
+	TokenType get_type(){ return type; }
+	void set_type(const TokenType& type){ this->type = type; }
 
+	// test get/set
+	std::string get_text(){ return text; }
+	void set_text(const std::string& text){ this->text = text; }
+
+	// convert to string need data (token and text)
 	std::string to_s(){ 
-		return (TokenTypeText[type] + " " + text); 
+		return (TokenToString(this->type) + " " + text); 
 	}
 
-	int getRow() {
+	int get_row() {
 		return row;
 	}
 
-	int getCol() {
+	int get_col() {
 		return col;
 	}
 
-	std::string position() {
+	std::string get_position() {
 		return "[" + std::to_string(row) + ":" + std::to_string(col) + "]";
 	}
 
-	~Token();
-	
+	~Token(){}
 };
-
-Token::~Token(){
-
-}
-
-#endif

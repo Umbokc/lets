@@ -1,103 +1,183 @@
-#ifndef TOKENTYPE_H
-#define TOKENTYPE_H
-enum TokenType { 
-	_NUMBER_, _HEX_NUMBER_, _WORD_,	_TEXT_,
+#ifndef TOKEN_TYPE_H
+#define TOKEN_TYPE_H
+#include <string>
+
+enum TokenType {
+	TT_NUMBER,
+	TT_HEX_NUMBER,
+	TT_OCTAL_NUMBER,
+	TT_BINARY_NUMBER,
+	TT_WORD,
+	TT_TEXT,
 
 	// keyword
-	_PRINT_, 
-	_IF_, _ELSE_, 
-	_WHILE_, _FOR_, _DO_, 
-	_BREAK_, _CONTINUE_, 
-	_DEF_, _RETURN_,
-	_USE_,
+	TT_PRINT,
+	TT_PRINTLN,
+	TT_IF,
+	TT_ELSE,
+	TT_WHILE,
+	TT_FOR,
+	TT_DO,
+	TT_BREAK,
+	TT_CONTINUE,
+	TT_DEF,
+	TT_DEF_C,
+	TT_RETURN,
+	TT_USE,
 
-	_PLUS_, // +
-	_MINUS_, // -
-	_STAR_, // *
-	_SLASH_, // /
-	_PERCENT_,// %
-	_EQ_, // =
-	_EQEQ_, // ==
-	_EXCL_, // !
-	_EXCLEQ_, // !=
-	_LTEQ_, // <=
-	_LT_, // <
-	_GT_, // >
-	_GTEQ_, // >=
+	TT_PLUS, // +
+	TT_MINUS, // -
+	TT_STAR, // *
+	TT_SLASH, // /
+	TT_PERCENT,// %
+	TT_AT, // @
 
-	_LTLT_, // <<
-	_GTGT_, // >>
-	_GTGTGT_, // >>>
+	TT_EQ, // =
+	TT_EQEQ, // ==
+	TT_EXCL, // !
+	TT_EXCLEQ, // !=
+	TT_LTEQ, // <=
+	TT_LT, // <
+	TT_GT, // >
+	TT_GTEQ, // >=
 
-	_TILDE_, // ~
-	_CARET_, // ^
-	_BAR_, // |
-	_BARBAR_, // ||
-	_AMP_, // &
-	_AMPAMP_, // &&
+	TT_PLUSEQ, // +=
+	TT_MINUSEQ, // -=
+	TT_STAREQ, // *=
+	TT_SLASHEQ, // /=
+	TT_PERCENTEQ, // %=
+	TT_ATEQ, // @=
+	TT_AMPEQ, // &=
+	TT_CARETEQ, // ^=
+	TT_BAREQ, // |=
+	TT_COLONCOLONEQ, // ::=
+	TT_LTLTEQ, // <<=
+	TT_GTGTEQ, // >>=
+	TT_GTGTGTEQ, // >>>=
 
-	_QUESTION_, // ?
-	_COLON_, // :
+	TT_PLUSPLUS, // ++
+	TT_MINUSMINUS, // --
 
-	_LPAREN_, // (
-	_RPAREN_, // )
-	_LBRACKET_, // [
-	_RBRACKET_, // ]
-	_LBRACE_, // {
-	_RBRACE_, // }
-	_COMMA_, // ,
+	TT_LTLT, // <<
+	TT_GTGT, // >>
+	TT_GTGTGT, // >>>
 
-	_EOF_
+	TT_DOTDOT, // ..
+	TT_STARSTAR, // **
+	TT_QUESTIONCOLON, // ?:
+
+	TT_TILDE, // ~
+	TT_CARET, // ^
+	TT_BAR, // |
+	TT_BARBAR, // ||
+	TT_AMP, // &
+	TT_AMPAMP, // &&
+
+	TT_QUESTION, // ?
+	TT_COLON, // :
+	TT_COLONCOLON, // ::
+
+	TT_LPAREN,  // (
+	TT_RPAREN, // )
+	TT_LBRACKET,  // [
+	TT_RBRACKET, // ]
+	TT_LBRACE,  // {
+	TT_RBRACE, // }
+	TT_COMMA,  // ,
+	TT_DOT, // .
+
+	TT_EOF
 };
 
-std::string TokenTypeText[] =  { 
-	"_NUMBER_", "_HEX_NUMBER_", "_WORD_",	"_TEXT_",
+static const std::string TokenTypeString[] = {
+	"number",
+	"hex_number",
+	"octal number",
+	"binary number",
+	"word",
+	"text",
 
 	// keyword
-	"_PRINT_",
-	"_IF_", "_ELSE_",
-	"_WHILE_", "_FOR_", "_DO_", 
-	"_BREAK_", "_CONTINUE_",
-	"_DEF_", "_RETURN_",
-	"_USE_",
+	"print",
+	"println",
+	"if",
+	"else",
+	"while",
+	"for",
+	"do",
+	"break",
+	"continue",
+	"def",
+	"def_c",
+	"return",
+	"use",
 
-	"_PLUS_ \"+\"", // +
-	"_MINUS_ \"-\"", // -
-	"_STAR_ \"*\"", // *
-	"_SLASH_ \"/\"", // /
-	"_PERCENT_",// %
-	"_EQ_ \"=\"", // =
-	"_EQEQ_ \"==\"", // ==
-	"_EXCL_ \"!\"", // !
-	"_EXCLEQ_ \"!=\"", // !=
-	"_LTEQ_ \"<=\"", // <=
-	"_LT_ \"<\"", // <
-	"_GT_ \">\"", // >
-	"_GTEQ_ \">=\"", // >=
+	"plus", // +
+	"minus", // -
+	"star", // *
+	"slash", // /
+	"percent",// %
+	"at", // @
 
-	"_LTLT_ \"<<\"", // <<
-	"_GTGT_ \">>\"", // >>
-	"_GTGTGT_ \">>>\"", // >>>
+	"eq", // =
+	"eqeq", // ==
+	"excl", // !
+	"excleq", // !=
+	"lteq", // <=
+	"lt", // <
+	"gt", // >
+	"gteq", // >=
 
-	"_TILDE_ \"~\"", // ~
-	"_CARET_ \"^\"", // ^
-	"_BAR_ \"|\"", // |
-	"_BARBAR_ \"||\"", // ||
-	"_AMP_ \"&\"", // &
-	"_AMPAMP_ \"&&\"", // &&
+	"pluseq", // +=
+	"minuseq", // -=
+	"stareq", // *=
+	"slasheq", // /=
+	"percenteq", // %=
+	"ateq", // @=
+	"ampeq", // &=
+	"careteq", // ^=
+	"bareq", // |=
+	"coloncoloneq", // ::=
+	"ltlteq", // <<=
+	"gtgteq", // >>=
+	"gtgtgteq", // >>>=
 
-	"_QUESTION_ \"?\"", // ?
-	"_COLON_ \":\"", // :
+	"plusplus", // ++
+	"minusminus", // --
 
-	"_LPAREN_ \"(\"", // (
-	"_RPAREN_ \")\"", // )
-	"_LBRACKET_ \"[\"", // [
-	"_RBRACKET_ \"]\"", // ]
-	"_LBRACE_ \"{\"", // {
-	"_RBRACE_ \"}\"", // }
-	"_COMMA_ \",\"", // ,
+	"ltlt", // <<
+	"gtgt", // >>
+	"gtgtgt", // >>>
 
-	"_EOF_"
+	"dotdot", // ..
+	"starstar", // **
+	"questioncolon", // ?:
+
+	"tilde", // ~
+	"caret", // ^
+	"bar", // |
+	"barbar", // ||
+	"amp", // &
+	"ampamp", // &&
+
+	"question", // ?
+	"colon", // :
+	"coloncolon", // ::
+
+	"lparen",  // (
+	"rparen", // )
+	"lbracket",  // [
+	"rbracket", // ]
+	"lbrace",  // {
+	"rbrace", // }
+	"comma",  // ,
+	"dot", // .
+
+	"eof"
 };
+
+const std::string TokenToString(int id) {
+	return TokenTypeString[id];
+}
 
 #endif

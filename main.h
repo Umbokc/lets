@@ -1,114 +1,68 @@
 #ifndef MAIN_H
 #define MAIN_H
-
-// #define USE_LEXER_STRUCT
-
 #include <iostream>
-#include <cstring>
-#include <cstdlib>	
+#include <string>
 #include <vector>
-#include <locale>
-#include <fstream>
-#include <sstream>
-#include <map>
-#include <stack>
-#include <stdarg.h>
-#define _USE_MATH_DEFINES
-#include <cmath>
-#include <ctime>
 
-class ParseException {
-public:
-	std::string message;
-	ParseException(std::string message){
-		this->message = message;
-	}
-	
-};
+#include "declaration.h"
+#include "functions.h"
 
-class Expression;
-class Statement;
+#include "exceptions/exceptions_error.cpp"
+#include "exceptions/parse_exception.cpp"
 
-class ArrayAccessExpression;
-class ArrayAssignmentStatement;
-class ArrayExpression;
-class AssignmentStatement;
-class BinaryExpression;
-class BlockStatement;
-class BreakStatement;
-class ConditionalExpression;
-class ContinueStatement;
-class DoWhileStatement;
-class ForStatement;
-class FunctionDefineStatement;
-class FunctionStatement;
-class FunctionalExpression;
-class IfStatement;
-class PrintStatement;
-class ReturnStatement;
-class UnaryExpression;
-class TernaryExpression;
-class ValueExpression;
-class VariableExpression;
-class WhileStatement;
+#include "lib/types.h"
+#include "lib/value.h"
+#include "lib/function.h"
+#include "lib/number_value.h"
+#include "lib/string_value.h"
+#include "lib/variables.h"
+#include "lib/array_value.h"
+#include "lib/functions.h"
 
-// не трогать, а то пздц
+#include "parser/tokentype.h"
+#include "parser/token.h"
+#include "parser/lexer.cpp"
 
-#include "dop_func.h"
+#include "parser/ast/main/visitor.h"
+#include "parser/ast/main/node.h"
 
-#include "lib/LibClasses.h"
-
-#include "parser/visitors/Visitor.h"
-
-#include "parser/ast/Expression.h"
-#include "parser/ast/Statement.h"
-
-#include "lib/UserDefineFunction.h"
-
-#include "parser/ast/ReturnStatement.h"
-#include "parser/ast/ArrayAssignmentStatement.h"
-#include "parser/ast/AssignmentStatement.h"
-#include "parser/ast/PrintStatement.h"
-#include "parser/ast/IfStatement.h"
-#include "parser/ast/BlockStatement.h"
-#include "parser/ast/BreakStatement.h"
-#include "parser/ast/ContinueStatement.h"
-#include "parser/ast/DoWhileStatement.h"
-#include "parser/ast/WhileStatement.h"
-#include "parser/ast/ForStatement.h"
-#include "parser/ast/FunctionStatement.h"
-#include "parser/ast/FunctionDefineStatement.h"
-#include "parser/ast/ReturnStatement.h"
-
-#include "parser/ast/ValueExpression.h"
-#include "parser/ast/BinaryExpression.h"
-#include "parser/ast/UnaryExpression.h"
-#include "parser/ast/TernaryExpression.h"
-#include "parser/ast/VariableExpression.h"
-#include "parser/ast/ConditionalExpression.h"
-#include "parser/ast/ArrayAccessExpression.h"
-#include "parser/ast/ArrayExpression.h"
-#include "parser/ast/FunctionalExpression.h"
-
-#include "parser/TokenType.h"
-#include "parser/Token.h"
-
-#ifdef USE_LEXER_STRUCT
-	#include "parser/Lexer_struct.h"
-#else
-	#include "parser/Lexer.h"
-#endif
+#include "parser/ast/main/expression.h"
+#include "parser/ast/expressions/value_expression.cpp"
+#include "parser/ast/expressions/array_access_expression.cpp"
+#include "parser/ast/expressions/array_expression.cpp"
+#include "parser/ast/expressions/binary_expression.cpp"
+#include "parser/ast/expressions/conditional_expression.cpp"
+#include "parser/ast/expressions/unary_expression.cpp"
+#include "parser/ast/expressions/ternary_expression.cpp"
+#include "parser/ast/expressions/variable_xpression.cpp"
 
 
-#include "parser/ast/Expression.h"
-#include "parser/ast/Statement.h"
+#include "parser/ast/main/statement.h"
+#include "parser/ast/statements/break_statement.cpp"
+#include "parser/ast/statements/continue_statement.cpp"
+#include "parser/ast/statements/block_statement.cpp"
+#include "parser/ast/statements/assignment_statement.cpp"
+#include "parser/ast/statements/array_assignment_statement.cpp"
+#include "parser/ast/statements/return_statement.cpp"
+#include "parser/ast/statements/for_statement.cpp"
+#include "parser/ast/statements/do_while_statement.cpp"
+#include "parser/ast/statements/while_statement.cpp"
+#include "parser/ast/statements/if_statement.cpp"
+#include "parser/ast/statements/print_statement.cpp"
+#include "parser/ast/statements/println_statement.cpp"
 
-#include "parser/visitors/AbstractVisitor.h"
-#include "parser/visitors/FunctionAdder.h"
-#include "parser/visitors/VariablesPrint.h"
-#include "parser/visitors/AssignValidator.h"
+#include "lib/user_define_function.h"
+#include "parser/ast/expressions/functional_expression.cpp"
 
-#include "parser/Parser.h"
+#include "parser/ast/statements/function_define_statement.cpp"
+#include "parser/ast/statements/function_statement.cpp"
 
+#include "modules/std/std_module.h"
+#include "modules/math/math_module.h"
+#include "parser/ast/statements/use_statement.cpp"
+
+#include "parser/parser.cpp"
+
+#include "lets.h"
 
 #endif

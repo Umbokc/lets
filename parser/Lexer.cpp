@@ -1,232 +1,271 @@
 #ifndef LEXER_CPP
 #define LEXER_CPP
 
-using namespace std;
+#include "lexer.h"
 
-class Lexer {
-private:
-	string input;
-	vector<Token> tokens;
-	int pos;
-	int row, col;
-	int length;
-public:
-	Lexer(){
+std::vector<Token> Lexer::tokenize(){
 
-	}
-		
-	Lexer(string input){
-		this->pos = 0;
-		this->row = 1;
-		this->col = 1;	
-		this->input = input;
-		this->length = input.length();
-	}
-
-	vector<Token> tokenize(){
-
-		while(this->pos < this->length){
-			
-			char current = peek(0);
-
-			if(isdigit(current)){
-				tokenizeNumber();
-
-			} else if (isalpha(current, locale())){
-				tokenizeWord();
-
-			} else if(current == '#'){
-				next();
-				tokenizeHexNumber();
-
-			} else if(current == '"'){
-				tokenizeText();
-
-			} else if(find_c(OPERATOR_CHARS, current) != -1){
-				tokenizeOperator();
-
-			} else {
-				next();
-			}
-		}
-
-		return this->tokens;
-	}
-
-	~Lexer();
-
-private:
-
-	void tokenizeNumber(){
-		string buf = "";
+	while (this->pos < this->length) {
 		char current = peek(0);
-
-		while(true){
-			if (current == '.'){
-				if (find_c(buf, '.') != -1) error_lex("Invalid float number");
-			} else if (!isdigit(current)){
-				break;
-			}
-			buf.push_back(current);
-			current = next();
-		}
-
-		addToken(_NUMBER_, buf);
+		if(isdigit(current)) tokenize_number();
+		else if(isalpha(current, std::locale())) tokenize_word();
+		else if( current == '"') tokenize_text_double_quote();
+		else if( current == '\'') tokenize_text_single_quote();
+		else if( current == '#') tokenize_comment();
+		else if (func::find_c(Lexer_vars::OPERATORS_CHARS, current) != -1) 
+			tokenize_operator();
+		else
+			next();
 	}
 
-	void tokenizeHexNumber(){
-		string buf = "";
-		char current = peek(0);
-
-		while(isdigit(current) || isHexNumber(current) != -1){
-			buf.push_back(current);
-			current = next();
-		}
-
-		addToken(_HEX_NUMBER_, buf);
-	}
-
-	int isHexNumber(char c){
-		string a = "abcdef";
-		return find_c(a, tolower(c, locale()));
-	}
-
-	void tokenizeOperator(){
-		char current = peek(0);
-		if(current == '/') {
-			if(peek(1) == '/'){
-				next();
-				next();
-				tokenizeComment();
-				return;
-			} else if(peek(1) == '*'){
-				next();
-				next();
-				tokenizeMultilineComment();
-				return;
-			}
-		}
-		string buffer;
-		while(true){
-			string text = buffer;
-			if((OPERATORS.find(text + current) == OPERATORS.end()) && !text.empty()){
-				addToken(OPERATORS[text]);
-				return;
-			}
-			buffer.push_back(current);
-			current = next();
-		}
-	}
-
-	void tokenizeWord(){
-		string buffer;
-		char current = peek(0);
-		while(true){
-			if(!(isdigit(current) || isalpha(current, locale())) && (current != '_') && (current != '$')){
-				break;
-			}
-			buffer.push_back(current);
-			current = next();
-		}
-
-
-		const char *buf = buffer.c_str();
-		switch(s2i(buf)){
-			case s2i("print"): 		addToken(_PRINT_); break;
-			case s2i("if"): 			addToken(_IF_); break;
-			case s2i("else"): 		addToken(_ELSE_); break;
-			case s2i("while"): 		addToken(_WHILE_); break;
-			case s2i("for"): 			addToken(_FOR_); break;
-			case s2i("do"): 			addToken(_DO_); break;
-			case s2i("break"): 		addToken(_BREAK_); break;
-			case s2i("continue"): addToken(_CONTINUE_); break;
-			case s2i("def"): 			addToken(_DEF_); break;
-			case s2i("return"): 	addToken(_RETURN_); break;
-			case s2i("use"): 			addToken(_USE_); break;
-			default:
-			addToken(_WORD_, buffer); break;
-		}
-	}
-
-	void tokenizeText(){
-		next(); // skip "
-		string buffer;
-		char current = peek(0);
-		while(true){
-	    if (current == '\0') error_lex("Reached end of file while parsing text string.");
-			if(current == '\\'){
-				current = next();
-				switch(current){
-					case '"': current = next(); buffer.push_back('"'); continue;
-					case 'n': current = next(); buffer.push_back('\n'); continue;
-					case 't': current = next(); buffer.push_back('\t'); continue;
-				}
-				buffer.push_back('\\');
-				continue;
-			}
-			if(current == '"') break;
-
-			buffer.push_back(current);
-			current = next();
-		}
-		next(); // skip closing "
-		addToken(_TEXT_, buffer);
-	}
-
-	void tokenizeComment(){
-		char current = peek(0);
-		while(true){
-			if(current == '\0' || current == '\n' || current == '\r') break;
-			current = next();
-		}
-	}
-
-	void tokenizeMultilineComment(){
-		char current = peek(0);
-		while(true){
-			if(current == '\0') error_lex("Reached end of file while parsing multiline comment");	
-			if(current == '*' && peek(1) == '/') break;
-			current = next();
-		}
-		next(); // *
-		next(); // /
-	}
-
-	char next(){
-		this->pos++;
-		char result = peek(0);
-		
-		if(result == '\n'){
-			this->row++;
-			this->col = 1;
-		} else {
-			this->col++;
-		}
-
-		return result;
-	}
-
-	char peek(int relPos){
-		int position = this->pos + relPos;
-		if(position >= this->length) return '\0';
-		return this->input[position];
-	}
-
-	void addToken(TokenType type){
-		addToken(type, "");
-	}
-
-	void addToken(TokenType type, string text){
-		this->tokens.push_back(Token(type, text, this->row, this->col));
-	}
-
-	void error_lex(string text) {
-		error("["+ std::to_string(row) +":" + std::to_string(col) +"] " + text);
-	}
-};
-
-Lexer::~Lexer(){
-
+	return this->tokens;
 }
 
+void Lexer::tokenize_number() {
+
+	clear_buffer();
+	char current = peek(0);
+	
+	bool is_octal = (current == '0');
+	
+	if(is_octal && look_char(1, 'x')){
+		tokenize_hex_number();
+		return;
+	}
+	if(is_octal && look_char(1, 'b')){
+		tokenize_binary_number();
+		return;
+	}
+
+	while (true) {
+
+		if(current == '.') {
+			if(func::find_c(this->buffer, '.') != -1 || is_octal) lexer_error(ExceptionsError::L_INVALID_FLOAT);
+		} else if(!isdigit(current)){
+			break;
+		}
+
+		this->buffer.push_back(current);
+		current = next();
+	}
+
+	if(is_octal){
+		add_token(TokenType::TT_OCTAL_NUMBER, this->buffer);
+	}	else {
+		add_token(TokenType::TT_NUMBER, this->buffer);
+	}
+}
+
+void Lexer::tokenize_hex_number() {
+	
+	clear_buffer();
+	next(); 
+	next();
+
+	char current = peek(0);
+
+	while (is_hex_number(current) != -1) {
+		this->buffer.push_back(current);
+		current = next();
+	}
+
+	add_token(TokenType::TT_HEX_NUMBER, this->buffer);
+}
+
+int Lexer::is_hex_number(char c){
+	return func::find_c("0123456789abcdef", tolower(c, std::locale()));
+}
+
+void Lexer::tokenize_binary_number() {
+
+	next(); 
+	next();
+	clear_buffer();
+
+	char current = peek(0);
+	std::string cur_s;
+	while (true) {
+		cur_s = current;
+		// cur_s.push_back(current);
+		if(std::regex_match(cur_s, std::regex("^[01]+$")) == 0)
+			break;
+
+		this->buffer.push_back(current);
+		current = next();
+	}
+
+	add_token(TokenType::TT_BINARY_NUMBER, this->buffer);
+}
+
+void Lexer::tokenize_word() {
+	
+	clear_buffer();
+	char current = peek(0);
+	while (true) {
+		if(!(isdigit(current) || isalpha(current, std::locale())) 
+				&& (current != '_') && (current != '$')){
+			break;
+		}
+
+		this->buffer.push_back(current);
+		current = next();
+	}
+
+
+	if(!map_key_exists(Lexer_vars::KEYWORDS, this->buffer)){
+		add_token(Lexer_vars::KEYWORDS[this->buffer]);
+	} else {
+		add_token(TokenType::TT_WORD, this->buffer);
+	}
+}
+
+void Lexer::tokenize_text_double_quote() {
+
+	next();
+	clear_buffer();
+
+	char current = peek(0);
+
+	if(peek(0) == '"' && peek(1) == '"'){
+		next(); next();
+		tokenize_multiline_comment();
+		return;
+	}
+
+	while (true) {
+		
+		if(current == '\\'){
+			current = next();
+			switch (current) {
+				case '\\': current = next(); this->buffer.push_back('\\'); continue;
+				case '"': current = next(); this->buffer.push_back('\"'); continue;
+				case 'n': current = next(); this->buffer.push_back('\n'); continue;
+				case 't': current = next(); this->buffer.push_back('\t'); continue;
+				case 'r': current = next(); this->buffer.push_back('\r'); continue;
+				case '0': current = next(); this->buffer.push_back('\0'); continue;
+			}
+			this->buffer.push_back('\\');
+			continue;
+		}
+
+		if(current == '"') break;
+		if (current == '\0') lexer_error(ExceptionsError::L_REACHED_EOF);
+		this->buffer.push_back(current);
+		current = next();
+	}
+
+	next();
+
+	add_token(TokenType::TT_TEXT , this->buffer);
+}
+
+void Lexer::tokenize_text_single_quote() {
+
+	next();	
+	clear_buffer();
+
+	char current = peek(0);
+
+	while (true) {
+		if(current == '\\'){
+			current = next();
+			switch (current) {
+				case '\\': current = next(); this->buffer.push_back('\\'); continue;
+				case '\'': current = next(); this->buffer.push_back('\''); continue;
+			}
+			this->buffer.push_back('\\');
+			continue;
+		}
+
+		if(current == '\'') break;
+		if (current == '\0') lexer_error(ExceptionsError::L_REACHED_EOF);
+		this->buffer.push_back(current);
+		current = next();
+	}
+
+	next();
+
+	add_token(TokenType::TT_TEXT, this->buffer);
+}
+
+void Lexer::tokenize_operator() {
+	
+	char current = peek(0);
+	std::string text;
+	clear_buffer();
+
+	while (true) {
+		text = this->buffer;
+		if(!text.empty() && map_key_exists(Lexer_vars::OPERATORS, text + current)){
+			add_token(Lexer_vars::OPERATORS[text], text);
+			return;
+		}
+
+		this->buffer.push_back(current);
+		current = next();
+	}
+}
+
+void Lexer::tokenize_comment(){
+	next();
+	char current = peek(0);
+	while (current != '\r' && current != '\n' && current != '\0') {
+		current = next();
+	}	
+}
+void Lexer::tokenize_multiline_comment(){
+	char current = peek(0);
+	while (true) {
+		if(current == '\0') lexer_error(ExceptionsError::L_MISS_CLOSE_TAG);
+		if(current == '"' && look_char(1, '"') && look_char(2, '"')) break;
+		current = next();
+	}
+	next();
+	next();
+}
+
+bool Lexer::look_char(int rpos, char chr){
+	return peek(rpos) == chr;
+}
+
+char Lexer::next(){
+	this->pos++;
+	char res = peek(0);
+	
+	if(res == '\n'){
+		this->row++;
+		this->col = 1;
+	} else {
+		this->col++;
+	}
+
+	return res;
+}
+
+char Lexer::peek(int rpos){
+	int position = this->pos + rpos;
+	if(position >= this->length) return '\0';
+	return this->input[position];
+}
+
+void Lexer::clear_buffer(){
+	buffer = "";
+}
+
+void Lexer::add_token(TokenType tt){
+	add_token(tt, "");
+}
+
+void Lexer::add_token(TokenType tt, std::string txt){
+	this->tokens.push_back(Token(tt, txt, this->row, this->col));
+}
+
+bool Lexer::map_key_exists(std::map<std::string, TokenType>& the_map, std::string key){
+	return (the_map.find(key) == the_map.end());
+}
+
+void Lexer::lexer_error(std::string mess){
+	std::cout << "Lexer error ["  << std::to_string(row) << ":" << std::to_string(col) << "]: " << mess << std::endl;
+	exit(1);
+}
 #endif

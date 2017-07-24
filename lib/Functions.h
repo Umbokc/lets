@@ -1,65 +1,44 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-static Value* F_ZERO = new NumberValue(0);
+#include "function.h"
+#include "function_container.h"
 
-class Echo : public Function{
+namespace LetsFunctions{
+	std::map<std::string, FunctionContainer*> functions;
+}
+
+class Functions{
 public:
-	Echo(){}
-	Value* execute(std::vector<Value *> args){
-		for(auto a : args){
-			std::cout << a->to_s() << std::endl;
-		}
-		return F_ZERO;
+
+	static bool is_exists(std::string key){
+		return LetsFunctions::functions.find(key) != LetsFunctions::functions.end();
 	}
-	~Echo();
-};
 
-class NewArray : public Function{
-public:
-	NewArray(){}
-	Value* execute(std::vector<Value *> args){
-		return createArray(args, 0);
+	static bool is_constexpr(std::string key){
+		return LetsFunctions::functions[key]->is_constant;
 	}
-	~NewArray();
-private:
-	ArrayValue* createArray(std::vector<Value *> args, int index){
-		
-		int size = (int) args[index]->asNumber();
-		int last = args.size() -1;
-		
-		ArrayValue *array = new ArrayValue(size);
 
-		if(index == last){
-			for (int i = 0; i < size; ++i){
-				array->set(i, F_ZERO);
-			}
-		} else if(index < last) {
-			for (int i = 0; i < size; ++i){
-				array->set(i, createArray(args, index+1));
-			}
-		}
-
-		return array;
+	static Function* get(std::string key){
+		if(!is_exists(key)) throw ParseException("Unknown function \"" + key + "\"");
+		return LetsFunctions::functions[key]->body;
 	}
+
+	static void set(std::string key, Function* function){
+		if(is_exists(key) && is_constexpr(key)) throw ParseException("Cannot rewrite constant function \"" + key + "\"");
+		LetsFunctions::functions[key] = new FunctionContainer(function);
+	}
+	
+	static void set_constexpr(std::string key, Function* function){
+		if(is_exists(key) && is_constexpr(key)) throw ParseException("Cannot rewrite constant function \"" + key + "\"");
+		LetsFunctions::functions[key] =  new FunctionContainer(function, true);
+	}
+
+	static void set_lets_funcs(std::string key, Function* function, bool is_constexpr){
+		LetsFunctions::functions[key] =  new FunctionContainer(function, is_constexpr);
+	}
+
+	~Functions();
 };
-
-std::map<std::string, Function*> thefunctions = {
-	{"echo", new Echo()},
-	{"newArray", new NewArray()},
-};
-
-bool Functions::isExists(std::string key){
-	return thefunctions.find(key) != thefunctions.end();
-}
-
-Function* Functions::get(std::string key){
-	if(!Functions::isExists(key)) throw ParseException("Unknown function \"" + key + "\"");
-	return thefunctions[key];
-}
-
-void Functions::set(std::string key, Function* function){
-	thefunctions[key] = function;
-}
 
 #endif
