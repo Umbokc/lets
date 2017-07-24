@@ -1,2 +1,7 @@
 *.out
-*.lets
+*.exe
+*.o
+
+ucpp
+
+.DS_Store
