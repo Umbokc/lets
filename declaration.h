@@ -3,13 +3,22 @@
 
 class Value;
 
+class Visitor;
+class Node;
 class Expression;
+class Accessible;
+// class AccessExpr;
+class Argument;
+class Arguments;
 class ArrayAccessExpression;
 class ArrayExpression;
+class AssignmentExpression;
 class BinaryExpression;
 class ConditionalExpression;
 class FunctionalExpression;
+class MapExpression;
 class UnaryExpression;
+class ContainerAccessExpression;
 class TernaryExpression;
 class ValueExpression;
 class VariableExpression;
@@ -23,7 +32,7 @@ class ContinueStatement;
 class DoWhileStatement;
 class ForStatement;
 class FunctionDefineStatement;
-class FunctionStatement;
+class ExprStatement;
 class IfStatement;
 class PrintStatement;
 class PrintlnStatement;

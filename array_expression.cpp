@@ -29,16 +29,7 @@ public:
 	}
 
 	std::string to_s(){
-		std::string result = "[ ";
-
-		for (Expression *argument : elements){
-			result += argument->to_s();
-			result +=  ", ";
-		}
-
-		result +=  "\b\b ]";
-
-		return result;
+		return "[ " + func::vector_to_s<Expression *>(elements) + " ]";
 	}
 
 	~ArrayExpression();

@@ -1,0 +1,16 @@
+c = {}
+println c
+
+a = {
+	key : 'value'
+}
+
+if a['key']
+	println true
+else
+	println false
+
+println a['key']
+
+str = 'the new string'
+println str[2]

@@ -1,5 +1,5 @@
-#ifndef ASSIGNMENTSTATEMENT_CPP
-#define ASSIGNMENTSTATEMENT_CPP
+#ifndef ASSIGNMENT_STATEMENT_CPP
+#define ASSIGNMENT_STATEMENT_CPP
 #include <string>
 
 class AssignmentStatement : public Statement{

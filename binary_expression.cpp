@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace BinaryOperator{
+namespace NS_Binary{
 
 	static enum Operator{
 		ADD, // +
@@ -18,7 +18,7 @@ namespace BinaryOperator{
 		XOR, // ^
 		LSHIFT, // <<
 		RSHIFT, // >>
-		URSHIFT, // >>>
+		EQ, // >>
 	} x;
 
 	const static std::string OperatorString[] {
@@ -34,7 +34,7 @@ namespace BinaryOperator{
 		"^",
 		"<<",
 		">>",
-		">>>"
+		"="
 	};
 	
 }
@@ -42,11 +42,11 @@ namespace BinaryOperator{
 class BinaryExpression : public Expression{
 public:
 
-	BinaryOperator::Operator operation;
+	NS_Binary::Operator operation;
 	Expression* expr1;
 	Expression* expr2;
 
-	BinaryExpression(BinaryOperator::Operator operation,
+	BinaryExpression(NS_Binary::Operator operation,
 		Expression* expr1, Expression* expr2): 
 	operation(std::move(operation)), 
 	expr1(std::move(expr1)), expr2(std::move(expr2)){}
@@ -69,7 +69,7 @@ public:
 		return func::string_format(
 			"[%s %s %s]",  
 			expr1->to_s().c_str(),
-			BinaryOperator::OperatorString[operation].c_str(),
+			NS_Binary::OperatorString[operation].c_str(),
 			expr2->to_s().c_str()
 			);
 	}
@@ -82,17 +82,17 @@ private:
 
 	Value * eval(Value *value1, Value *value2){
 		switch (operation) {
-			case BinaryOperator::ADD: return BO_add(value1, value2);
-			case BinaryOperator::SUBTRACT: return BO_subtract(value1, value2);
-			case BinaryOperator::MULTIPLY: return BO_multiply(value1, value2);
-			case BinaryOperator::DIVIDE: return BO_divide(value1, value2);
-			case BinaryOperator::REMAINDER: return BO_remainder(value1, value2);
-			case BinaryOperator::AND: return BO_and(value1, value2);
-			case BinaryOperator::OR: return BO_or(value1, value2);
-			case BinaryOperator::XOR: return BO_xor(value1, value2);
-			case BinaryOperator::LSHIFT: return BO_lshift(value1, value2);
-			case BinaryOperator::RSHIFT: return BO_rshift(value1, value2);
-			// case BinaryOperator::URSHIFT: return BO_urshift(value1, value2);
+			case NS_Binary::ADD: return BO_add(value1, value2);
+			case NS_Binary::SUBTRACT: return BO_subtract(value1, value2);
+			case NS_Binary::MULTIPLY: return BO_multiply(value1, value2);
+			case NS_Binary::DIVIDE: return BO_divide(value1, value2);
+			case NS_Binary::REMAINDER: return BO_remainder(value1, value2);
+			case NS_Binary::AND: return BO_and(value1, value2);
+			case NS_Binary::OR: return BO_or(value1, value2);
+			case NS_Binary::XOR: return BO_xor(value1, value2);
+			case NS_Binary::LSHIFT: return BO_lshift(value1, value2);
+			case NS_Binary::RSHIFT: return BO_rshift(value1, value2);
+			// case NS_Binary::URSHIFT: return BO_urshift(value1, value2);
 			default:
 			operation_is_not_supported();
 		}
@@ -247,7 +247,7 @@ private:
 	void operation_is_not_supported(){
 		throw ParseException(
 			"Operation \""+
-			BinaryOperator::OperatorString[operation]+
+			NS_Binary::OperatorString[operation]+
 			"\" Is Not Supported"
 			);
 	}

@@ -15,6 +15,7 @@ enum TokenType {
 	TT_PRINTLN,
 	TT_IF,
 	TT_ELSE,
+	TT_ELIF,
 	TT_WHILE,
 	TT_FOR,
 	TT_DO,
@@ -24,6 +25,7 @@ enum TokenType {
 	TT_DEF_C,
 	TT_RETURN,
 	TT_USE,
+	TT_END,
 
 	TT_PLUS, // +
 	TT_MINUS, // -
@@ -111,6 +113,7 @@ static const std::string TokenTypeString[] = {
 	"def_c",
 	"return",
 	"use",
+	"end",
 
 	"plus", // +
 	"minus", // -

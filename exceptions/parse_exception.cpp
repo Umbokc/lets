@@ -2,11 +2,17 @@
 #define PARSE_EXCEPTION_CPP
 
 class ParseException {
-public:
+protected:
 	std::string message;
-	ParseException(std::string message){
-		this->message = message;
-	}
+public:
+
+	ParseException(){}
+	
+	ParseException(std::string message):message(std::move(message)){}
+	std::string get_message(){ return message; }
+	
+	~ParseException(){}
+
 };
 
 #endif

@@ -4,34 +4,71 @@
 #include <string>
 
 class UserDefineFunction : public Function {
-	std::vector<std::string> arg_names;
+	Arguments args;
 	Statement *body;
 public:
 
-	UserDefineFunction(std::vector<std::string> arg_names, Statement *body){
-		this->arg_names = arg_names;
-		this->body = body;
-	}
+	UserDefineFunction(Arguments args, Statement *body):
+				args(std::move(args)), body(std::move(body)){}
 
 	int get_args_count(){
-		return arg_names.size();
+		return args.get_size();
 	}
 
-	std::string get_arg_name(int index){
-		if(index < 0 || index >= get_args_count()) return "";
-		return arg_names[index];
-	}
-
-	Value* execute(std::vector<Value *> args){
+	Value* execute(std::vector<Value *> values){
+		int size = values.size();
+		int required = args.get_required();
+		if(size < required) {
+			throw ParseException(
+				func::string_format(
+					"Arguments count mismatch %d < %d", 
+					size, required
+				)
+			);
+		}
+		int total_size = get_args_count();
+		if(size > total_size) {
+			throw ParseException(
+				func::string_format(
+					"Arguments count mismatch %d > %d", 
+					size, required
+				)
+			);
+		}
+		Variables::push();
 		try{
+			for (int i = 0; i < size; ++i){
+				Variables::set(get_arg_name(i), values[i]);
+			}
+			// optional args if exists
+			for(int i = size; i < total_size; ++i){
+				Argument arg = args.get(i);
+				Variables::set(arg.get_name(), arg.get_value_expr()->eval());
+			}
+
 			body->execute();
-			return ZERO; 
+			Variables::pop();
+			return ZERO;
 		} catch(ReturnStatement *rs){
+			Variables::pop();
 			return rs->get_result();
 		}
-
 	}
 
+	std::string get_arg_name(int i){
+		if(i < 0 || i >= args.get_size()) return "";
+		return args.get(i).get_name();
+	}
+
+	std::string to_s(){
+		// if(func::instanceof<ReturnStatement>(body)){
+			return func::string_format(
+				"def %s = %s", 
+				args.to_s().c_str(),
+				body->to_s().c_str()
+			);
+		// }
+	}
 };
 
 #endif

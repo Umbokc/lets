@@ -10,7 +10,7 @@ public:
 	}
 
 	void execute(){
-		cout << expression->eval()->to_s();
+		std::cout << expression->eval()->to_s();
 	}
 
 	void accept(Visitor *visitor){

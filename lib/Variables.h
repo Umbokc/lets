@@ -7,32 +7,32 @@
 #include <map>
 #include "variable_container.h"
 
-using namespace std;
+namespace NS_Variables{
+	#define MAP_VAR std::map<std::string, VariableContainer*>
 
-namespace Variables_vars{
-	static map<string, VariableContainer*> variables = {
+	static MAP_VAR variables = {
 		{"false", new VariableContainer(ZERO, true)},
 		{"true", new VariableContainer(ONE, true)},
 	};
 
-	static stack<map<string, VariableContainer*>> thestack;
+	static std::stack<MAP_VAR> thestack;
 
 }
 
-using namespace Variables_vars;
+using namespace NS_Variables;
 
 class Variables{
 public:
 
 	static void push(){
-		thestack.push(map<string, VariableContainer*>(variables));
+		thestack.push(MAP_VAR(variables));
 	}
 
 	static void pop(){
 		thepop(&variables, thestack, thestack.size());
 	}
 
-	static bool is_exists(string key){
+	static bool is_exists(std::string key){
 		return variables.find(key) != variables.end();
 	}
 
@@ -40,31 +40,31 @@ public:
 		return variables[key]->is_constant;
 	}
 	
-	static Value* get(string key){
-		if(!is_exists(key)) return ZERO;
+	static Value* get(std::string key){
+		if(!is_exists(key)) throw VariableDoesNotExistsException(key);
 		return variables[key]->value;
 	}
 
-	static void set(string key, Value* value){
+	static void set(std::string key, Value* value){
 		if(is_exists(key) && is_constexpr(key)) throw ParseException("Cannot assign value to constant \"" + key + "\"");
 		variables[key] = new VariableContainer(value);
 	}
 
 
-	static void set_constexpr(string key, Value* value){
+	static void set_constexpr(std::string key, Value* value){
 		if(is_exists(key) && is_constexpr(key)) throw ParseException("Cannot assign value to constant \"" + key + "\"");
 		variables[key] = new VariableContainer(value, true);
 	}
 
-	static void set_lets_varss(string key, Value* value, bool is_contstant){
+	static void set_lets_varss(std::string key, Value* value, bool is_contstant){
 		variables[key] = new VariableContainer(value, is_contstant);
 	}
 
 private:
-	static void thepop(map<string, VariableContainer*> *var, stack<map<string, VariableContainer*>> the_stack, int size){
+	static void thepop(MAP_VAR *var, std::stack<MAP_VAR> the_stack, int size){
 
 		int i = 0;
-		map<string, VariableContainer*> temp[size];
+		MAP_VAR temp[size];
 		while (!thestack.empty()){
 			temp[i] = thestack.top();
 			thestack.pop();

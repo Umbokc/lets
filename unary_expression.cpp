@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace UnaryOperator{
+namespace NS_Unary{
 
 	static enum Operator{
     INCREMENT_PREFIX, // ++
@@ -31,40 +31,44 @@ namespace UnaryOperator{
 	
 }
 
-class UnaryExpression : public Expression{
+class UnaryExpression : public Expression, public Statement{
 public:
 
-	UnaryOperator::Operator operation;
+	NS_Unary::Operator operation;
 	Expression *expr;
 
-	UnaryExpression(UnaryOperator::Operator operation,
+	UnaryExpression(NS_Unary::Operator operation,
 		Expression* expr): 
 		operation(std::move(operation)), expr(std::move(expr)){}
+
+	void execute(){
+		eval();
+	}
 
 	Value *eval() {
 		Value *value = expr->eval();
 		switch (operation) {
-			case UnaryOperator::Operator::INCREMENT_PREFIX:
+			case NS_Unary::Operator::INCREMENT_PREFIX:
 				return UO_increment(value);
-			case UnaryOperator::Operator::INCREMENT_POSTFIX:
+			case NS_Unary::Operator::INCREMENT_POSTFIX:
 				// if(auto v1 = dynamic_cast<VariableExpression>(value)){
 					// VariableExpression::set(UO_increment(value));
 					// return value;
 				// }
 				return UO_increment(value);
-			case UnaryOperator::Operator::DECREMENT_PREFIX:
+			case NS_Unary::Operator::DECREMENT_PREFIX:
 				return UO_decrement(value);
-			case UnaryOperator::Operator::DECREMENT_POSTFIX:
+			case NS_Unary::Operator::DECREMENT_POSTFIX:
 				// if(value instanceof VariableExpression){
 					// VariableExpression::set(UO_decrement(value));
 					// return value;
 				// }
 				return UO_decrement(value);
-			case UnaryOperator::Operator::COMPLEMENT:
+			case NS_Unary::Operator::COMPLEMENT:
 				return UO_complement(value);
-			case UnaryOperator::Operator::NEGATE:
+			case NS_Unary::Operator::NEGATE:
 				return UO_negate(value);
-			case UnaryOperator::Operator::NOT:
+			case NS_Unary::Operator::NOT:
 				return UO_not(value);
 			default:
 				throw ParseException("Operation Is Not Supported");
@@ -132,7 +136,7 @@ public:
 	std::string to_s(){
 		return func::string_format(
 			"[%s %s]",  
-			UnaryOperator::OperatorString[operation].c_str(),
+			NS_Unary::OperatorString[operation].c_str(),
 			expr->to_s().c_str()
 		);
 	}

@@ -4,27 +4,27 @@
 class FunctionDefineStatement : public Statement{
 public:
 	std::string name;
-	std::vector<std::string> arg_names;
+	Arguments args;
 	Statement *body;
 	bool is_constexpr;
 
 	FunctionDefineStatement(
 		std::string name,
-		std::vector<std::string> arg_names,
+		Arguments args,
 		Statement *body,
 		bool is_constexpr)
 		:
 		name(std::move(name)),
-		arg_names(std::move(arg_names)),
+		args(std::move(args)),
 		body(std::move(body)),
 		is_constexpr(std::move(is_constexpr))
 	{}
 
 	void execute(){
 		if(is_constexpr)
-			Functions::set_constexpr(name, new UserDefineFunction(arg_names, body));
+			Functions::set_constexpr(name, new UserDefineFunction(args, body));
 		else
-			Functions::set(name, new UserDefineFunction(arg_names, body));
+			Functions::set(name, new UserDefineFunction(args, body));
 	}
 
 	void accept(Visitor *visitor){
@@ -32,17 +32,9 @@ public:
 	}
 
 	std::string to_s(){
-		std::string result = "def " + name + " ( ";
-
-		for (std::string argument : arg_names){
-			result += argument;
-			result +=  ", ";
-		}
-
-		result += "\b\b ) ";
-
+		std::string result = "def " + name;
+		result +=  " ( " + args.to_s() + " ) ";
 		result += body->to_s();
-
 		return result;
 	}
 

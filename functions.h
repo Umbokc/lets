@@ -3,10 +3,10 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #include <sstream>
 #include <cstdarg>  // For va_start, etc.
 #include <algorithm>
-
 
 template <typename T> 
 void dbg (const T& s){
@@ -22,6 +22,34 @@ void dbg (const T& s, bool end){
 	}
 }
 namespace func {
+	
+	// template<typename Base, typename T>
+	// inline bool instanceof(const T *ptr) {
+	// 	return dynamic_cast<const Base*>(ptr) != nullptr;
+	// }
+	
+	template<typename Base, typename T>
+	inline bool instanceof(const T*) {
+		return std::is_base_of<Base, T>::value;
+	}
+	template<typename T>
+	std::string vector_to_s(const std::vector<T> elems, std::string separator) {
+		std::string result = "";
+		int size = elems.size();
+
+		for(int i = 0; i < size; i++){
+			result += elems[i]->to_s();
+			if(i != size-1)
+				result += separator;
+		}
+
+		return result;
+	}
+
+	template<typename T>
+	std::string vector_to_s(const std::vector<T> elems) {
+		return vector_to_s<T>(elems, ", ");
+	}
 
 	std::string string_format(const std::string fmt, ...) {
 			int size = ((int)fmt.size()) * 2 + 50;   // Use a rubric appropriate for your code
@@ -94,11 +122,39 @@ namespace func {
 		std::string s = "";
 		return appendctos(s,a);
 	}
+
 	std::string dtos (double d) {
 		std::ostringstream strs;
 		strs << d;
 		return strs.str();
 	}
+
+	// bool is_float( const std::string& my_string ) {
+	//  bool Checked = true;
+	//  bool was_dot = false;
+	//  int i = 0;
+	//  do {
+	//    if (isdigit(my_string[i]) || my_string[i] == '.') {
+	//      if (my_string[i] == '.') {
+	//        if(was_dot){
+	//          Checked = false;
+	//          break;
+	//        }
+	//        was_dot = true;
+	//        Checked = true;
+	//      }
+
+	//      i++;
+	//    } else {
+	//      //to the next character
+	//      i++;
+	//      Checked = false;
+	//      break;
+	//    }
+	//  } while (my_string[i] != '\0');
+
+	//  return Checked;
+ //  }
 }
 
 #endif

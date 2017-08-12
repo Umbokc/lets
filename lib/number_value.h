@@ -4,23 +4,35 @@
 
 class NumberValue : virtual public Value{
 private:
-	double value;
+	Number *value;
 public:
 
+	NumberValue(int value){
+		this->value = new Number(value);
+	}
+
 	NumberValue(double value){
-		this->value = value;
+		this->value = new Number(value);
+	}
+
+	NumberValue(long long value){
+		this->value = new Number(value);
 	}
 
 	int as_int(){
-		return (int)as_number();
+		return value->as_int();
 	}
 
 	double as_number(){
-		return value;
+		return value->as_double();
+	}
+
+	long long as_long(){
+		return value->as_long();
 	}
 	
 	std::string as_string(){
-		return func::dtos(value);
+		return value->to_s();
 	}
 	
 	std::string to_s(){

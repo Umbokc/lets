@@ -72,20 +72,13 @@ public:
 	double as_number(){
 		throw ParseException("Cannot cast array to number");
 	} 
+
+	long long as_long(){
+		return as_number();
+	} 
 	
 	std::string as_string(){
-
-		std::string result = "[ ";
-
-		for(auto el : elements){
-			result += el->to_s();
-			result += ", ";
-		}
-		if(elements.size() > 1)
-			result += "\b\b";
-		result += " ]";
-		
-		return result;
+		return "[ " + func::vector_to_s<Value *>(elements) + " ]";
 	} 
 	
 	std::string to_s(){

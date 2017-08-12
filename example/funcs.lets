@@ -1,0 +1,17 @@
+def name(c b = 1):
+	println 'c = ' + c
+	println 'b = ' + b
+	def hello(you = 'Joe'):
+		println 'Hello ' + you
+	end
+end
+
+println name('you')
+
+if(false):
+	def name(c b = 1):
+		println 'end'
+	end
+end
+
+name(1).hello('Walter')

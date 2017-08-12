@@ -12,7 +12,7 @@ public:
 	{}
 
 	void execute(){
-		cout << expression->eval()->to_s() << std::endl;
+		std::cout << expression->eval()->to_s() << std::endl;
 	}
 
 	void accept(Visitor *visitor){

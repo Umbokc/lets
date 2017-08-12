@@ -7,7 +7,7 @@
 #include <regex>
 #include <map>
 
-namespace Lexer_vars{
+namespace NS_Lexer{
 	static std::string OPERATORS_CHARS = "+-*/%()[]{}=<>!&|,^~?:";
 
 	static std::map<std::string, TokenType> OPERATORS = {
@@ -76,6 +76,7 @@ namespace Lexer_vars{
 		{"println", TokenType::TT_PRINTLN},
 		{"if", TokenType::TT_IF},
 		{"else", TokenType::TT_ELSE},
+		// {"elif", TokenType::TT_ELIF},
 		{"while", TokenType::TT_WHILE},
 		{"for", TokenType::TT_FOR},
 		{"do", TokenType::TT_DO},
@@ -85,6 +86,7 @@ namespace Lexer_vars{
 		{"def_c", TokenType::TT_DEF_C},
 		{"return", TokenType::TT_RETURN},
 		{"use", TokenType::TT_USE},
+		{"end", TokenType::TT_END},
 		{"include", TokenType::TT_RETURN}
 	};
 }
@@ -125,7 +127,7 @@ private:
 	char next();
 	char peek(int rpos);
 
-	bool map_key_exists(std::map<std::string, TokenType> &the_map, std::string key);
+	// bool map_key_exists(std::map<std::string, TokenType> &the_map, std::string key);
 
 	void clear_buffer();
 	void add_token(TokenType tt);

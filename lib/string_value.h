@@ -20,6 +20,14 @@ public:
 	double as_number(){
 		return atof(&value[0u]);
 	}
+
+	long long as_long(){
+		return std::stol(&value[0u], 0);
+	}
+	
+	std::string get_c(int index){
+		return func::ctos(value[index]);
+	}
 	
 	std::string as_string(){
 		return value;

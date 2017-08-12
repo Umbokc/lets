@@ -30,7 +30,7 @@ public:
 		Parser parser = Parser(tokens);
 		Statement* programm = parser.parse();
 		if(debag){
-			cout << programm->to_s() << endl;
+			std::cout << programm->to_s() << std::endl;
 		}
 		// programm->accept(new FunctionAdder());
 		// programm->accept(new VariablesPrint());
@@ -39,7 +39,7 @@ public:
 		programm->execute();
 
 	} catch (ParseException& pe){
-		std::cout << "Parser error: " << pe.message << std::endl; 
+		std::cout << "Parser error: " << pe.get_message() << std::endl; 
 	}
 	}
 	

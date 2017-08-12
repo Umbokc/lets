@@ -8,13 +8,27 @@ public:
 
 	ValueExpression(){}
 
+	ValueExpression(int value){
+		this->value = new NumberValue(value);
+	}
+
 	ValueExpression(double value){
+		this->value = new NumberValue(value);
+	}
+
+	ValueExpression(long long value){
 		this->value = new NumberValue(value);
 	}
 
 	ValueExpression(std::string value){
 		this->value = new StringValue(value);
 	}
+
+	ValueExpression(Function *value){
+		this->value = new FunctionValue(value);
+	}
+
+	ValueExpression(Value *value):value(std::move(value)){}
 
 	Value *eval(){
 		return value;

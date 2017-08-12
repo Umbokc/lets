@@ -1,14 +1,16 @@
 #ifndef LETS_MODULE_STD_FUNCTIONS_H
 #define LETS_MODULE_STD_FUNCTIONS_H
+#include <limits>
 
-namespace Lets_Modules_Std{
+namespace NSLM_Std_Funcs{
 
 	class Echo : public Function{
 	public:
 		Echo(){}
 		Value* execute(std::vector<Value *> args){
 			for(auto a : args){
-				std::cout << a->to_s() << std::endl;
+				std::cout.precision(a->to_s().length());
+				std::cout << std::fixed << a->to_s() << std::endl;
 			}
 			return ZERO;
 		}

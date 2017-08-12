@@ -12,7 +12,7 @@ std::vector<Token> Lexer::tokenize(){
 		else if( current == '"') tokenize_text_double_quote();
 		else if( current == '\'') tokenize_text_single_quote();
 		else if( current == '#') tokenize_comment();
-		else if (func::find_c(Lexer_vars::OPERATORS_CHARS, current) != -1) 
+		else if (func::find_c(NS_Lexer::OPERATORS_CHARS, current) != -1) 
 			tokenize_operator();
 		else
 			next();
@@ -111,9 +111,8 @@ void Lexer::tokenize_word() {
 		current = next();
 	}
 
-
-	if(!map_key_exists(Lexer_vars::KEYWORDS, this->buffer)){
-		add_token(Lexer_vars::KEYWORDS[this->buffer]);
+	if(NS_Lexer::KEYWORDS.find(this->buffer) != NS_Lexer::KEYWORDS.end()){
+		add_token(NS_Lexer::KEYWORDS[this->buffer]);
 	} else {
 		add_token(TokenType::TT_WORD, this->buffer);
 	}
@@ -196,8 +195,8 @@ void Lexer::tokenize_operator() {
 
 	while (true) {
 		text = this->buffer;
-		if(!text.empty() && map_key_exists(Lexer_vars::OPERATORS, text + current)){
-			add_token(Lexer_vars::OPERATORS[text], text);
+		if(!text.empty() && NS_Lexer::OPERATORS.find(text + current) == NS_Lexer::OPERATORS.end()){
+			add_token(NS_Lexer::OPERATORS[text], text);
 			return;
 		}
 
@@ -260,9 +259,9 @@ void Lexer::add_token(TokenType tt, std::string txt){
 	this->tokens.push_back(Token(tt, txt, this->row, this->col));
 }
 
-bool Lexer::map_key_exists(std::map<std::string, TokenType>& the_map, std::string key){
-	return (the_map.find(key) == the_map.end());
-}
+// bool Lexer::map_key_exists(std::map<std::string, TokenType>& the_map, std::string key){
+// 	return (the_map.find(key) == the_map.end());
+// }
 
 void Lexer::lexer_error(std::string mess){
 	std::cout << "Lexer error ["  << std::to_string(row) << ":" << std::to_string(col) << "]: " << mess << std::endl;

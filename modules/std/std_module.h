@@ -6,8 +6,8 @@
 namespace Lets_Module_Std {
 
 	void run() {
-		Functions::set_lets_funcs("echo", new Lets_Modules_Std::Echo(), true);
-		Functions::set_lets_funcs("newArray", new Lets_Modules_Std::NewArray(), true);
+		// Functions::set_lets_funcs("echo", new NSLM_Std_Funcs::Echo(), true);
+		// Functions::set_lets_funcs("newArray", new NSLM_Std_Funcs::NewArray(), true);
 	}
 
 }
