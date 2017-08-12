@@ -4,5 +4,6 @@ bin/lets
 *.o
 
 ucpp
+dbg
 
 .DS_Store
