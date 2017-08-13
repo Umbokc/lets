@@ -25,22 +25,22 @@ public:
 	}
 	
 	void parser(bool debag){
-	try {
+		try {
 
-		Parser parser = Parser(tokens);
-		Statement* programm = parser.parse();
-		if(debag){
-			std::cout << programm->to_s() << std::endl;
+			Parser parser = Parser(tokens);
+			Statement* programm = parser.parse();
+			if(debag){
+				std::cout << programm->to_s() << std::endl;
+			}
+			// programm->accept(new FunctionAdder());
+			// programm->accept(new VariablesPrint());
+			// programm->accept(new AssignValidator());
+
+			programm->execute();
+
+		} catch (ParseException& pe){
+			std::cout << "Parser error: " << pe.get_message() << std::endl; 
 		}
-		// programm->accept(new FunctionAdder());
-		// programm->accept(new VariablesPrint());
-		// programm->accept(new AssignValidator());
-
-		programm->execute();
-
-	} catch (ParseException& pe){
-		std::cout << "Parser error: " << pe.get_message() << std::endl; 
-	}
 	}
 	
 	~Lets(){}

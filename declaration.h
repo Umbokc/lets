@@ -35,7 +35,7 @@ class FunctionDefineStatement;
 class ExprStatement;
 class IfStatement;
 class PrintStatement;
-class PrintlnStatement;
+class PutStatement;
 class ReturnStatement;
 class UseStatement;
 class WhileStatement;

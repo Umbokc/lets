@@ -73,7 +73,7 @@ namespace NS_Lexer{
 
 	static std::map<std::string, TokenType> KEYWORDS = {
 		{"print", TokenType::TT_PRINT},
-		{"println", TokenType::TT_PRINTLN},
+		{"put", TokenType::TT_PUT},
 		{"if", TokenType::TT_IF},
 		{"else", TokenType::TT_ELSE},
 		// {"elif", TokenType::TT_ELIF},

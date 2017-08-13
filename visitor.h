@@ -29,7 +29,7 @@ public:
 	virtual void visit(ExprStatement *s) = 0;
 	virtual void visit(IfStatement *s) = 0;
 	virtual void visit(PrintStatement *s) = 0;
-	virtual void visit(PrintlnStatement *s) = 0;
+	virtual void visit(PutStatement *s) = 0;
 	virtual void visit(ReturnStatement *s) = 0;
 	virtual void visit(UseStatement *s) = 0;
 	virtual void visit(WhileStatement *s) = 0;

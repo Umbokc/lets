@@ -31,7 +31,7 @@ Statement* Parser::statement_or_block(int type){
 
 Statement* Parser::statement(){
 	if(match(TokenType::TT_PRINT)) 		return new PrintStatement(expression());
-	if(match(TokenType::TT_PRINTLN)) 	return new PrintlnStatement(expression());
+	if(match(TokenType::TT_PUT)) 			return new PutStatement(expression());
 	if(match(TokenType::TT_IF)) 			return if_else();
 	if(match(TokenType::TT_DO)) 			return do_while_statement();
 	if(match(TokenType::TT_WHILE)) 		return while_statement();
@@ -50,26 +50,13 @@ Statement* Parser::statement(){
 }
 
 Statement* Parser::assignment_statement(){
-	// WORD EQ
-	// if(look_match(0, TokenType::TT_WORD) && look_match(1, TokenType::TT_EQ)){
-	// 	std::string var = consume(TokenType::TT_WORD).get_text();
-	// 	consume(TokenType::TT_EQ);
-	// 	return new AssignmentStatement(var, expression());
-	// }
-	
-	// if(look_match(0,TokenType::TT_WORD) && look_match(1, TokenType::TT_LBRACKET)){
-		// ArrayAccessExpression* array = element();
-		// consume(TokenType::TT_EQ);
-		// return new ArrayAssignmentStatement(array, expression());
-	// }
-
 	Expression *expr = expression();
 
 	if(dynamic_cast<Statement*>(expr)){
 		return dynamic_cast<Statement*>(expr);
 	}
 
-	error_pars("Unknown statement " + get(0).get_text(), get(0));
+	error_pars("Unknown statement " + get(-1).get_text(), get(-1));
 	return NULL;
 }
 
@@ -243,12 +230,7 @@ Expression* Parser::assignment_strict(){
 	int position = this->pos;
 	Expression* target_expr = qualified_name();
 	
-	// if(AccessExpr* v = dynamic_cast<Accessible*>(target_expr))
-		// dbg("lol");
-	// if((target_expr == NULL) || !(func::instanceof<Accessible>(target_expr))){
 	if((target_expr == NULL) || !(dynamic_cast<Accessible*>(target_expr))){
-	// if(!(target_expr != NULL)){
-		// dbg(typeid(target_expr).name());
 		this->pos = position;
 		return NULL;
 	}
@@ -414,24 +396,16 @@ Expression* Parser::additive(){
 
 	while (true) {
 		if (match(TokenType::TT_PLUS)) {
-			result = new BinaryExpression(NS_Binary::Operator::ADD, result, multiplicative());
-			continue;
+				result = new BinaryExpression(NS_Binary::Operator::ADD, result, multiplicative());
+				continue;
 		}
 		if (match(TokenType::TT_MINUS)) {
 			result = new BinaryExpression(NS_Binary::Operator::SUBTRACT, result, multiplicative());
 			continue;
 		}
-		// if (match(TokenType::TT_COLONCOLON)) {
-		// 	result = new BinaryExpression(NS_Binary::Operator::PUSH, result, multiplicative());
-		// 	continue;
-		// }
-		// if (match(TokenType::TT_AT)) {
-		// 	result = new BinaryExpression(NS_Binary::Operator::AT, result, multiplicative());
-		// 	continue;
-		// }
 		break;
 	}
-
+	
 	return result;
 }
 

@@ -12,7 +12,7 @@ enum TokenType {
 
 	// keyword
 	TT_PRINT,
-	TT_PRINTLN,
+	TT_PUT,
 	TT_IF,
 	TT_ELSE,
 	TT_ELIF,
@@ -101,7 +101,7 @@ static const std::string TokenTypeString[] = {
 
 	// keyword
 	"print",
-	"println",
+	"put",
 	"if",
 	"else",
 	"while",

@@ -10,7 +10,7 @@ public:
 	}
 
 	void execute(){
-		std::cout << expression->eval()->to_s();
+		std::cout << expression->eval()->to_s() << std::endl;
 	}
 
 	void accept(Visitor *visitor){
@@ -18,7 +18,7 @@ public:
 	}
 
 	std::string to_s(){
-		return "print " + expression->to_s();
+		return "print " + expression->to_s() + "\n";
 	}
 
 	~PrintStatement(){

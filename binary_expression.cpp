@@ -11,7 +11,6 @@ namespace NS_Binary{
 		MULTIPLY, // *
 		DIVIDE, // /
 		REMAINDER, // %
-		// PUSH, // ::
 		// Bitwise
 		AND, // &
 		OR, // |
@@ -27,7 +26,6 @@ namespace NS_Binary{
 		"*",
 		"/",
 		"%",
-		// "::",
 		// Bitwise
 		"&",
 		"|",
@@ -80,7 +78,7 @@ public:
 	}
 private:
 
-	Value * eval(Value *value1, Value *value2){
+	Value *eval(Value *value1, Value *value2){
 		switch (operation) {
 			case NS_Binary::ADD: return BO_add(value1, value2);
 			case NS_Binary::SUBTRACT: return BO_subtract(value1, value2);
@@ -92,7 +90,6 @@ private:
 			case NS_Binary::XOR: return BO_xor(value1, value2);
 			case NS_Binary::LSHIFT: return BO_lshift(value1, value2);
 			case NS_Binary::RSHIFT: return BO_rshift(value1, value2);
-			// case NS_Binary::URSHIFT: return BO_urshift(value1, value2);
 			default:
 			operation_is_not_supported();
 		}
@@ -100,16 +97,21 @@ private:
 		return ZERO;
 	}
 
-	Value* BO_add(Value *value1, Value *value2) {
+	Value *BO_add(Value *value1, Value *value2) {
 		
 		switch (value1->type()) {
 			case Types::T_NUMBER: 
-			return BO_add(dynamic_cast<NumberValue *>(value1), value2);
+				return BO_add(dynamic_cast<NumberValue *>(value1), value2);
 			case Types::T_ARRAY:
-				return ArrayValue::add(
-					dynamic_cast<ArrayValue *>(value1),
-					value2
-				);
+				if(value2->type() == Types::T_ARRAY){
+					return ArrayValue::merge(
+						dynamic_cast<ArrayValue *>(value1),
+						dynamic_cast<ArrayValue *>(value2)
+					);
+				} else if(value2->type() == Types::T_STRING){
+					return new StringValue(value1->as_string() + value2->as_string());
+				}
+				throw ParseException("Cannot merge non array value to array");
 			case Types::T_STRING:
 			default:
 				return new StringValue(value1->as_string() + value2->as_string());
@@ -118,7 +120,7 @@ private:
 		return ZERO;
 	}
 
-	Value* BO_add(NumberValue *value1, Value *value2) {
+	Value *BO_add(NumberValue *value1, Value *value2) {
 		switch (value2->type()) {
 			case Types::T_STRING:{
 				return new StringValue(
@@ -132,11 +134,11 @@ private:
 		return ZERO;
 	}
 
-	Value* BO_subtract(Value *value1, Value *value2) {
+	Value *BO_subtract(Value *value1, Value *value2) {
 		return new NumberValue(value1->as_number() - value2->as_number());
 	}
 
-	Value* BO_multiply(Value *value1, Value *value2) {
+	Value *BO_multiply(Value *value1, Value *value2) {
 
 		switch (value1->type()) {
 			case Types::T_NUMBER:{
@@ -173,7 +175,7 @@ private:
 		return ZERO;
 	}
 
-	Value* BO_divide(Value *value1, Value *value2) {
+	Value *BO_divide(Value *value1, Value *value2) {
 		// if(value2->as_number() == 0)
 			// throw ParseException("Division by zero is undefined");
 		// else
@@ -182,39 +184,29 @@ private:
 		return ZERO;
 	}
 
-	Value* BO_remainder(Value *value1, Value *value2) {
+	Value *BO_remainder(Value *value1, Value *value2) {
 		return new NumberValue(value1->as_int() % value2->as_int());
 	}
 
-	Value* BO_and(Value *value1, Value *value2) {
+	Value *BO_and(Value *value1, Value *value2) {
 		return new NumberValue(value1->as_int() & value2->as_int());
 	}
 
-	Value* BO_or(Value *value1, Value *value2) {
+	Value *BO_or(Value *value1, Value *value2) {
 		return new NumberValue(value1->as_int() | value2->as_int());
 	}
 
-	Value* BO_xor(Value *value1, Value *value2) {
+	Value *BO_xor(Value *value1, Value *value2) {
 		return new NumberValue(value1->as_int() ^ value2->as_int());
 	}
 
-	Value* BO_lshift(Value *value1, Value *value2) {
+	Value *BO_lshift(Value *value1, Value *value2) {
 		switch (value1->type()) {
 			case Types::T_NUMBER: 
 			return new NumberValue(value1->as_int() << value2->as_int());
 			case Types::T_ARRAY:
-				if(value2->type() == Types::T_ARRAY){
-					return ArrayValue::merge(
-						dynamic_cast<ArrayValue *>(value1),
-						dynamic_cast<ArrayValue *>(value2)
-					);
-				} else {
-					return ArrayValue::add(
-						dynamic_cast<ArrayValue *>(value1),
-						value2
-					);
-					// throw ParseException("Cannot merge non array value to array");
-				}
+				dynamic_cast<ArrayValue *>(value1)->add(value2);
+				return value1;
 			default:
 				operation_is_not_supported();
 		}
@@ -222,23 +214,23 @@ private:
 		return ZERO;
 	}
 
-	Value* BO_rshift(Value *value1, Value *value2) {
-		if(value1->type() == Types::T_ARRAY ){
-				if(value2->type() == Types::T_ARRAY){
-					return ArrayValue::merge(
-						dynamic_cast<ArrayValue *>(value2),
-						dynamic_cast<ArrayValue *>(value1)
-					);
-				} else {
-					throw ParseException("Cannot add element to non array value");
-				}
-		}
+	Value *BO_rshift(Value *value1, Value *value2) {
+		// if(value1->type() == Types::T_ARRAY ){
+		// 	dynamic_cast<ArrayValue *>(value1)->add_forward(value2);
+		// 		if(value2->type() == Types::T_ARRAY){
+		// 			dynamic_cast<ArrayValue *>(value1)->add_forward(value2);
+		// 			return ArrayValue::merge(
+		// 				dynamic_cast<ArrayValue *>(value2),
+		// 				dynamic_cast<ArrayValue *>(value1)
+		// 			);
+		// 		} else {
+		// 			throw ParseException("Cannot add element to non array value");
+		// 		}
+		// }
 
 		if(value2->type() == Types::T_ARRAY){
-			return ArrayValue::add_forward(
-				dynamic_cast<ArrayValue *>(value2),
-				value1
-			);
+			dynamic_cast<ArrayValue *>(value2)->add_forward(value1);
+			return value2;
 		}
 
 		return new NumberValue(value1->as_int() >> value2->as_int());

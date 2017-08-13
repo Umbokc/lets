@@ -48,6 +48,14 @@ public:
 		return new ArrayValue(result);
 	}
 
+	void add(Value *val){
+		elements.push_back(val);
+	}
+
+	void add_forward(Value *val){
+		elements.insert(elements.begin(), val);
+	}
+
 	Value *get(int index){
 		
 		if(index < elements.size())
@@ -63,7 +71,6 @@ public:
 	void set(int index, Value *value){
 		elements[index] = value;
 	}
-
 
 	int as_int(){
 		return as_number();

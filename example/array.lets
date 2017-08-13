@@ -1,0 +1,10 @@
+a1 = [1, 2, 3]
+a2 = [4, --0, 6]
+
+a = '12' >> (a2 >> a1)
+
+print a1
+print a1
+print a2
+print a
+print a << a[2]

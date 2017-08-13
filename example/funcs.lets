@@ -1,17 +1,71 @@
-def name(c b = 1):
-	println 'c = ' + c
-	println 'b = ' + b
+def name(c, b = 1):
+	print 'c = ' + c
+	print 'b = ' + b
 	def hello(you = 'Joe'):
-		println 'Hello ' + you
+		print 'Hello ' + you
 	end
 end
 
-println name('you')
+print name('you')
 
-if(false):
-	def name(c b = 1):
-		println 'end'
+if(false)
+	def name(c, b = 1):
+		print 'end'
 	end
-end
 
 name(1).hello('Walter')
+
+# sort
+def insertion_sort(a, n):
+	
+	for i = 1, i < n, i = i + 1 :
+		x = a[i]
+		j = i - 1
+		
+		while x < a[j] :
+			a[j + 1] = a[j]
+			j = j - 1
+		end
+
+		a[j+1] = x
+	end
+
+	return a
+end
+
+def bubble_sort(a n) :
+	for i = 0, i < n-1, i = i + 1 :
+		changed = false
+		for j = 0, j < n-i-1, j = j + 1 :
+			if(a[j] > a[j + 1]) :
+				b = a[j]
+				a[j] = a[j+1]
+				a[j+1] = b
+				changed = true
+			end
+		end
+		if(!changed) break
+	end
+	return a
+end
+
+def selection_sort(a n):
+	for(i = 0, i < n, i = i + 1):
+		k = i
+		x = a[i]
+		for(j = i + 1, j < n, j = j + 1):
+			if a[j] < x :
+				k = j
+				x = a[j]
+			end
+		end
+		a[k] = a[i]
+		a[i] = x
+	end
+	return a
+end
+
+a = [2 5 2 7 3 5 4 6]
+print insertion_sort(a 8)
+print bubble_sort(a 8)
+print selection_sort(a 8)
