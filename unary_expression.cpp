@@ -18,10 +18,10 @@ namespace NS_Unary{
 	} x;
 
 	const static std::string OperatorString[] {
-    "++",
-    "--",
-    "++",
-    "--",
+    "++(prefix)",
+    "--(prefix)",
+    "(postfix)++",
+    "(postfix)--",
     "-",
     // Boolean
     "!",
@@ -39,7 +39,9 @@ public:
 
 	UnaryExpression(NS_Unary::Operator operation,
 		Expression* expr): 
-		operation(std::move(operation)), expr(std::move(expr)){}
+		operation(std::move(operation)), expr(std::move(expr)){
+			// dbg(NS_Unary::OperatorString[operation] + " : " + expr->to_s());
+		}
 
 	void execute(){
 		eval();
@@ -49,33 +51,39 @@ public:
 		Value *value = expr->eval();
 		switch (operation) {
 			case NS_Unary::Operator::INCREMENT_PREFIX:
-				return UO_increment(value);
+				if(dynamic_cast<Accessible*>(expr)){
+					return dynamic_cast<Accessible*>(expr)->set(UE_increment(value));
+				}
+				return UE_increment(value);
 			case NS_Unary::Operator::INCREMENT_POSTFIX:
-				// if(auto v1 = dynamic_cast<VariableExpression>(value)){
-					// VariableExpression::set(UO_increment(value));
-					// return value;
-				// }
-				return UO_increment(value);
+				if(dynamic_cast<Accessible*>(expr)){
+					dynamic_cast<Accessible*>(expr)->set(UE_increment(value));
+					return value;
+				}
+				return UE_increment(value);
 			case NS_Unary::Operator::DECREMENT_PREFIX:
-				return UO_decrement(value);
+				if(dynamic_cast<Accessible*>(expr)){
+					return dynamic_cast<Accessible*>(expr)->set(UE_decrement(value));
+				}
+				return UE_decrement(value);
 			case NS_Unary::Operator::DECREMENT_POSTFIX:
-				// if(value instanceof VariableExpression){
-					// VariableExpression::set(UO_decrement(value));
-					// return value;
-				// }
-				return UO_decrement(value);
+				if(dynamic_cast<Accessible*>(expr)){
+					dynamic_cast<Accessible*>(expr)->set(UE_decrement(value));
+					return value;
+				}
+				return UE_decrement(value);
 			case NS_Unary::Operator::COMPLEMENT:
-				return UO_complement(value);
+				return UE_complement(value);
 			case NS_Unary::Operator::NEGATE:
-				return UO_negate(value);
+				return UE_negate(value);
 			case NS_Unary::Operator::NOT:
-				return UO_not(value);
+				return UE_not(value);
 			default:
 				throw ParseException("Operation Is Not Supported");
 		}
 	}
 	
-	Value *UO_increment(Value *value){
+	Value *UE_increment(Value *value){
 		if(value->type() == Types::T_STRING) {
 			std::string newval = value->as_string();
 			if(newval == "") return ONE;
@@ -86,7 +94,7 @@ public:
 		return new NumberValue(value->as_number() + 1);
 	}
 	
-	Value *UO_decrement(Value *value){
+	Value *UE_decrement(Value *value){
 		if(value->type() == Types::T_STRING) {
 			std::string newval = value->as_string();
 			if(newval == "") return NEGATE_ONE;
@@ -96,11 +104,11 @@ public:
 		return new NumberValue(value->as_number() - 1);
 	}
 	
-	Value *UO_complement(Value *value){
+	Value *UE_complement(Value *value){
 		return new NumberValue(~(int)value->as_number());
 	}
 
-	Value *UO_negate(Value *value){
+	Value *UE_negate(Value *value){
 		if(value->type() == Types::T_NUMBER){
 		
 			return new NumberValue(-value->as_number());
@@ -120,7 +128,7 @@ public:
 		return ZERO;
 	}
 	
-	Value *UO_not(Value *value){
+	Value *UE_not(Value *value){
 		if(value->type() == Types::T_NUMBER){
 			return new NumberValue(value->as_number() == 0);
 		} else if(value->type() == Types::T_STRING){

@@ -17,8 +17,8 @@ public:
 		throw ParseException("Cannot cast function to number");
 	}
 
-	long long as_long(){
-		return (long long)as_number();
+	long as_long(){
+		return (long)as_number();
 	}
 	
 	Function* get_value(){

@@ -77,8 +77,8 @@ private:
 	Expression* additive();
 	Expression* multiplicative();
 	Expression* unary();
-	Expression* primary();
-	Expression* variable();
+	Expression* primary(bool);
+	Expression* variable(bool);
 	Expression* qualified_name();
 	std::vector<Expression*> variable_suffix();
 	Expression* value();

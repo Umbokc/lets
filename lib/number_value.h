@@ -4,35 +4,35 @@
 
 class NumberValue : virtual public Value{
 private:
-	Number *value;
+	Number value;
 public:
 
 	NumberValue(int value){
-		this->value = new Number(value);
+		this->value = value;
 	}
 
 	NumberValue(double value){
-		this->value = new Number(value);
+		this->value = value;
 	}
 
-	NumberValue(long long value){
-		this->value = new Number(value);
+	NumberValue(long value){
+		this->value = value;
 	}
 
 	int as_int(){
-		return value->as_int();
+		return value.as_int();
 	}
 
 	double as_number(){
-		return value->as_double();
+		return value.as_double();
 	}
 
-	long long as_long(){
-		return value->as_long();
+	long as_long(){
+		return value.as_long();
 	}
 	
 	std::string as_string(){
-		return value->to_s();
+		return value.as_string();
 	}
 	
 	std::string to_s(){

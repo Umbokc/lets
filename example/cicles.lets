@@ -1,0 +1,11 @@
+print "\nFor iterations"
+for i = 0, i < 10, ++i :
+	print i + ' / 10'
+end
+
+print "\nWhile"
+i = 0
+while i < 10:
+	print i + '/10'
+	++i
+end

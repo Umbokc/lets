@@ -80,7 +80,7 @@ public:
 		throw ParseException("Cannot cast array to number");
 	} 
 
-	long long as_long(){
+	long as_long(){
 		return as_number();
 	} 
 	

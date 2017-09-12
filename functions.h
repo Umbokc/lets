@@ -123,9 +123,10 @@ namespace func {
 		return appendctos(s,a);
 	}
 
-	std::string dtos (double d) {
+	template<class T>
+	std::string number_to_s (T num) {
 		std::ostringstream strs;
-		strs << d;
+		strs << num;
 		return strs.str();
 	}
 

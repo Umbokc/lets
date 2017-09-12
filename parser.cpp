@@ -125,7 +125,7 @@ Arguments Parser::arguments(){
 		std::string name = consume(TokenType::TT_WORD).get_text();
 		if(match(TokenType::TT_EQ)){
 			start_optional_args = true;
-			arguments.add_optional(name, variable());
+			arguments.add_optional(name, variable(false));
 		} else if (!start_optional_args){
 			arguments.add_required(name);
 		} else {
@@ -436,29 +436,35 @@ Expression* Parser::multiplicative(){
 }
 
 Expression* Parser::unary(){
+	
 	if (match(TokenType::TT_PLUSPLUS)) {
-		return new UnaryExpression(NS_Unary::Operator::INCREMENT_PREFIX, primary());
+		return new UnaryExpression(
+			NS_Unary::Operator::INCREMENT_PREFIX, primary(true)
+		);
 	}
 	if (match(TokenType::TT_MINUSMINUS)) {
-		return new UnaryExpression(NS_Unary::Operator::DECREMENT_PREFIX, primary());
+		return new UnaryExpression(
+			NS_Unary::Operator::DECREMENT_PREFIX, primary(true)
+		);
 	}
+
 	if(match(TokenType::TT_MINUS)) {
-		return new UnaryExpression(NS_Unary::Operator::NEGATE, primary());
+		return new UnaryExpression(NS_Unary::Operator::NEGATE, primary(false));
 	}
 	if (match(TokenType::TT_EXCL)) {
-		return new UnaryExpression(NS_Unary::Operator::NOT, primary());
+		return new UnaryExpression(NS_Unary::Operator::NOT, primary(false));
 	}
 	if (match(TokenType::TT_TILDE)) {
-		return new UnaryExpression(NS_Unary::Operator::COMPLEMENT, primary());
+		return new UnaryExpression(NS_Unary::Operator::COMPLEMENT, primary(false));
 	}
 	if(match(TokenType::TT_PLUS)){
-		return primary();
+		return primary(false);
 	}
 
-	return primary();
+	return primary(false);
 }
 
-Expression* Parser::primary() {
+Expression* Parser::primary(bool incr = false) {
 
 	if(match(TokenType::TT_LPAREN)){
 		Expression* result = expression();
@@ -472,10 +478,10 @@ Expression* Parser::primary() {
 		return new ValueExpression(new UserDefineFunction(args, statement));
 	}
 
-	return variable();
+	return variable(incr);
 }
 
-Expression* Parser::variable() {
+Expression* Parser::variable(bool incr = false) {
 
 	if(look_match(0,TokenType::TT_WORD) && look_match(1, TokenType::TT_LPAREN)){
 		return function_chain(new ValueExpression(consume(TokenType::TT_WORD).get_text()));
@@ -487,16 +493,18 @@ Expression* Parser::variable() {
 		if(look_match(0, TokenType::TT_LPAREN)){
 			return function_chain(qualified_name_expr);
 		}
-		// postfix increment/decrement
-		if(match(TokenType::TT_PLUSPLUS)){
-			return new UnaryExpression(
-				NS_Unary::Operator::INCREMENT_POSTFIX, qualified_name_expr
-			);
-		}
-		if(match(TokenType::TT_MINUSMINUS)){
-			return new UnaryExpression(
-				NS_Unary::Operator::DECREMENT_POSTFIX, qualified_name_expr
-			);
+		if(!incr){
+			// postfix increment/decrement
+			if(match(TokenType::TT_PLUSPLUS)){
+				return new UnaryExpression(
+					NS_Unary::Operator::INCREMENT_POSTFIX, qualified_name_expr
+				);
+			}
+			if(match(TokenType::TT_MINUSMINUS)){
+				return new UnaryExpression(
+					NS_Unary::Operator::DECREMENT_POSTFIX, qualified_name_expr
+				);
+			}
 		}
 		return qualified_name_expr;
 	}
@@ -559,7 +567,7 @@ Expression* Parser::value() {
 				return new ValueExpression(num);
 			} catch (std::exception& e){
 				try{
-					long long num = std::atol(&the_num[0u]);
+					long num = std::atol(&the_num[0u]);
 					return new ValueExpression(num);
 				} catch (std::exception& e){
 					error_pars("Very big number", current);

@@ -16,7 +16,7 @@ public:
 		this->value = new NumberValue(value);
 	}
 
-	ValueExpression(long long value){
+	ValueExpression(long value){
 		this->value = new NumberValue(value);
 	}
 

@@ -21,7 +21,7 @@ public:
 		return atof(&value[0u]);
 	}
 
-	long long as_long(){
+	long as_long(){
 		return std::stol(&value[0u], 0);
 	}
 	

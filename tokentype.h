@@ -93,7 +93,7 @@ enum TokenType {
 
 static const std::string TokenTypeString[] = {
 	"number",
-	"hex_number",
+	"hex number",
 	"octal number",
 	"binary number",
 	"word",
@@ -104,6 +104,7 @@ static const std::string TokenTypeString[] = {
 	"put",
 	"if",
 	"else",
+	"elif",
 	"while",
 	"for",
 	"do",

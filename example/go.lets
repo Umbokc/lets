@@ -1,9 +1,27 @@
 # use 'std'
 # use 'math'
-a = (((((2 + (2 * 2) / 1 ) - 5 ) * 6) + 4))
+a = 1
+print a++
+print 'clean: ' + a
+print ++a
+print 'clean: ' + a
+print "\n"
+print a--
+print 'clean: ' + a
+print --a
+print 'clean: ' + a
 
-# b = 1 
-print a
+print 'clean: ' + a
+
+for i = 0, i < 10, ++i :
+	print i + ' / 10'
+end
+
+print "\n"
+
+b = (~(-12))
+
+print b
 
 # a = 1415912
 # println '2' + 2
