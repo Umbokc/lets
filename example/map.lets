@@ -1,15 +1,22 @@
 b = {
-	key : [
+	1 : 'lol'
+	'key' : [
 		'the best lang', 2
 	],
-	key2 : {
-		key: 1,
-		key2: 0
+	'key2' : {
+		'key': 1,
+		'key2': 0
 	},
 }
 
 b['key'][1] = 1
+b[5] = 10
+b['s'] = 11
 
-println b['key'][0]
-println b['key']
-println b['key2']
+print b 						# { 1 : lol, 5 : 10, key : [ the best lang, 1 ], key2 : { key : 1, key2 : 0 }, s : 11 }
+print b['key'][0] 	# the best lang
+print b['key'] 			# [ the best lang, 1 ]
+print b['key2'] 		# { key : 1, key2 : 0 }
+
+
+
