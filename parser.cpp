@@ -93,7 +93,21 @@ Statement* Parser::do_while_statement(){
 
 Statement* Parser::for_statement(){
 
-	match(TokenType::TT_LPAREN); // не обязательные скобки
+	int foreach_index = look_match(0, TokenType::TT_LPAREN) ? 1 : 0; // не обязательные скобки
+
+	if(look_match(foreach_index, TokenType::TT_WORD)
+		&& look_match(foreach_index+1, TokenType::TT_IN)){
+		return foreach_arr_statement(false);
+	}
+
+	if(look_match(foreach_index, TokenType::TT_WORD)
+		&& look_match(foreach_index+1, TokenType::TT_COMMA)
+		&& look_match(foreach_index+2, TokenType::TT_WORD)
+		&& look_match(foreach_index+3, TokenType::TT_IN)){
+		return foreach_arr_statement(true);
+	}
+
+	bool open_parent = match(TokenType::TT_LPAREN); // не обязательные скобки
 
 	Statement* initialization = assignment_statement();
 	consume(TokenType::TT_COMMA);
@@ -101,11 +115,36 @@ Statement* Parser::for_statement(){
 	consume(TokenType::TT_COMMA);
 	Statement* incement = assignment_statement();
 
-	match(TokenType::TT_RPAREN); // не обязательные скобки
+	if(open_parent) consume(TokenType::TT_RPAREN); 
 
 	Statement* statement = statement_or_block(1);
 
 	return new ForStatement(initialization, termintion, incement, statement);
+}
+
+ForeachStatement* Parser::foreach_arr_statement(bool two_vars = false){
+
+	bool open_parent = match(TokenType::TT_LPAREN); // не обязательные скобки
+
+	std::string key = "";
+	std::string val = "";
+
+	if(two_vars){
+		key = consume(TokenType::TT_WORD).get_text();
+		consume(TokenType::TT_COMMA);
+		val = consume(TokenType::TT_WORD).get_text();
+	} else {
+		val = consume(TokenType::TT_WORD).get_text();
+	}
+
+	consume(TokenType::TT_IN);
+	Expression* container = expression();
+
+	if(open_parent) consume(TokenType::TT_RPAREN); 
+
+	Statement* body = statement_or_block(1);
+
+	return new ForeachStatement(key, val, container, body);
 }
 
 FunctionDefineStatement* Parser::function_define(bool is_constexpr){
@@ -195,13 +234,13 @@ Expression* Parser::array(){
 Expression* Parser::map_vals(){
 	// {key1: value1, key2: value2, ...}
 	consume(TokenType::TT_LBRACE);
-	std::map<std::string, Expression* > elements;
+	std::map<Expression*, Expression*> elements;
 	while(!match(TokenType::TT_RBRACE)){
-		Token curr = consume(TokenType::TT_WORD);
-		std::string key = curr.get_text();
 		
+		Expression* key = expression();
+
 		if(elements.find(key) != elements.end())
-			error_pars("Key '" +key+ "' already exists", curr);
+			error_pars("Key '" + key->to_s() + "' already exists", get(0));
 		
 		consume(TokenType::TT_COLON);
 		Expression* val = expression();
@@ -219,10 +258,11 @@ Expression* Parser::expression(){
 
 Expression* Parser::assignment(){
 	Expression* assignment = assignment_strict();
+
 	if(assignment != NULL){
 		return assignment;
 	}
-	
+
 	return ternary();
 }
 
@@ -239,9 +279,18 @@ Expression* Parser::assignment_strict(){
 		this->pos = position;
 		return NULL;
 	}
+	
 	match(current_type);
+
 	NS_Binary::Operator op = NS_Parser::ASSIGN_OPERATORS[current_type];
-	Expression* expr = expression();
+	
+	Expression* expr;
+
+	if(match(TokenType::TT_INPUT)){
+		expr = dynamic_cast<Expression*>(new InputExpression());
+	} else {
+		expr = expression();
+	}
 
 	return new AssignmentExpression(op, dynamic_cast<Accessible*>(target_expr), expr);
 }
@@ -370,6 +419,7 @@ Expression* Parser::shift() {
 
 	while (true) {
 		if (match(TokenType::TT_LTLT)) {
+			// expression = new BinaryExpression(NS_Binary::Operator::LSHIFT, expression, additive());
 			expression = new BinaryExpression(NS_Binary::Operator::LSHIFT, expression, additive());
 			continue;
 		}
@@ -377,14 +427,6 @@ Expression* Parser::shift() {
 			expression = new BinaryExpression(NS_Binary::Operator::RSHIFT, expression, additive());
 			continue;
 		}
-		// if (match(TokenType::TT_GTGTGT)) {
-		// 	expression = new BinaryExpression(NS_Binary::Operator::URSHIFT, expression, additive());
-		// 	continue;
-		// }
-		// if (match(TokenType::TT_DOTDOT)) {
-		// 	expression = new BinaryExpression(NS_Binary::Operator::RANGE, expression, additive());
-		// 	continue;
-		// }
 		break;
 	}
 

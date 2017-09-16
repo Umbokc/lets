@@ -17,6 +17,7 @@ public:
 	virtual void visit(UnaryExpression *s) = 0;
 	virtual void visit(ValueExpression *s) = 0;
 	virtual void visit(VariableExpression *s) = 0;
+	virtual void visit(InputExpression *s) = 0;
 	
 	virtual void visit(ArrayAssignmentStatement *s) = 0;
 	virtual void visit(AssignmentStatement *s) = 0;
@@ -25,6 +26,7 @@ public:
 	virtual void visit(ContinueStatement *s) = 0;
 	virtual void visit(DoWhileStatement *s) = 0;
 	virtual void visit(ForStatement *s) = 0;
+	virtual void visit(ForeachStatement *s) = 0;
 	virtual void visit(FunctionDefineStatement *s) = 0;
 	virtual void visit(ExprStatement *s) = 0;
 	virtual void visit(IfStatement *s) = 0;

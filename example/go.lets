@@ -1,33 +1,17 @@
-# use 'std'
-# use 'math'
 a = 1
-print a++
-print 'clean: ' + a
-print ++a
-print 'clean: ' + a
-print "\n"
-print a--
-print 'clean: ' + a
-print --a
-print 'clean: ' + a
+print 'a = ' + a
 
-print 'clean: ' + a
-
-for i = 0, i < 10, ++i :
-	print i + ' / 10'
+for i = 1, i < 2, ++i :
+	print 'for: a = ' + a
+	a = 12
+	print 'for: a = ' + a
 end
 
-print "\n"
+print 'i = ' + i
+print 'a = ' + a
 
-b = (~(-12))
+arr = [1 2 3 6 7]
 
-print b
-
-# a = 1415912
-# println '2' + 2
-
-# a = (1 <= 2) ? "as" : "asd"
-# println PI
-
-# s = "'strin\\g\'\n\t\t\ts'"
-# echo(s 1)
+for x in arr:
+	print x
+end

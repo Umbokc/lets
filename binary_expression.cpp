@@ -46,8 +46,10 @@ public:
 
 	BinaryExpression(NS_Binary::Operator operation,
 		Expression* expr1, Expression* expr2): 
-	operation(std::move(operation)), 
-	expr1(std::move(expr1)), expr2(std::move(expr2)){}
+		operation(std::move(operation)), 
+		expr1(std::move(expr1)),
+		expr2(std::move(expr2))
+	{}
 
 	Value * eval(){
 		Value *value1 = expr1->eval();
@@ -202,7 +204,7 @@ private:
 
 	Value *BO_lshift(Value *value1, Value *value2) {
 		switch (value1->type()) {
-			case Types::T_NUMBER: 
+			case Types::T_NUMBER:
 			return new NumberValue(value1->as_int() << value2->as_int());
 			case Types::T_ARRAY:
 				dynamic_cast<ArrayValue *>(value1)->add(value2);

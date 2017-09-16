@@ -46,8 +46,8 @@ public:
 	~NumberValue(){
 		
 	}
-	
 };
+
 static NumberValue* ZERO = new NumberValue(0);
 static NumberValue* ONE = new NumberValue(1);
 static NumberValue* NEGATE_ONE = new NumberValue(-1);

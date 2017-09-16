@@ -39,9 +39,7 @@ public:
 
 	UnaryExpression(NS_Unary::Operator operation,
 		Expression* expr): 
-		operation(std::move(operation)), expr(std::move(expr)){
-			// dbg(NS_Unary::OperatorString[operation] + " : " + expr->to_s());
-		}
+		operation(std::move(operation)), expr(std::move(expr)){}
 
 	void execute(){
 		eval();
@@ -72,12 +70,12 @@ public:
 					return value;
 				}
 				return UE_decrement(value);
-			case NS_Unary::Operator::COMPLEMENT:
-				return UE_complement(value);
 			case NS_Unary::Operator::NEGATE:
 				return UE_negate(value);
 			case NS_Unary::Operator::NOT:
 				return UE_not(value);
+			case NS_Unary::Operator::COMPLEMENT:
+				return UE_complement(value);
 			default:
 				throw ParseException("Operation Is Not Supported");
 		}

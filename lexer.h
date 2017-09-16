@@ -87,6 +87,8 @@ namespace NS_Lexer{
 		{"return", TokenType::TT_RETURN},
 		{"use", TokenType::TT_USE},
 		{"end", TokenType::TT_END},
+		{"in", TokenType::TT_IN},
+		{"input", TokenType::TT_INPUT},
 		{"include", TokenType::TT_RETURN}
 	};
 }

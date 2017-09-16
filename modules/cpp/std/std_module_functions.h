@@ -7,6 +7,7 @@ namespace NSLM_Std_Funcs{
 	class Echo : public Function{
 	public:
 		Echo(){}
+
 		Value* execute(std::vector<Value *> args){
 			for(auto a : args){
 				std::cout.precision(a->to_s().length());
@@ -14,7 +15,12 @@ namespace NSLM_Std_Funcs{
 			}
 			return ZERO;
 		}
-		~Echo();
+		
+		std::string to_s(){
+			return "";
+		}
+
+		~Echo(){}
 	};
 
 	class NewArray : public Function{
@@ -23,7 +29,10 @@ namespace NSLM_Std_Funcs{
 		Value* execute(std::vector<Value *> args){
 			return create_array(args, 0);
 		}
-		~NewArray();
+		std::string to_s(){
+			return "";
+		}
+		~NewArray(){}
 	private:
 		ArrayValue* create_array(std::vector<Value *> args, int index){
 			

@@ -1,6 +1,9 @@
 #ifndef USE_STATEMENT_H
 #define USE_STATEMENT_H
 
+#include "modules/cpp/std/std_module.h"
+#include "modules/cpp/math/math_module.h"
+
 class UseStatement : public Statement{
 public:
 	std::string name;

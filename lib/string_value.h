@@ -9,6 +9,14 @@ private:
 	std::string value;
 public:
 
+	StringValue(){
+		this->value = "";
+	}
+
+	StringValue(char value){
+		this->value = func::ctos(value);
+	}
+
 	StringValue(std::string value){
 		this->value = value;
 	}

@@ -1,6 +1,27 @@
-print "\nFor iterations"
+print "For iterations"
 for i = 0, i < 10, ++i :
 	print i + ' / 10'
+end
+
+print "\nFor each string"
+for elem in "Umbokc" :
+	print elem
+end
+
+print "\nFor each array"
+for elem in [4 8 15 16 23 42] :
+	print elem
+end
+
+map = {
+	1 : 1
+	2 : 'val 2'
+	'three' : 3
+	'four' : 'four'
+}
+print "\nFor each map"
+for key, val in map:
+	print key + ' : ' + val
 end
 
 print "\nWhile"

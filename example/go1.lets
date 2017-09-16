@@ -1,16 +1,9 @@
-c = {}
-println c
-
-a = {
-	key : 'value'
+map = {
+	1 : 'lol2'
+	2 : 'lol4'
+	'first' : 'lol'
 }
 
-if a['key']
-	println true
-else
-	println false
-
-println a['key']
-
-str = 'the new string'
-println str[2]
+for x in map:
+	print x
+end

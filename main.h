@@ -51,6 +51,7 @@
 #include "variable_expression.cpp"
 #include "assignment_expression.cpp"
 #include "container_access_expression.cpp"
+#include "input_expression.cpp"
 
 
 #include "break_statement.cpp"
@@ -60,6 +61,7 @@
 #include "array_assignment_statement.cpp"
 #include "return_statement.cpp"
 #include "for_statement.cpp"
+#include "foreach_statement.cpp"
 #include "do_while_statement.cpp"
 #include "while_statement.cpp"
 #include "if_statement.cpp"
@@ -72,8 +74,6 @@
 #include "function_define_statement.cpp"
 #include "expr_statement.cpp"
 
-#include "modules/std/std_module.h"
-#include "modules/math/math_module.h"
 #include "use_statement.cpp"
 
 #include "parser.cpp"

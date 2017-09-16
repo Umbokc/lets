@@ -29,9 +29,9 @@ public:
 		// }
 	// }
 
-	static MapValue *add(MapValue *arr, std::string key, Value *value){
+	static MapValue *add(MapValue *arr, Value *key, Value *value){
 		std::map<std::string, Value *> result = arr->get_all();
-		result[key] = value;
+		result[key->to_s()] = value;
 		return new MapValue(result);
 	}
 
@@ -50,13 +50,13 @@ public:
 		return new MapValue(result);
 	}
 
-	bool is_exists(std::string key){
-		return elems.find(key) != elems.end();
+	bool is_exists(Value *key){
+		return elems.find(key->to_s()) != elems.end();
 	}
 
-	Value *get(std::string key){
+	Value *get(Value *key){
 		if(is_exists(key))
-			return elems[key];
+			return elems[key->to_s()];
 		throw ParseException("Undefined key of map");
 	}
 
@@ -64,12 +64,12 @@ public:
 		return elems;
 	}
 
-	void set(std::string key, Value *value){
-		elems[key] = value;
+	void set(Value *key, Value *value){
+		elems[key->to_s()] = value;
 	}
 
-	void set(std::string key, Function *function){
-		elems[key] = new FunctionValue(function);
+	void set(Value *key, Function *function){
+		elems[key->to_s()] = new FunctionValue(function);
 	}
 
 	int as_int(){

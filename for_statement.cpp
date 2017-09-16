@@ -21,7 +21,7 @@ public:
 	{}
 
 	void execute(){
-		Variables::push();
+		// Variables::push();
 		for(initialization->execute(); termination->eval()->as_number() != 0; increment->execute()){
 			try{
 				statement->execute();
@@ -31,7 +31,7 @@ public:
 				// continue;
 			}
 		}
-		Variables::pop();
+		// Variables::pop();
 	}
 
 	void accept(Visitor *visitor){

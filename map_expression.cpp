@@ -6,15 +6,15 @@
 
 class MapExpression : public Expression{
 public:
-	std::map<std::string, Expression*> elements; 
+	std::map<Expression*, Expression*> elements; 
 
-	MapExpression(std::map<std::string, Expression*> elements)
+	MapExpression(std::map<Expression*, Expression*> elements)
 											:elements(std::move(elements)){}
 
 	Value *eval(){
 		MapValue* map_val = new MapValue();
 		for (auto& elem: elements) {
-			map_val->set(elem.first, elem.second->eval());
+			map_val->set(elem.first->eval(), elem.second->eval());
 		}
 		return map_val;
 	}
@@ -29,7 +29,7 @@ public:
 		int i = 0;
 		int size = elements.size();
 		for (auto& elem : elements){
-			result += elem.first;	
+			result += elem.first->to_s();
 			result +=  " : ";
 			result += elem.second->to_s();
 			if(i != size) result +=  ", ";

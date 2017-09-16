@@ -51,7 +51,7 @@ public:
 					dynamic_cast<StringValue*>(container)->get_c(last->as_int())
 				);
 			case Types::T_MAP:
-				return dynamic_cast<MapValue*>(container)->get(last->to_s());
+				return dynamic_cast<MapValue*>(container)->get(last);
 			default:
 				throw ParseException(
 					"Array or map expected. Got " + TypesString[container->type()]
@@ -67,7 +67,7 @@ public:
 				dynamic_cast<ArrayValue*>(container)->set(last->as_int(), value);
 				return value;
 			case Types::T_MAP:
-				dynamic_cast<MapValue*>(container)->set(last->to_s(), value);
+				dynamic_cast<MapValue*>(container)->set(last, value);
 				return value;
 			default:
 				throw ParseException(
@@ -88,7 +88,7 @@ public:
 					break;
 				}
 				case Types::T_MAP :{
-					container = dynamic_cast<MapValue*> (container)->get(the_i->to_s());
+					container = dynamic_cast<MapValue*> (container)->get(the_i);
 					break;
 				}
 				default:

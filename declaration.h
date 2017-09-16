@@ -22,6 +22,7 @@ class ContainerAccessExpression;
 class TernaryExpression;
 class ValueExpression;
 class VariableExpression;
+class InputExpression;
 
 class Statement;
 class ArrayAssignmentStatement;
@@ -31,6 +32,7 @@ class BreakStatement;
 class ContinueStatement;
 class DoWhileStatement;
 class ForStatement;
+class ForeachStatement;
 class FunctionDefineStatement;
 class ExprStatement;
 class IfStatement;

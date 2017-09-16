@@ -18,8 +18,8 @@ namespace NS_Parser{
 		{TokenType::TT_CARETEQ, NS_Binary::Operator::XOR},
 		{TokenType::TT_BAREQ, NS_Binary::Operator::OR},
 		// {TokenType::TT_COLONCOLONEQ, NS_Binary::Operator::PUSH},
-		{TokenType::TT_LTLTEQ, NS_Binary::Operator::LSHIFT},
-		{TokenType::TT_GTGTEQ, NS_Binary::Operator::RSHIFT},
+		{TokenType::TT_LTLT, NS_Binary::Operator::LSHIFT},
+		{TokenType::TT_GTGT, NS_Binary::Operator::RSHIFT},
 		// {TokenType::TT_GTGTGTEQ, NS_Binary::Operator::URSHIFT},
 		// {TokenType::TT_ATEQ, NS_Binary::Operator::AT}
 	};
@@ -52,6 +52,7 @@ private:
 	Statement* while_statement();
 	Statement* do_while_statement();
 	Statement* for_statement();
+	ForeachStatement* foreach_arr_statement(bool);
 	FunctionDefineStatement* function_define(bool);
 	Arguments arguments();
 	Statement* statement_body();

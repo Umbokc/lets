@@ -57,8 +57,8 @@ public:
 	}
 
 	Value *get(int index){
-		
-		if(index < elements.size())
+
+		if(index >= 0 && index < elements.size())
 			return elements[index];
 		
 		throw ParseException("Undefined index of array");
@@ -69,7 +69,14 @@ public:
 	}
 
 	void set(int index, Value *value){
-		elements[index] = value;
+
+
+		if(index > -1 && index < elements.size()){
+			elements[index] = value;
+			return;
+		}
+
+		throw ParseException("Undefined index "+ std::to_string(index) +" of array");
 	}
 
 	int as_int(){
