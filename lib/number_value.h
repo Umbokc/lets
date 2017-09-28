@@ -35,6 +35,10 @@ public:
 		return value.as_string();
 	}
 	
+	int len(){
+		return -1;
+	}
+	
 	std::string to_s(){
 		return as_string();
 	}

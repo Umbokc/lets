@@ -23,6 +23,17 @@ namespace NSLM_Std_Funcs{
 		~Echo(){}
 	};
 
+	class Len : public Function{
+	public:
+		Value* execute(std::vector<Value *> args){
+			if(args.size() != 1) throw ParseException("Function len(arg*) one args expected");
+			return new NumberValue(args[0]->len());
+		}
+		
+		std::string to_s(){ return ""; }
+		
+	};
+
 	class NewArray : public Function{
 	public:
 		NewArray(){}

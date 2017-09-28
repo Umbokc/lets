@@ -8,13 +8,14 @@
 #include <map>
 
 namespace NS_Lexer{
-	static std::string OPERATORS_CHARS = "+-*/%()[]{}=<>!&|,^~?:";
+	static std::string OPERATORS_CHARS = "+-*/%()[]{}=<>!&|,^~?:.@";
 
 	static std::map<std::string, TokenType> OPERATORS = {
 		{"+", TokenType::TT_PLUS},
 		{"-", TokenType::TT_MINUS},
 		{"*", TokenType::TT_STAR},
 		{"/", TokenType::TT_SLASH},
+		{"%", TokenType::TT_PERCENT},
 		{"(", TokenType::TT_LPAREN},
 		{")", TokenType::TT_RPAREN},
 		{"[", TokenType::TT_LBRACKET},
@@ -25,6 +26,7 @@ namespace NS_Lexer{
 		{"<", TokenType::TT_LT},
 		{">", TokenType::TT_GT},
 		{",", TokenType::TT_COMMA},
+		{".", TokenType::TT_DOT},
     {"^", TokenType::TT_CARET},
     {"~", TokenType::TT_TILDE},
     {"?", TokenType::TT_QUESTION},
@@ -48,9 +50,6 @@ namespace NS_Lexer{
     {"^=", TokenType::TT_CARETEQ},
     {"|=", TokenType::TT_BAREQ},
     {"::=", TokenType::TT_COLONCOLONEQ},
-    {"<<=", TokenType::TT_LTLTEQ},
-    {">>=", TokenType::TT_GTGTEQ},
-    {">>>=", TokenType::TT_GTGTGTEQ},
 
     {"++", TokenType::TT_PLUSPLUS},
     {"--", TokenType::TT_MINUSMINUS},
@@ -62,7 +61,6 @@ namespace NS_Lexer{
     
     {"<<", TokenType::TT_LTLT},
     {">>", TokenType::TT_GTGT},
-    {">>>", TokenType::TT_GTGTGT},
 
     {"@", TokenType::TT_AT},
     {"@=", TokenType::TT_ATEQ},
@@ -132,6 +130,7 @@ private:
 	// bool map_key_exists(std::map<std::string, TokenType> &the_map, std::string key);
 
 	void clear_buffer();
+	bool is_word_var(char);
 	void add_token(TokenType tt);
 	void add_token(TokenType tt, std::string txt);
 

@@ -6,7 +6,7 @@
 
 class ArrayExpression : public Expression{
 public:
-	std::vector<Expression *> elements; 
+	std::vector<Expression *> elements;
 
 	ArrayExpression(std::vector<Expression *> elements)
 											:elements(std::move(elements)){}

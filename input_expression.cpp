@@ -8,13 +8,13 @@ public:
 	Value *value;
 
 	InputExpression(){
+	}
+
+	Value *eval(){
 		std::string str;
 		getline(std::cin, str);
 		// std::cin >> str;
 		this->value = new StringValue(str);
-	}
-
-	Value *eval(){
 		return value;
 	}
 

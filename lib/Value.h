@@ -11,6 +11,7 @@ public:
 	virtual long as_long() = 0;
 	virtual std::string as_string() = 0;
 	virtual std::string to_s() = 0;
+	virtual int len() = 0;
 	virtual Types type() = 0;
 
 };

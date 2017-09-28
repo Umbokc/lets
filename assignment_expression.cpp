@@ -2,10 +2,6 @@
 #define ASSIGNMENT_EXPRESSION_H
 
 #include <string>
-#include "visitor.h"
-#include "expression.h"
-#include "variable_expression.cpp"
-#include "binary_expression.cpp"
 
 class AssignmentExpression : public Expression, public Statement{
 public:

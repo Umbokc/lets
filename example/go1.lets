@@ -1,9 +1,9 @@
-map = {
-	1 : 'lol2'
-	2 : 'lol4'
-	'first' : 'lol'
-}
-
-for x in map:
-	print x
+def	sdef():
+	print 'text'
+	def	sdef2():
+		print 'text2'
+	end
 end
+
+sdef()
+sdef2()

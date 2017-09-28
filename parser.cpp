@@ -1,7 +1,7 @@
 #ifndef PARSER_CPP
 #define PARSER_CPP
 
-#include "parser.h"
+#include "include/parser.h"
 
 BlockStatement* Parser::parse(){
 	BlockStatement* result = new BlockStatement();
@@ -178,6 +178,7 @@ Arguments Parser::arguments(){
 Statement* Parser::statement_body(){
 	if(match(TokenType::TT_EQ))
 		return new ReturnStatement(expression());
+
 	return statement_or_block(1);
 }
 

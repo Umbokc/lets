@@ -4,7 +4,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 #include <limits>
-#include "math_module_functions.h"
+#include "math_functions.h"
 
 namespace Lets_Module_Math {
 

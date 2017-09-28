@@ -55,16 +55,12 @@ enum TokenType {
 	TT_CARETEQ, // ^=
 	TT_BAREQ, // |=
 	TT_COLONCOLONEQ, // ::=
-	TT_LTLTEQ, // <<=
-	TT_GTGTEQ, // >>=
-	TT_GTGTGTEQ, // >>>=
 
 	TT_PLUSPLUS, // ++
 	TT_MINUSMINUS, // --
 
 	TT_LTLT, // <<
 	TT_GTGT, // >>
-	TT_GTGTGT, // >>>
 
 	TT_DOTDOT, // ..
 	TT_STARSTAR, // **
@@ -146,16 +142,12 @@ static const std::string TokenTypeString[] = {
 	"careteq", // ^=
 	"bareq", // |=
 	"coloncoloneq", // ::=
-	"ltlteq", // <<=
-	"gtgteq", // >>=
-	"gtgtgteq", // >>>=
 
 	"plusplus", // ++
 	"minusminus", // --
 
 	"ltlt", // <<
 	"gtgt", // >>
-	"gtgtgt", // >>>
 
 	"dotdot", // ..
 	"starstar", // **

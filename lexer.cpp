@@ -1,14 +1,14 @@
 #ifndef LEXER_CPP
 #define LEXER_CPP
 
-#include "lexer.h"
+#include "include/lexer.h"
 
 std::vector<Token> Lexer::tokenize(){
 
 	while (this->pos < this->length) {
 		char current = peek(0);
 		if(isdigit(current)) tokenize_number();
-		else if(isalpha(current, std::locale())) tokenize_word();
+		else if(is_word_var(current)) tokenize_word();
 		else if( current == '"') tokenize_text_double_quote();
 		else if( current == '\'') tokenize_text_single_quote();
 		else if( current == '#') tokenize_comment();
@@ -102,8 +102,7 @@ void Lexer::tokenize_word() {
 	clear_buffer();
 	char current = peek(0);
 	while (true) {
-		if(!(isdigit(current) || isalpha(current, std::locale())) 
-				&& (current != '_') && (current != '$')){
+		if(!(isdigit(current) || is_word_var(current))){
 			break;
 		}
 
@@ -212,6 +211,7 @@ void Lexer::tokenize_comment(){
 		current = next();
 	}	
 }
+
 void Lexer::tokenize_multiline_comment(){
 	char current = peek(0);
 	while (true) {
@@ -249,6 +249,10 @@ char Lexer::peek(int rpos){
 
 void Lexer::clear_buffer(){
 	buffer = "";
+}
+
+bool Lexer::is_word_var(char c){
+	return isalpha(c, std::locale()) || (c == '_') || (c == '$');
 }
 
 void Lexer::add_token(TokenType tt){

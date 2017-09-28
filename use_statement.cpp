@@ -1,8 +1,9 @@
 #ifndef USE_STATEMENT_H
 #define USE_STATEMENT_H
 
-#include "modules/cpp/std/std_module.h"
-#include "modules/cpp/math/math_module.h"
+#include "modules/cpp/std/main.h"
+#include "modules/cpp/math/main.h"
+#include "modules/cpp/type/main.h"
 
 class UseStatement : public Statement{
 public:
@@ -13,6 +14,7 @@ public:
 	void execute(){
 		if(name == "std") Lets_Module_Std::run();
 		else if(name == "math") Lets_Module_Math::run();
+		else if(name == "type") Lets_Module_Type::run();
 		else
 			throw ParseException("Does not found module " + name);
 	}

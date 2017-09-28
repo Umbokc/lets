@@ -69,7 +69,7 @@ private:
 	Function* get_function(std::string key){
 		if(Functions::is_exists(key)) return Functions::get(key);
 		
-		if(Variables::is_exists(key)){
+		if(Variables::is_exists_all(key)){
 			Value* variable = Variables::get(key);
 			if(variable->type() == Types::T_FUNCTION){
 				return dynamic_cast<FunctionValue*>(variable)->get_value();

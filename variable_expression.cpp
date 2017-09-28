@@ -13,7 +13,7 @@ public:
 	}
 	
 	Value* get(){
-		if(!Variables::is_exists(name)) throw VariableDoesNotExistsException(name);
+		if(!Variables::is_exists_all(name)) throw VariableDoesNotExistsException(name);
 		return Variables::get(name);
 	}
 	

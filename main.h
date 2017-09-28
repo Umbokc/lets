@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "declaration.h"
-#include "functions.h"
+#include "include/declaration.h"
+#include "include/functions.h"
 
 #include "exceptions/exceptions_error.cpp"
 #include "exceptions/parse_exception.cpp"
@@ -26,16 +26,16 @@
 #include "lib/map_value.h"
 
 
-#include "tokentype.h"
-#include "token.h"
+#include "include/tokentype.h"
+#include "include/token.h"
 #include "lexer.cpp"
 
-#include "visitor.h"
-#include "node.h"
-#include "accessible.h"
+#include "include/visitor.h"
+#include "include/node.h"
+#include "include/accessible.h"
 
-#include "expression.h"
-#include "statement.h"
+#include "include/expression.h"
+#include "include/statement.h"
 
 #include "argument.cpp"
 #include "arguments.cpp"
@@ -78,6 +78,6 @@
 
 #include "parser.cpp"
 
-#include "lets.h"
+#include "include/lets.h"
 
 #endif

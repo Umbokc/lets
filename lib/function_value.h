@@ -25,6 +25,10 @@ public:
 		return value;
 	}
 	
+	int len(){
+		return -1;
+	}
+	
 	std::string as_string(){
 		return "function";
 	}

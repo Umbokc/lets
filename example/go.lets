@@ -1,17 +1,52 @@
-a = 1
-print 'a = ' + a
+use 'std'
+use 'type'
 
-for i = 1, i < 2, ++i :
-	print 'for: a = ' + a
-	a = 12
-	print 'for: a = ' + a
+operations = {
+	"+" : def(a b) = a + b
+	"-" : def(a b) = a - b
+	"*" : def(a b) = a * b
+	"/" : def(a b) = a / b
+	"%" : def(a b) = a % b
+}
+
+for key, operation in operations :
+	print key + ' : ' + operation(10 4)
 end
 
-print 'i = ' + i
-print 'a = ' + a
+y = 2
+$x = '1'
 
-arr = [1 2 3 6 7]
-
-for x in arr:
-	print x
+def func():
+	$x = 11
+	y = 11
+	print 'y ' + y
+	print '$x ' + $x
+	def func2():
+		$x = 12
+		# y = 12
+		print 'y ' + y
+		print '$x ' + $x
+		def func3():
+			$x = 13
+			# y = 13
+			print 'y ' + y
+			print '$x ' + $x
+		end
+	end
 end
+print 'y ' + y
+
+func()
+func2()
+func3()
+
+print 'y ' + y
+print '$x ' + $x
+$x = 3
+print '$x ' + $x
+
+my_funcs = {
+	'fact' : def (n) = n < 0 ? 0 : n == 0 ? 1 : n * my_funcs.fact(n-1)
+}
+
+print my_funcs.fact(5)

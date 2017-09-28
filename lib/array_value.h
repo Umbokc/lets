@@ -85,11 +85,15 @@ public:
 
 	double as_number(){
 		throw ParseException("Cannot cast array to number");
-	} 
+	}
 
 	long as_long(){
 		return as_number();
-	} 
+	}
+	
+	int len(){
+		return elements.size();
+	}
 	
 	std::string as_string(){
 		return "[ " + func::vector_to_s<Value *>(elements) + " ]";

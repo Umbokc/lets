@@ -1,24 +1,15 @@
-def name(c, b = 1):
-	print 'c = ' + c
-	print 'b = ' + b
-	def hello(you = 'Joe'):
-		print 'Hello ' + you
+def_c len(arr):
+	i = 0
+	for x in arr:
+		++i
 	end
+	return i
 end
 
-print name('you')
-
-if(false)
-	def name(c, b = 1):
-		print 'end'
-	end
-
-name(1).hello('Walter')
-
 # sort
-def insertion_sort(a, n):
+def insertion_sort(a n):
 	
-	for i = 1, i < n, i = i + 1 :
+	for i = 1, i < n, ++i :
 		x = a[i]
 		j = i - 1
 		
@@ -34,9 +25,9 @@ def insertion_sort(a, n):
 end
 
 def bubble_sort(a n) :
-	for i = 0, i < n-1, i = i + 1 :
+	for i = 0, i < n-1, ++i :
 		changed = false
-		for j = 0, j < n-i-1, j = j + 1 :
+		for j = 0, j < n-i-1, ++j :
 			if(a[j] > a[j + 1]) :
 				b = a[j]
 				a[j] = a[j+1]
@@ -50,10 +41,10 @@ def bubble_sort(a n) :
 end
 
 def selection_sort(a n):
-	for(i = 0, i < n, i = i + 1):
+	for(i = 0, i < n, ++i):
 		k = i
 		x = a[i]
-		for(j = i + 1, j < n, j = j + 1):
+		for(j = i + 1, j < n, ++j):
 			if a[j] < x :
 				k = j
 				x = a[j]
@@ -65,7 +56,50 @@ def selection_sort(a n):
 	return a
 end
 
-a = [2 5 2 7 3 5 4 6]
-print insertion_sort(a 8)
-print bubble_sort(a 8)
-print selection_sort(a 8)
+a = [4
+5
+6
+8
+10
+12
+15
+19
+20
+23
+30
+43
+44
+45
+46
+51
+52
+54
+60
+66
+67
+42
+70
+40
+7
+68
+55
+37
+11
+14
+56
+57
+41
+63
+47
+31
+59
+48
+24
+9]
+sort = insertion_sort(a len(a))
+#sort = bubble_sort(a len(a))
+#sort = selection_sort(a len(a))
+
+for x in sort:
+	print x
+end

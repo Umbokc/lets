@@ -23,8 +23,8 @@ public:
 		Value* objs = container->eval();
 		bool has_key = key != "";
 
-		Value *prev_var_value__key = (has_key && Variables::is_exists(key)) ? Variables::get(key) : NULL;
-		Value *prev_var_value__val = Variables::is_exists(val) ? Variables::get(val) : NULL;
+		Value *prev_var_value__key = (has_key && Variables::is_exists_all(key)) ? Variables::get(key) : NULL;
+		Value *prev_var_value__val = Variables::is_exists_all(val) ? Variables::get(val) : NULL;
 
 		int i = 0;
 		if(dynamic_cast<StringValue*>(objs)){

@@ -37,6 +37,10 @@ public:
 		return func::ctos(value[index]);
 	}
 	
+	int len(){
+		return value.length();
+	}
+	
 	std::string as_string(){
 		return value;
 	}

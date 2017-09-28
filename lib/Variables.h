@@ -7,15 +7,19 @@
 #include <map>
 #include "variable_container.h"
 
-namespace NS_Variables{
-	#define MAP_VAR std::map<std::string, VariableContainer*>
 
-	static MAP_VAR variables = {
+namespace NS_Variables{
+
+	#define VARIABLE_MAP std::map<std::string, VariableContainer*>
+
+	static VARIABLE_MAP variables = {};
+
+	static VARIABLE_MAP global_variables = {
 		{"false", new VariableContainer(ZERO, true)},
 		{"true", new VariableContainer(ONE, true)},
 	};
 
-	static std::stack<MAP_VAR> thestack;
+	static std::stack<VARIABLE_MAP> the_stack;
 
 }
 
@@ -25,56 +29,86 @@ class Variables{
 public:
 
 	static void push(){
-		thestack.push(MAP_VAR(variables));
+		the_stack.push(VARIABLE_MAP(variables));
 	}
 
 	static void pop(){
-		thepop(&variables, thestack, thestack.size());
+		variables = the_stack.top();
+		the_stack.pop();
+		// thepop(&variables, the_stack, the_stack.size());
 	}
 
+	static bool is_exists_all(std::string key){
+		return is_exists_g(key) || is_exists(key);
+	}
+	
 	static bool is_exists(std::string key){
 		return variables.find(key) != variables.end();
 	}
 
+	static bool is_exists_g(std::string key){
+		return global_variables.find(key) != global_variables.end();
+	}
+
 	static bool is_constexpr(std::string key){
-		return variables[key]->is_constant;
+		return (is_exists(key)) ? variables[key]->is_constant :
+					 (is_exists_g(key)) ? global_variables[key]->is_constant : 
+					 false;
 	}
 	
 	static Value* get(std::string key){
-		if(!is_exists(key)) throw VariableDoesNotExistsException(key);
+		if(!is_exists_all(key)) throw VariableDoesNotExistsException(key);
+
+		if(is_exists_g(key)){
+			return global_variables[key]->value;
+		}
+
 		return variables[key]->value;
 	}
 
 	static void set(std::string key, Value* value){
-		if(is_exists(key) && is_constexpr(key)) throw ParseException("Cannot assign value to constant \"" + key + "\"");
-		variables[key] = new VariableContainer(value);
+		set_var(key, value, false, is_global_var(key), true);
 	}
 
-
 	static void set_constexpr(std::string key, Value* value){
-		if(is_exists(key) && is_constexpr(key)) throw ParseException("Cannot assign value to constant \"" + key + "\"");
-		variables[key] = new VariableContainer(value, true);
+		set_var(key, value, true, is_global_var(key), true);
 	}
 
 	static void set_lets_varss(std::string key, Value* value, bool is_contstant){
-		variables[key] = new VariableContainer(value, is_contstant);
+		set_var(key, value, is_contstant, is_global_var(key), false);
+	}
+
+	static void set_var(std::string key, Value* value, bool is_const, bool is_glob, bool check_const){
+		if(is_constexpr(key) && check_const) throw ParseException("Cannot assign value to constant \"" + key + "\"");
+		if(is_glob){
+			global_variables[key] = new VariableContainer(value, is_const);
+		} else {
+			variables[key] = new VariableContainer(value, is_const);
+		}
 	}
 
 private:
-	static void thepop(MAP_VAR *var, std::stack<MAP_VAR> the_stack, int size){
+	static bool is_global_var(std::string key){
+		if(is_exists_g(key) || key[0] == '$'){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	static void thepop(VARIABLE_MAP *var, std::stack<VARIABLE_MAP> the_stack, int size){
 
 		int i = 0;
-		MAP_VAR temp[size];
-		while (!thestack.empty()){
-			temp[i] = thestack.top();
-			thestack.pop();
+		VARIABLE_MAP temp[size];
+		while (!the_stack.empty()){
+			temp[i] = the_stack.top();
+			the_stack.pop();
 			++i;
 		}
 
 		for (int j = size - 1, l = 0; j >= 0; --j, ++l) {
 			var[l] = temp[j];
 		}
-
 	}
 
 };

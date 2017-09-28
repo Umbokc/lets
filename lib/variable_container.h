@@ -15,7 +15,8 @@ public:
 	}
 
 	VariableContainer(Value *value, bool is_const):
-		value(std::move(value)), is_constant(std::move(is_const))
+		value(std::move(value)),
+		is_constant(std::move(is_const))
 	{}
 
 	~VariableContainer(){}

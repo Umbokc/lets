@@ -82,7 +82,11 @@ public:
 
 	long as_long(){
 		return as_number();
-	} 
+	}
+	
+	int len(){
+		return elems.size();
+	}
 	
 	std::string as_string(){
 		std::string result = "{ ";
