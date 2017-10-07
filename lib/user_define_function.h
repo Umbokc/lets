@@ -52,6 +52,10 @@ public:
 		} catch(ReturnStatement *rs){
 			Variables::pop();
 			return rs->get_result();
+		} catch(SelfStatement *ss){
+			Value* res = execute(ss->args);
+			throw new SelfStatementResponse(res);
+			return res;
 		}
 	}
 

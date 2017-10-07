@@ -6,9 +6,10 @@
 namespace NS_LM_Std {
 
 	void run() {
-		Functions::set_lets_funcs("echo", 			new NS_LM_F_Std::NS_LM_Fs_Echo(), true);
-		Functions::set_lets_funcs("fprint", 		new NS_LM_F_Std::NS_LM_Fs_fprint(), true);
 		Functions::set_lets_funcs("len", 				new NS_LM_F_Std::NS_LM_Fs_Len(), true);
+		Functions::set_lets_funcs("echo", 		new NS_LM_F_Std::NS_LM_Fs_Echo(), true);
+		Functions::set_lets_funcs("echo_nl", 			new NS_LM_F_Std::NS_LM_Fs_EchoNl(), true);
+		Functions::set_lets_funcs("self", 			new NS_LM_F_Std::NS_LM_Fs_Self(), true);
 		Functions::set_lets_funcs("newArray", 	new NS_LM_F_Std::NS_LM_Fs_NewArray(), true);
 	}
 

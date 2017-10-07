@@ -74,6 +74,7 @@
 #include "print_statement.cpp"
 #include "put_statement.cpp"
 #include "mode_programm_statment.cpp"
+#include "self_statement.cpp"
 
 #include "lib/user_define_function.h"
 #include "functional_expression.cpp"

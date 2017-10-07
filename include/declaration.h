@@ -43,5 +43,14 @@ class ReturnStatement;
 class UseStatement;
 class WhileStatement;
 class ModeProgrammStatement;
+class SelfStatement;
+
+class SelfStatementResponse {
+public:
+	Value* result;
+	SelfStatementResponse(Value * result):result(std::move(result)){
+		dbg("SelfStatementResponse");
+	}
+};
 
 #endif

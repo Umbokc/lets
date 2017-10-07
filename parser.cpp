@@ -46,6 +46,7 @@ Statement* Parser::statement(){
 	if(match(TokenType::TT_BREAK)) 		return new BreakStatement();
 	if(match(TokenType::TT_CONTINUE)) return new ContinueStatement();
 	if(match(TokenType::TT_RETURN)) 	return new ReturnStatement(expression());
+	// if(match(TokenType::TT_SELF)) 		return new SelfStatement(arguments());
 	if(match(TokenType::TT_USE)) 			return new UseStatement(expression()->eval()->as_string());
 	if(match(TokenType::TT_FOR)) 			return for_statement();
 	if(match(TokenType::TT_DEF)) 			return function_define(false);

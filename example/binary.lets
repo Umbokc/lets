@@ -16,7 +16,7 @@ def call_operations(a b):
 	print ''
 	for elem in $operations :
 		for key, operation in elem:
-			print a + ' ' + key + ' ' + b + ' = ' + operation(a b)
+			echo(a, ' ', key, ' ', b, ' = ', operation(a b))
 		end
 	end
 	print ''
@@ -56,16 +56,16 @@ end
 def_c bitwise():
 	for a = 0, a <= 1, a++ :
 		for b = 0, b <= 1, b++ :
-			fprint(a, " | ", b, " = ", a | b)
-			fprint(a, " & ", b, " = ", a & b)
-			fprint(a, " ^ ", b, " = ", a ^ b)
+			echo(a, " | ", b, " = ", a | b)
+			echo(a, " & ", b, " = ", a & b)
+			echo(a, " ^ ", b, " = ", a ^ b)
 		end
-		fprint("     ~", a, " ", ~a)
-		fprint("     !", a, "  ", !a "\n")
+		echo("     ~", a, " ", ~a)
+		echo("     !", a, "  ", !a "\n")
 	end
 end
 
 number()
-array()
+# array()
 # map()
 bitwise()

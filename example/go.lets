@@ -1,31 +1,39 @@
 use 'std'
-use 'type'
+# use 'type'
 
-$x = '1'
+# $x = '1'
 
-def func():
-	$x = 11
-	print '$x = ' + $x
-	def func2():
-		$x = 12
-		print '$x = ' + $x
-		def func3():
-			$x = 13
-			print '$x = ' + $x
-		end
-	end
+# def func():
+# 	$x = 11
+# 	print '$x = ' + $x
+# 	def func2():
+# 		$x = 12
+# 		print '$x = ' + $x
+# 		def func3():
+# 			$x = 13
+# 			print '$x = ' + $x
+# 		end
+# 	end
+# end
+
+# func()
+# func2()
+# func3()
+
+# print '$x = ' + $x
+# $x = 3
+# print '$x = ' + $x
+$a = true
+def fact(n):
+	# print n
+	return n < 0 ? 0 
+		: n == 0 ? 1 
+		: n * fact(n-1)
 end
-
-func()
-func2()
-func3()
-
-print '$x = ' + $x
-$x = 3
-print '$x = ' + $x
 
 my_funcs = {
 	'facttorial' : def (n) = n < 0 ? 0 : n == 0 ? 1 : n * my_funcs.facttorial(n-1)
 }
 
-print my_funcs.facttorial(5)
+print fact(5)
+# print my_funcs.facttorial(5)

@@ -1,5 +1,5 @@
-#ifndef RETURN_STATEMENT_H
-#define RETURN_STATEMENT_H
+#ifndef LL_RETURN_STATEMENT_CPP
+#define LL_RETURN_STATEMENT_CPP
 #include <string>
 
 class ReturnStatement : public Statement{

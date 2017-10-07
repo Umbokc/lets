@@ -4,7 +4,7 @@
 
 namespace NS_LM_F_Std{
 
-	class NS_LM_Fs_Echo : public Function{
+	class NS_LM_Fs_EchoNl : public Function{
 	public:
 		Value* execute(std::vector<Value *> args){
 			for(Value *a : args){
@@ -19,10 +19,8 @@ namespace NS_LM_F_Std{
 		}
 	};
 
-	class NS_LM_Fs_fprint : public Function{
+	class NS_LM_Fs_Echo : public Function{
 	public:
-		NS_LM_Fs_fprint(){}
-
 		Value* execute(std::vector<Value *> args){
 			for(auto a : args){
 				std::cout.precision(a->to_s().length());
@@ -35,8 +33,6 @@ namespace NS_LM_F_Std{
 		std::string to_s(){
 			return "";
 		}
-
-		~NS_LM_Fs_fprint(){}
 	};
 
 	class NS_LM_Fs_Len : public Function{
@@ -49,6 +45,24 @@ namespace NS_LM_F_Std{
 		
 		std::string to_s(){ return ""; }
 		~NS_LM_Fs_Len(){}
+	};
+
+	class NS_LM_Fs_Self : public Function{
+	public:
+		NS_LM_Fs_Self(){}
+		Value* execute(std::vector<Value *> args){
+			SelfStatement *a;
+			try{
+				a = new SelfStatement(args);
+				// dbg("NS_LM_Fs_Self");
+			} catch (SelfStatementResponse * a){
+				dbg("NS_LM_Fs_Self");
+			}
+			return a->eval();
+		}
+		
+		std::string to_s(){ return ""; }
+		~NS_LM_Fs_Self(){}
 	};
 
 	class NS_LM_Fs_NewArray : public Function{

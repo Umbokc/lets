@@ -88,7 +88,7 @@ namespace NS_Lexer{
 		{"input", TokenType::TT_INPUT},
 		{"include", TokenType::TT_RETURN},
 		{"mode", TokenType::TT_MODE},
-		{"self", TokenType::TT_SELF},
+		// {"self", TokenType::TT_SELF},
 		{"match", TokenType::TT_MATCH},
 	};
 }

@@ -37,6 +37,7 @@ public:
 	virtual void visit(UseStatement *s) = 0;
 	virtual void visit(WhileStatement *s) = 0;
 	virtual void visit(ModeProgrammStatement *s) = 0;
+	virtual void visit(SelfStatement *s) = 0;
 };
 
 #endif
