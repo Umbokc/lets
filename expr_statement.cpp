@@ -14,7 +14,6 @@ public:
 	}
 
 	Value *eval(){
-		// dbg("ExprStatement: " + expr->to_s());
 		return expr->eval();
 	}
 

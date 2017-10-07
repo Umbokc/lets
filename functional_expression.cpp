@@ -1,15 +1,20 @@
 #ifndef FUNCTIONAL_EXPRESSION_H
 #define FUNCTIONAL_EXPRESSION_H
+#include <iostream>
+#include <algorithm>
 
 class FunctionalExpression : public Expression, public Statement{
 public:
-	Expression* functionExpr;
+	std::string function_name;
+	Expression* function_expr;
 	std::vector<Expression *> arguments; 
 
 	FunctionalExpression(){}
+	~FunctionalExpression(){}
 	
-	FunctionalExpression(Expression* functionExpr)
-										:functionExpr(std::move(functionExpr)){}
+	FunctionalExpression(Expression* function_expr) :function_expr(std::move(function_expr)){
+		this->function_name = this->function_expr->to_s();
+	}
 
 	void add_arguments(Expression *arg){
 		arguments.push_back(arg);
@@ -20,6 +25,7 @@ public:
 	}
 
 	Value *eval(){
+
 		int size = arguments.size();
 		std::vector<Value *> values;
 		values.reserve(size);
@@ -28,10 +34,11 @@ public:
 			values.push_back(argument->eval());
 		}
 
-		Function *f = consume_function(this->functionExpr);
-		CallStack::enter(this->functionExpr->to_s(), f);
+		Function *f = consume_function(function_expr);
+		CallStack::enter(function_expr->to_s(), f);
 		Value* result = f->execute(values);
 		CallStack::exit();
+
 		return result;
 	}
 
@@ -40,7 +47,7 @@ public:
 	}
 
 	std::string name_to_s(){
-		return this->functionExpr->to_s();
+		return this->function_expr->to_s();
 	}
 
 	std::string args_to_s(){
@@ -53,7 +60,8 @@ public:
 
 private:
 
-	Function* consume_function(Expression* expr){
+	Function* consume_function(Expression *expr){
+
 		try{
 			Value* value = expr->eval();
 			if(value->type() == Types::T_FUNCTION){
@@ -61,6 +69,8 @@ private:
 			}
 			return get_function(value->as_string());
 		} catch (VariableDoesNotExistsException& e){
+			if(e.get_variable() == "")
+				return get_function(this->function_name);
 			return get_function(e.get_variable());
 		}
 	}

@@ -7,4 +7,5 @@ public:
 	virtual std::string to_s() = 0;
 };
 
+
 #endif

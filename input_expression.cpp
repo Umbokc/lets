@@ -2,13 +2,12 @@
 #define INPUT_EXPRESSION_CPP
 #include <string>
 
-class InputExpression : virtual public Expression {
+class InputExpression : public Expression {
 public:
 
 	Value *value;
 
-	InputExpression(){
-	}
+	InputExpression(){}
 
 	Value *eval(){
 		std::string str;

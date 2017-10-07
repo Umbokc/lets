@@ -16,7 +16,6 @@ enum TokenType {
 	TT_PUT,
 	TT_IF,
 	TT_ELSE,
-	TT_ELIF,
 	TT_WHILE,
 	TT_FOR,
 	TT_DO,
@@ -29,6 +28,7 @@ enum TokenType {
 	TT_END,
 	TT_IN,
 	TT_MODE,
+	TT_SELF,
 	TT_MATCH,
 
 	TT_PLUS, // +
@@ -105,7 +105,6 @@ static const std::string TokenTypeString[] = {
 	"put",
 	"if",
 	"else",
-	"elif",
 	"while",
 	"for",
 	"do",
@@ -118,6 +117,7 @@ static const std::string TokenTypeString[] = {
 	"end",
 	"in",
 	"mode",
+	"self",
 	"match",
 
 	"plus", // +

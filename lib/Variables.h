@@ -87,6 +87,34 @@ public:
 		}
 	}
 
+	static void show(){
+		std::string result = "Variables: \n";
+			int i = 0;
+			int size = variables.size();
+			for (auto& elem : variables){
+				result += "\t";
+				result += elem.first;
+				result +=  " : ";
+				result += elem.second->value->to_s();
+				if(i != size-1) result +=  ", \n";
+				i++;
+			}
+			i = 0;
+			size = global_variables.size();
+			if(size > 0) result +=  ", \n";
+			for (auto& elem : global_variables){
+				result += "\t";
+				result += elem.first;
+				result +=  " : ";
+				result += elem.second->value->to_s();
+				if(i != size-1) result +=  ", \n";
+				i++;
+			}
+			result +=  "\nend";
+
+			std::cout << result << std::endl;
+	}
+
 private:
 	static bool is_global_var(std::string key){
 		if(is_exists_g(key) || key[0] == '$'){

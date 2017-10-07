@@ -2,9 +2,8 @@
 #define VARIABLE_XPRESSION_H
 
 class VariableExpression : public Expression, public Accessible{
-// class VariableExpression : public AccessExpr{
 public:
-	std::string name;
+	mutable std::string name;
 
 	VariableExpression(std::string name):name(std::move(name)){}
 

@@ -74,7 +74,6 @@ namespace NS_Lexer{
 		{"put", TokenType::TT_PUT},
 		{"if", TokenType::TT_IF},
 		{"else", TokenType::TT_ELSE},
-		// {"elif", TokenType::TT_ELIF},
 		{"while", TokenType::TT_WHILE},
 		{"for", TokenType::TT_FOR},
 		{"do", TokenType::TT_DO},
@@ -89,6 +88,7 @@ namespace NS_Lexer{
 		{"input", TokenType::TT_INPUT},
 		{"include", TokenType::TT_RETURN},
 		{"mode", TokenType::TT_MODE},
+		{"self", TokenType::TT_SELF},
 		{"match", TokenType::TT_MATCH},
 	};
 }

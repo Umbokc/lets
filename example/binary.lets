@@ -1,3 +1,4 @@
+use 'std'
 mode '0x666'
 
 $operations = [
@@ -52,6 +53,19 @@ def_c map():
 	print map + 2
 end
 
+def_c bitwise():
+	for a = 0, a <= 1, a++ :
+		for b = 0, b <= 1, b++ :
+			fprint(a, " | ", b, " = ", a | b)
+			fprint(a, " & ", b, " = ", a & b)
+			fprint(a, " ^ ", b, " = ", a ^ b)
+		end
+		fprint("     ~", a, " ", ~a)
+		fprint("     !", a, "  ", !a "\n")
+	end
+end
+
 number()
 array()
 # map()
+bitwise()

@@ -72,20 +72,17 @@ Statement* Parser::assignment_statement(){
 
 Statement* Parser::if_else(){
 
-	Expression* condition = expression();
+	Expression* condition = expression();	
 	Statement* if_statement = statement_or_block(2);
-	Statement* else_statemen;
-
-	if(match(TokenType::TT_ELSE) || (
-		dynamic_cast<BlockStatement*>(if_statement) &&
-		get(-1).get_type() == TokenType::TT_ELSE)
-	){
-		else_statemen = statement_or_block(1);
+	Statement* else_statement;
+	
+	if(match(TokenType::TT_ELSE) || (dynamic_cast<BlockStatement*>(if_statement) && get(-1).get_type() == TokenType::TT_ELSE)){
+		else_statement = statement_or_block(1);
 	} else {
-		else_statemen = NULL;
+		else_statement = NULL;
 	}
 
-	return new IfStatement(condition, if_statement, else_statemen);
+	return new IfStatement(condition, if_statement, else_statement);
 }
 
 Statement* Parser::while_statement(){
@@ -221,11 +218,13 @@ FunctionalExpression* Parser::function(Expression *qualified_name_expr){
 
 	consume(TokenType::TT_LPAREN);
 	FunctionalExpression* function = new FunctionalExpression(qualified_name_expr);
+
 	while(!match(TokenType::TT_RPAREN)){
 		function->add_arguments(expression());
 		match(TokenType::TT_COMMA);
 	}
 
+	
 	return function; 
 }
 
@@ -708,8 +707,6 @@ Token Parser::get(int rel_pos){
 bool Parser::end_the_block(int type){
 	if(type == 2)
 		return end_block_if();
-	// else if(type == 3)
-		// return end_block_else_if();
 	
 	return end_block();
 }
@@ -723,7 +720,6 @@ bool Parser::end_block_if(){
 }
 
 bool Parser::end_block_else_if(){
-	// return (!match(TokenType::TT_END, TokenType::TT_ELIF));
 	return false;
 }
 

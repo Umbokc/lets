@@ -38,6 +38,24 @@ public:
 		LetsFunctions::functions[key] =  new FunctionContainer(function, is_constexpr);
 	}
 
+	static void show(){
+		std::string result = "Functions: \n";
+			int i = 0;
+			int size = LetsFunctions::functions.size();
+			for (auto& elem : LetsFunctions::functions){
+				result += "\t";
+				result += elem.first;
+				result +=  " : ";
+				result += elem.second->body->to_s();
+				
+				if(i != size-1) result +=  ", \n";
+				i++;
+			}
+			result +=  "\nend";
+
+			std::cout << result << std::endl;
+	}
+
 	~Functions();
 };
 

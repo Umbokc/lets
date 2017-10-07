@@ -8,8 +8,7 @@ public:
 	
 	VariableDoesNotExistsException(){}
 
-	VariableDoesNotExistsException(std::string& variable)
-													:variable(std::move(variable)){
+	VariableDoesNotExistsException(std::string& variable):variable(std::move(variable)){
 		this->message = "Variable " + this->variable + " does not exists";
 	}
 

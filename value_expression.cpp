@@ -2,7 +2,7 @@
 #define VALUE_EXPRESSION_CPP
 #include <string>
 
-class ValueExpression : virtual public Expression {
+class ValueExpression : public Expression {
 public:
 	Value *value;
 

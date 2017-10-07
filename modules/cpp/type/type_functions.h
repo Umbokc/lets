@@ -56,7 +56,7 @@ namespace NS_LM_F_Type{
 				// format_function_show = args[2]->to_s();
 				std::cout << func::string_format(
 					format_function_show,
-					the_function->functionExpr->to_s().c_str(),
+					args[0]->to_s().c_str(),
 					the_function->args_to_s().c_str()
 				);
 			}
