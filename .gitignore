@@ -1,6 +1,4 @@
-bin/*.out
-bin/*.exe
-bin/lets
+bin/*
 *.o
 
 ucpp
