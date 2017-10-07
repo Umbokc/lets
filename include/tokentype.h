@@ -28,6 +28,8 @@ enum TokenType {
 	TT_USE,
 	TT_END,
 	TT_IN,
+	TT_MODE,
+	TT_MATCH,
 
 	TT_PLUS, // +
 	TT_MINUS, // -
@@ -115,6 +117,8 @@ static const std::string TokenTypeString[] = {
 	"use",
 	"end",
 	"in",
+	"mode",
+	"match",
 
 	"plus", // +
 	"minus", // -

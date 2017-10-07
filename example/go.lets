@@ -1,20 +1,8 @@
 use 'std'
 use 'type'
 
-operations = {
-	"+" : def(a b) = a + b
-	"-" : def(a b) = a - b
-	"*" : def(a b) = a * b
-	"/" : def(a b) = a / b
-	"%" : def(a b) = a % b
-}
-
-for key, operation in operations :
-	print key + ' : ' + operation(10 4)
-end
-
 y = 2
-$x = '1'
+# $x = '1'
 
 def func():
 	$x = 11
@@ -34,6 +22,7 @@ def func():
 		end
 	end
 end
+
 print 'y ' + y
 
 func()
@@ -50,3 +39,30 @@ my_funcs = {
 }
 
 print my_funcs.fact(5)
+
+# fprint()
+# for a = 0, a <= 1, a++ :
+# 	for b = 0, b <= 1, b++ :
+# 		print(a + " | " + b + " = " + (a | b))
+# 		print(a + " & " + b + " = " + (a & b))
+# 		print(a + " ^ " + b + " = " + (a ^ b))
+# 	# 	fprint(a, " | ", b, " = ", a | b)
+# 	# 	fprint(a, " & ", b, " = ", a & b)
+# 	# 	fprint(a, " ^ ", b, " = ", a ^ b)
+# 	end
+# 	print("   ~" + a + "  " + string(~a))
+# 	print("   !" + a + "   " + string(!a))
+# 	print ''
+# 	# fprint("   ~", a, " ", ~a)
+# 	# fprint("   !", a, " ", !a)
+# end
+
+
+# a = newArray(200 200)
+# for i, x in a:
+# 	for j, y in a:
+# 		a[i][j] = i * j
+# 		# print a[i][j]
+# 	end
+# end
+

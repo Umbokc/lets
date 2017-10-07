@@ -7,10 +7,18 @@ BlockStatement* Parser::parse(){
 	BlockStatement* result = new BlockStatement();
 
 	while(!match(TokenType::TT_EOF)){
-		result->add(statement());
+		try{
+			result->add(statement());
+		} catch (ParseException& pe){
+			throw pe;
+		}
 	}
 
 	return result;
+}
+
+Statement* Parser::get_parsed_statement(){
+	return this->parsed_statement;
 }
 
 Statement* Parser::block(int type){
@@ -42,6 +50,8 @@ Statement* Parser::statement(){
 	if(match(TokenType::TT_FOR)) 			return for_statement();
 	if(match(TokenType::TT_DEF)) 			return function_define(false);
 	if(match(TokenType::TT_DEF_C)) 		return function_define(true);
+	if(match(TokenType::TT_MODE)) 		return new ModeProgrammStatement(expression()->eval()->as_string());
+	if(match(TokenType::TT_MATCH)) 		return match();
 	if (look_match(0, TokenType::TT_WORD) && look_match(1,TokenType::TT_LPAREN)) {
 		return new ExprStatement(function_chain(qualified_name()));
 	}
@@ -251,6 +261,15 @@ Expression* Parser::map_vals(){
 	}
 
 	return new MapExpression(elements);
+}
+
+MatchExpression* Parser::match(){
+	// match expression :
+	//  case pattern1: result1
+	//  case pattern2 if extr: result2
+	// end
+
+	return NULL;
 }
 
 Expression* Parser::expression(){
@@ -633,7 +652,10 @@ Expression* Parser::value() {
 	}
 
 	error_pars("Unknown expression: " + current.get_text(), current);
-	exit(1);
+	if(!Mode_Programm::without_stop){
+		exit(1);
+	}
+	return NULL;
 }
 
 Token Parser::consume(TokenType type){
@@ -657,7 +679,7 @@ bool Parser::match(TokenType type){
 	return true;
 }
 
-bool Parser::match_or_match(std::vector<TokenType> types){
+bool Parser::match(std::vector<TokenType> types){
 
 	Token current = get(0);
 
@@ -697,11 +719,11 @@ bool Parser::end_block(){
 }
 
 bool Parser::end_block_if(){
-	return (!match_or_match({TokenType::TT_END, TokenType::TT_ELSE}));
+	return (!match({TokenType::TT_END, TokenType::TT_ELSE}));
 }
 
 bool Parser::end_block_else_if(){
-	// return (!match_or_match(TokenType::TT_END, TokenType::TT_ELIF));
+	// return (!match(TokenType::TT_END, TokenType::TT_ELIF));
 	return false;
 }
 
@@ -714,7 +736,9 @@ void Parser::error_pars(std::string text, Token t){
 	// std::string expr_err = t.to_s();
 
 	std::cout << "Parser error " << t.get_position() << ": " << text << std::endl; 
-	exit(1);
+	if(!Mode_Programm::without_stop){
+		exit(1);
+	}
 }
 
 #endif

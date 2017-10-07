@@ -23,6 +23,7 @@ class TernaryExpression;
 class ValueExpression;
 class VariableExpression;
 class InputExpression;
+class MatchExpression;
 
 class Statement;
 class ArrayAssignmentStatement;
@@ -41,5 +42,6 @@ class PutStatement;
 class ReturnStatement;
 class UseStatement;
 class WhileStatement;
+class ModeProgrammStatement;
 
 #endif

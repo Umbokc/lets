@@ -1,24 +1,47 @@
+mode '0x666'
+
+$operations = [
+	{"+" : def(a b) = a + b}
+	{"-" : def(a b) = a - b}
+	{"*" : def(a b) = a * b}
+	{"/" : def(a b) = a / b}
+	{"%" : def(a b) = a % b}
+	{"&" : def(a b) = a & b}
+	{"|" : def(a b) = a | b}
+	{"^" : def(a b) = a ^ b}
+]
+
+def call_operations(a b):
+	print ''
+	for elem in $operations :
+		for key, operation in elem:
+			print a + ' ' + key + ' ' + b + ' = ' + operation(a b)
+		end
+	end
+	print ''
+end
+
+print "Binary operations with:"
 # number
 def_c number():
-	print "number:"
-
-	print 1 + 2
-	print 1 + '2'
+	print "numbers"
+	call_operations(10 4)
 end
 
 # array
 def_c array():
-	print "\narray:"
-	arr = [1, 2]
+	print "array:"
+	arr1 = [1, 2]
 	arr2 = [6, 7]
 	
-	print arr + arr2
-	print arr2 + arr
-	print arr + "\n"
-	print 5 >> arr
-	print arr << 7
-	print arr
+	call_operations(arr1 arr2)
 
+	# print arr + arr2
+	# print arr2 + arr
+	# print arr + "\n"
+	# print 5 >> arr
+	# print arr << 7
+	# print arr
 end
 
 # map
@@ -31,4 +54,4 @@ end
 
 number()
 array()
-map()
+# map()

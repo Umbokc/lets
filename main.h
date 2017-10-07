@@ -4,8 +4,13 @@
 #include <string>
 #include <vector>
 
+#include "include/help_functions.cpp"
+
+#include "utils/time_measurement.cpp"
+
+#include "include/mode.h"
+
 #include "include/declaration.h"
-#include "include/functions.h"
 
 #include "exceptions/exceptions_error.cpp"
 #include "exceptions/parse_exception.cpp"
@@ -27,7 +32,7 @@
 
 
 #include "include/tokentype.h"
-#include "include/token.h"
+#include "include/token.cpp"
 #include "lexer.cpp"
 
 #include "include/visitor.h"
@@ -52,6 +57,7 @@
 #include "assignment_expression.cpp"
 #include "container_access_expression.cpp"
 #include "input_expression.cpp"
+#include "match_expression.cpp"
 
 
 #include "break_statement.cpp"
@@ -67,6 +73,7 @@
 #include "if_statement.cpp"
 #include "print_statement.cpp"
 #include "put_statement.cpp"
+#include "mode_programm_statment.cpp"
 
 #include "lib/user_define_function.h"
 #include "functional_expression.cpp"
@@ -78,6 +85,21 @@
 
 #include "parser.cpp"
 
-#include "include/lets.h"
+// #include "include/lets.cpp"
+
+class Options {
+	bool showTokens = false, showAst = false, showMeasurements = false;
+	bool lintMode = false;
+	int optimizationLevel = 0;
+public:
+	void validate() {
+		if (lintMode == true) {
+			showTokens = false;
+			showAst = false;
+			showMeasurements = false;
+			optimizationLevel = 0;
+		}
+	}
+};
 
 #endif

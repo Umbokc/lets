@@ -3,7 +3,6 @@
 #include <string>
 #include <limits>
 #include <cmath>
-#include "../include/functions.h"
 
 namespace NS_Number {
 	typedef union {

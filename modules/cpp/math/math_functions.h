@@ -1,7 +1,7 @@
-#ifndef LETS_MODULE_MATH_FUNCTIONS_H
-#define LETS_MODULE_MATH_FUNCTIONS_H
+#ifndef LETS_MODULE_FUNCTIONS_MATH_H
+#define LETS_MODULE_FUNCTIONS_MATH_H
 
-namespace Lets_Modules_Math{
+namespace NS_LM_F_Math{
 	
 	class LMM_Sin : public Function{
 	public:

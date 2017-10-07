@@ -28,8 +28,8 @@ public:
 			values.push_back(argument->eval());
 		}
 
-		Function *f = consume_function(functionExpr);
-		CallStack::enter(functionExpr->to_s(), f);
+		Function *f = consume_function(this->functionExpr);
+		CallStack::enter(this->functionExpr->to_s(), f);
 		Value* result = f->execute(values);
 		CallStack::exit();
 		return result;
@@ -39,17 +39,16 @@ public:
 		visitor->visit(this);
 	}
 
+	std::string name_to_s(){
+		return this->functionExpr->to_s();
+	}
+
+	std::string args_to_s(){
+		return func::vector_to_s<Expression *>(arguments) ;
+	}
+
 	std::string to_s(){
-		std::string result = functionExpr->to_s() + "( ";
-
-		for (Expression *argument : arguments){
-			result += argument->to_s();
-			result +=  ", ";
-		}
-
-		result +=  "\b\b )";
-
-		return result;
+		return name_to_s() + "( " + args_to_s() + " )";
 	}
 
 private:
@@ -75,6 +74,7 @@ private:
 				return dynamic_cast<FunctionValue*>(variable)->get_value();
 			}
 		}
+		
 
 		throw ParseException("Unknown function \"" + key + "\"");
 	}

@@ -1,12 +1,12 @@
-#ifndef LETS_MODULE_STD_FUNCTIONS_H
-#define LETS_MODULE_STD_FUNCTIONS_H
+#ifndef LETS_MODULE_FUNCTIONS_STD_H
+#define LETS_MODULE_FUNCTIONS_STD_H
 #include <limits>
 
-namespace NSLM_Std_Funcs{
+namespace NS_LM_F_Std{
 
-	class Echo : public Function{
+	class LMS_Echo : public Function{
 	public:
-		Echo(){}
+		LMS_Echo(){}
 
 		Value* execute(std::vector<Value *> args){
 			for(auto a : args){
@@ -20,30 +20,51 @@ namespace NSLM_Std_Funcs{
 			return "";
 		}
 
-		~Echo(){}
+		~LMS_Echo(){}
 	};
 
-	class Len : public Function{
+	class LMS_Echo_spaces : public Function{
 	public:
+		LMS_Echo_spaces(){}
+
+		Value* execute(std::vector<Value *> args){
+			for(auto a : args){
+				std::cout.precision(a->to_s().length());
+				std::cout << std::fixed << a->to_s() << " ";
+			}
+			std::cout << std::endl;
+			return ZERO;
+		}
+		
+		std::string to_s(){
+			return "";
+		}
+
+		~LMS_Echo_spaces(){}
+	};
+
+	class LMS_Len : public Function{
+	public:
+		LMS_Len(){}
 		Value* execute(std::vector<Value *> args){
 			if(args.size() != 1) throw ParseException("Function len(arg*) one args expected");
 			return new NumberValue(args[0]->len());
 		}
 		
 		std::string to_s(){ return ""; }
-		
+		~LMS_Len(){}
 	};
 
-	class NewArray : public Function{
+	class LMS_NewArray : public Function{
 	public:
-		NewArray(){}
+		LMS_NewArray(){}
 		Value* execute(std::vector<Value *> args){
 			return create_array(args, 0);
 		}
 		std::string to_s(){
 			return "";
 		}
-		~NewArray(){}
+		~LMS_NewArray(){}
 	private:
 		ArrayValue* create_array(std::vector<Value *> args, int index){
 			

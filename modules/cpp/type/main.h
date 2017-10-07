@@ -3,11 +3,12 @@
 
 #include "type_functions.h"
 
-namespace Lets_Module_Type {
+namespace NS_LM_Type {
 
 	void run() {
-		Functions::set_lets_funcs("int", new NSLM_Type_Funcs::to_int(), true);
-		Functions::set_lets_funcs("string", new NSLM_Type_Funcs::to_string(), true);
+		Functions::set_lets_funcs("int", 			new NS_LM_F_Type::NS_LM_Fs_to_int(), true);
+		Functions::set_lets_funcs("string", 	new NS_LM_F_Type::NS_LM_Fs_to_string(), true);
+		Functions::set_lets_funcs("call_f", 	new NS_LM_F_Type::NS_LM_Fs_call_func(), true);
 	}
 
 }

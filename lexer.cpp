@@ -9,6 +9,7 @@ std::vector<Token> Lexer::tokenize(){
 		char current = peek(0);
 		if(isdigit(current)) tokenize_number();
 		else if(is_word_var(current)) tokenize_word();
+		else if( current == '`') tokenize_extended_word();
 		else if( current == '"') tokenize_text_double_quote();
 		else if( current == '\'') tokenize_text_single_quote();
 		else if( current == '#') tokenize_comment();
@@ -115,6 +116,21 @@ void Lexer::tokenize_word() {
 	} else {
 		add_token(TokenType::TT_WORD, this->buffer);
 	}
+}
+
+void Lexer::tokenize_extended_word() {
+	next(); // skip `
+	clear_buffer();
+	char current = peek(0);
+	while (true) {
+		if (current == '`') break;
+		if (current == '\0') lexer_error("Reached end of file while parsing extended word.");
+		if (current == '\n' || current == '\r') lexer_error("Reached end of line while parsing extended word.");
+		this->buffer.push_back(current);
+		current = next();
+	}
+	next(); // skip closing `
+	add_token(TokenType::TT_WORD, this->buffer);
 }
 
 void Lexer::tokenize_text_double_quote() {
@@ -263,12 +279,9 @@ void Lexer::add_token(TokenType tt, std::string txt){
 	this->tokens.push_back(Token(tt, txt, this->row, this->col));
 }
 
-// bool Lexer::map_key_exists(std::map<std::string, TokenType>& the_map, std::string key){
-// 	return (the_map.find(key) == the_map.end());
-// }
-
 void Lexer::lexer_error(std::string mess){
 	std::cout << "Lexer error ["  << std::to_string(row) << ":" << std::to_string(col) << "]: " << mess << std::endl;
 	exit(1);
 }
+
 #endif

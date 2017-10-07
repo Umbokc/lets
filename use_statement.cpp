@@ -12,9 +12,9 @@ public:
 	UseStatement(std::string name):name(std::move(name)){}
 
 	void execute(){
-		if(name == "std") Lets_Module_Std::run();
-		else if(name == "math") Lets_Module_Math::run();
-		else if(name == "type") Lets_Module_Type::run();
+		if(name == "std") NS_LM_Std::run();
+		else if(name == "math") NS_LM_Math::run();
+		else if(name == "type") NS_LM_Type::run();
 		else
 			throw ParseException("Does not found module " + name);
 	}

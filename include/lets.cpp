@@ -39,7 +39,7 @@ public:
 			programm->execute();
 
 		} catch (ParseException& pe){
-			std::cout << "Parser error: " << pe.get_message() << std::endl; 
+			std::cout << "Parser error: " << pe.get_message() << std::endl;
 		}
 	}
 	

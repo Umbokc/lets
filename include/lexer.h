@@ -87,7 +87,9 @@ namespace NS_Lexer{
 		{"end", TokenType::TT_END},
 		{"in", TokenType::TT_IN},
 		{"input", TokenType::TT_INPUT},
-		{"include", TokenType::TT_RETURN}
+		{"include", TokenType::TT_RETURN},
+		{"mode", TokenType::TT_MODE},
+		{"match", TokenType::TT_MATCH},
 	};
 }
 
@@ -117,6 +119,7 @@ private:
 	int is_hex_number(char c);
 	void tokenize_binary_number();
 	void tokenize_word();
+	void tokenize_extended_word();
 	void tokenize_text_double_quote();
 	void tokenize_text_single_quote();
 	void tokenize_operator();

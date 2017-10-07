@@ -17,7 +17,7 @@ namespace NS_Binary{
 		XOR, // ^
 		LSHIFT, // <<
 		RSHIFT, // >>
-		EQ, // >>
+		EQ, // =
 	} x;
 
 	const static std::string OperatorString[] {
@@ -81,21 +81,29 @@ public:
 private:
 
 	Value *eval(Value *value1, Value *value2){
-		switch (operation) {
-			case NS_Binary::ADD: return BO_add(value1, value2);
-			case NS_Binary::SUBTRACT: return BO_subtract(value1, value2);
-			case NS_Binary::MULTIPLY: return BO_multiply(value1, value2);
-			case NS_Binary::DIVIDE: return BO_divide(value1, value2);
-			case NS_Binary::REMAINDER: return BO_remainder(value1, value2);
-			case NS_Binary::AND: return BO_and(value1, value2);
-			case NS_Binary::OR: return BO_or(value1, value2);
-			case NS_Binary::XOR: return BO_xor(value1, value2);
-			case NS_Binary::LSHIFT: return BO_lshift(value1, value2);
-			case NS_Binary::RSHIFT: return BO_rshift(value1, value2);
-			default:
-			operation_is_not_supported();
+		try{
+			switch (operation) {
+				case NS_Binary::ADD: return BO_add(value1, value2);
+				case NS_Binary::SUBTRACT: return BO_subtract(value1, value2);
+				case NS_Binary::MULTIPLY: return BO_multiply(value1, value2);
+				case NS_Binary::DIVIDE: return BO_divide(value1, value2);
+				case NS_Binary::REMAINDER: return BO_remainder(value1, value2);
+				case NS_Binary::AND: return BO_and(value1, value2);
+				case NS_Binary::OR: return BO_or(value1, value2);
+				case NS_Binary::XOR: return BO_xor(value1, value2);
+				case NS_Binary::LSHIFT: return BO_lshift(value1, value2);
+				case NS_Binary::RSHIFT: return BO_rshift(value1, value2);
+				default:
+				operation_is_not_supported();
+			}
+		} catch(ParseException& pe){
+			if(Mode_Programm::without_stop){
+				std::cout << "Error binary operation: " << pe.get_message() << std::endl;
+				return ZERO;
+			} else {
+				throw ParseException(pe.get_message());
+			}
 		}
-
 		return ZERO;
 	}
 

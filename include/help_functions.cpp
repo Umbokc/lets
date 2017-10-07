@@ -1,5 +1,5 @@
-#ifndef HELP_FUNCTIONS_H
-#define HELP_FUNCTIONS_H
+#ifndef HELP_FUNCTIONS_CPP
+#define HELP_FUNCTIONS_CPP
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -129,33 +129,6 @@ namespace func {
 		strs << num;
 		return strs.str();
 	}
-
-	// bool is_float( const std::string& my_string ) {
-	//  bool Checked = true;
-	//  bool was_dot = false;
-	//  int i = 0;
-	//  do {
-	//    if (isdigit(my_string[i]) || my_string[i] == '.') {
-	//      if (my_string[i] == '.') {
-	//        if(was_dot){
-	//          Checked = false;
-	//          break;
-	//        }
-	//        was_dot = true;
-	//        Checked = true;
-	//      }
-
-	//      i++;
-	//    } else {
-	//      //to the next character
-	//      i++;
-	//      Checked = false;
-	//      break;
-	//    }
-	//  } while (my_string[i] != '\0');
-
-	//  return Checked;
- //  }
 }
 
 #endif

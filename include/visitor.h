@@ -18,6 +18,7 @@ public:
 	virtual void visit(ValueExpression *s) = 0;
 	virtual void visit(VariableExpression *s) = 0;
 	virtual void visit(InputExpression *s) = 0;
+	virtual void visit(MatchExpression *s) = 0;
 	
 	virtual void visit(ArrayAssignmentStatement *s) = 0;
 	virtual void visit(AssignmentStatement *s) = 0;
@@ -35,6 +36,7 @@ public:
 	virtual void visit(ReturnStatement *s) = 0;
 	virtual void visit(UseStatement *s) = 0;
 	virtual void visit(WhileStatement *s) = 0;
+	virtual void visit(ModeProgrammStatement *s) = 0;
 };
 
 #endif

@@ -1,3 +1,6 @@
+#ifndef _TOKEN_CPP
+#define _TOKEN_CPP
+
 #include <string>
 #include "tokentype.h"
 
@@ -29,13 +32,8 @@ public:
 		return (TokenToString(this->type) + " " + text); 
 	}
 
-	int get_row() {
-		return row;
-	}
-
-	int get_col() {
-		return col;
-	}
+	int get_row() { return row; }
+	int get_col() { return col; }
 
 	std::string get_position() {
 		return "[" + std::to_string(row) + ":" + std::to_string(col) + "]";
@@ -43,3 +41,5 @@ public:
 
 	~Token(){}
 };
+
+#endif

@@ -28,6 +28,7 @@ private:
 	Token TT_EOF_T = Token(TokenType::TT_EOF, "", -1, -1);
 	std::vector<Token> tokens;
 	int pos, size;
+	Statement* parsed_statement;
 public:
 	
 	Parser(){}
@@ -42,6 +43,8 @@ public:
 	~Parser(){}
 private:
 
+	Statement* get_parsed_statement();
+
 	Statement* block(int);
 	Statement* statement_or_block(int);
 	Statement* statement();
@@ -55,12 +58,11 @@ private:
 	Arguments arguments();
 	Statement* statement_body();
 
-
 	Expression* function_chain(Expression*);
 	FunctionalExpression* function(Expression*);
 	Expression* array();
-	// ArrayAccessExpression* element();
 	Expression* map_vals();
+	MatchExpression* match();
 	Expression* expression();
 	Expression* assignment();
 	Expression* assignment_strict();
@@ -85,7 +87,7 @@ private:
 
 	Token consume(TokenType);
 	bool match(TokenType);
-	bool match_or_match(std::vector<TokenType>);
+	bool match(std::vector<TokenType>);
 	bool look_match(int, TokenType);
 	Token get(int);
 

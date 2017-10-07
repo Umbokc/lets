@@ -74,7 +74,7 @@ public:
 		set_var(key, value, true, is_global_var(key), true);
 	}
 
-	static void set_lets_varss(std::string key, Value* value, bool is_contstant){
+	static void set_lets_vars(std::string key, Value* value, bool is_contstant){
 		set_var(key, value, is_contstant, is_global_var(key), false);
 	}
 
