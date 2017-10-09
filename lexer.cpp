@@ -155,6 +155,7 @@ void Lexer::tokenize_text_double_quote() {
 				case '"': current = next(); this->buffer.push_back('\"'); continue;
 				case 'n': current = next(); this->buffer.push_back('\n'); continue;
 				case 't': current = next(); this->buffer.push_back('\t'); continue;
+				case 'b': current = next(); this->buffer.push_back('\b'); continue;
 				case 'r': current = next(); this->buffer.push_back('\r'); continue;
 				case '0': current = next(); this->buffer.push_back('\0'); continue;
 			}

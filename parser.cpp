@@ -21,19 +21,19 @@ Statement* Parser::get_parsed_statement(){
 	return this->parsed_statement;
 }
 
-Statement* Parser::block(int type){
+Statement* Parser::block(){
 	BlockStatement* block = new BlockStatement();
 
 	consume(TokenType::TT_COLON);
-	while(end_the_block(type)){
+	while(!match(TokenType::TT_END)){
 		block->add(statement());
 	}
 
 	return block;
 }
 
-Statement* Parser::statement_or_block(int type){
-	if(look_match(0, TokenType::TT_COLON)) return block(type);
+Statement* Parser::statement_or_block(){
+	if(look_match(0, TokenType::TT_COLON)) return block();
 	return statement();
 }
 
@@ -74,13 +74,30 @@ Statement* Parser::assignment_statement(){
 Statement* Parser::if_else(){
 
 	Expression* condition = expression();	
-	Statement* if_statement = statement_or_block(2);
+	Statement* if_statement;
 	Statement* else_statement;
-	
-	if(match(TokenType::TT_ELSE) || (dynamic_cast<BlockStatement*>(if_statement) && get(-1).get_type() == TokenType::TT_ELSE)){
-		else_statement = statement_or_block(1);
+
+	if(match(TokenType::TT_COLON)){
+		BlockStatement* block = new BlockStatement();
+		while(true){
+			if(match(TokenType::TT_END)){
+				else_statement = NULL;
+				break;
+			}
+			if(match(TokenType::TT_COLON) && match(TokenType::TT_ELSE)){
+				else_statement = statement_or_block();
+				break;
+			}
+			block->add(statement());
+		}
+		if_statement = block;
 	} else {
-		else_statement = NULL;
+		if_statement = statement();
+		if(match(TokenType::TT_ELSE)){
+			else_statement = statement_or_block();
+		} else {
+			else_statement = NULL;
+		}
 	}
 
 	return new IfStatement(condition, if_statement, else_statement);
@@ -88,12 +105,12 @@ Statement* Parser::if_else(){
 
 Statement* Parser::while_statement(){
 	Expression* condition = expression();
-	Statement* statement = statement_or_block(1);
+	Statement* statement = statement_or_block();
 	return new WhileStatement(condition, statement);
 }
 
 Statement* Parser::do_while_statement(){
-	Statement* statement = statement_or_block(1);
+	Statement* statement = statement_or_block();
 	consume(TokenType::TT_WHILE);
 	Expression* condition = expression();
 	return new DoWhileStatement(condition, statement);
@@ -125,7 +142,7 @@ Statement* Parser::for_statement(){
 
 	if(open_parent) consume(TokenType::TT_RPAREN); 
 
-	Statement* statement = statement_or_block(1);
+	Statement* statement = statement_or_block();
 
 	return new ForStatement(initialization, termintion, incement, statement);
 }
@@ -150,7 +167,7 @@ ForeachStatement* Parser::foreach_arr_statement(bool two_vars = false){
 
 	if(open_parent) consume(TokenType::TT_RPAREN); 
 
-	Statement* body = statement_or_block(1);
+	Statement* body = statement_or_block();
 
 	return new ForeachStatement(key, val, container, body);
 }
@@ -187,7 +204,7 @@ Statement* Parser::statement_body(){
 	if(match(TokenType::TT_EQ))
 		return new ReturnStatement(expression());
 
-	return statement_or_block(1);
+	return statement_or_block();
 }
 
 Expression* Parser::function_chain(Expression *qualified_name_expr){
@@ -332,7 +349,7 @@ Expression* Parser::logicalOr(){
 	Expression* result = logicalAnd();
 	while(true){
 		if(match(TokenType::TT_BARBAR)){
-			result = new ConditionalExpression(ConditionalOperator::Operator::OR, result, logicalAnd());
+			result = new ConditionalExpression(NS_Conditional::Operator::OR, result, logicalAnd());
 			continue;
 		}
 		break;
@@ -344,7 +361,7 @@ Expression* Parser::logicalAnd(){
 	Expression* result = bitwiseOr();
 	while(true){
 		if(match(TokenType::TT_AMPAMP)){
-			result = new ConditionalExpression(ConditionalOperator::Operator::AND, result, bitwiseOr());
+			result = new ConditionalExpression(NS_Conditional::Operator::AND, result, bitwiseOr());
 			continue;
 		}
 		break;
@@ -399,10 +416,10 @@ Expression* Parser::equality(){
 	Expression* result = conditional();
 	
 	if(match(TokenType::TT_EQEQ)){
-		return new ConditionalExpression(ConditionalOperator::Operator::EQUALS, result, conditional());
+		return new ConditionalExpression(NS_Conditional::Operator::EQUALS, result, conditional());
 	}
 	if(match(TokenType::TT_EXCLEQ)){
-		return new ConditionalExpression(ConditionalOperator::Operator::NOT_EQUALS, result, conditional());
+		return new ConditionalExpression(NS_Conditional::Operator::NOT_EQUALS, result, conditional());
 	}
 
 	return result;
@@ -413,19 +430,19 @@ Expression* Parser::conditional(){
 
 	while(true){
 		if(match(TokenType::TT_LT)){
-			result = new ConditionalExpression(ConditionalOperator::Operator::LT, result, shift());
+			result = new ConditionalExpression(NS_Conditional::Operator::LT, result, shift());
 			continue;
 		}
 		if(match(TokenType::TT_LTEQ)){
-			result = new ConditionalExpression(ConditionalOperator::Operator::LTEQ, result, shift());
+			result = new ConditionalExpression(NS_Conditional::Operator::LTEQ, result, shift());
 			continue;
 		}
 		if(match(TokenType::TT_GT)){
-			result = new ConditionalExpression(ConditionalOperator::Operator::GT, result, shift());
+			result = new ConditionalExpression(NS_Conditional::Operator::GT, result, shift());
 			continue;
 		}
 		if(match(TokenType::TT_GTEQ)){
-			result = new ConditionalExpression(ConditionalOperator::Operator::GTEQ, result, shift());
+			result = new ConditionalExpression(NS_Conditional::Operator::GTEQ, result, shift());
 			continue;
 		}
 		break;
@@ -650,7 +667,7 @@ Expression* Parser::value() {
 	if(match(TokenType::TT_TEXT)){
 		return new ValueExpression(current.get_text());
 	}
-
+	dbg(get(-1).to_s());
 	error_pars("Unknown expression: " + current.get_text(), current);
 	if(!Mode_Programm::without_stop){
 		exit(1);
@@ -703,25 +720,6 @@ Token Parser::get(int rel_pos){
 	int position = pos + rel_pos;
 	if(position >= size) return TT_EOF_T;
 	return tokens[position];
-}
-
-bool Parser::end_the_block(int type){
-	if(type == 2)
-		return end_block_if();
-	
-	return end_block();
-}
-
-bool Parser::end_block(){
-	return !match(TokenType::TT_END);
-}
-
-bool Parser::end_block_if(){
-	return (!match({TokenType::TT_END, TokenType::TT_ELSE}));
-}
-
-bool Parser::end_block_else_if(){
-	return false;
 }
 
 void Parser::error_pars(std::string text, Token t){

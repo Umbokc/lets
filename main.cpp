@@ -1,7 +1,6 @@
 #include "main.h"
 
 int main(int argc, char const *argv[]) {
-
 	if(argc <= 1){
 		std::cout << "Give me code!" << std::endl;
 		exit(1);
@@ -12,6 +11,7 @@ int main(int argc, char const *argv[]) {
 			std::cout << "File: " << argv[i] << std::endl;
 
 		TimeMeasurement measurement;
+		Statement* programm;
 
 		measurement.start("Tokenize time");
 		
@@ -24,9 +24,17 @@ int main(int argc, char const *argv[]) {
 		measurement.start("Parse time");
 
 		Parser parser = Parser(tokens);
-		Statement* programm = parser.parse();
+		Statement* parsedProgram = parser.parse();
 
 		measurement.stop("Parse time");
+
+		if(false){
+			measurement.start("Optimization time");
+			programm = Optimizer::optimize(parsedProgram, 1, false);
+			measurement.stop("Optimization time");
+		} else {
+			programm = parsedProgram;
+		}
 		
 		// programm->accept(new FunctionAdder());
 		// programm->accept(new VariablesPrint());
@@ -41,7 +49,7 @@ int main(int argc, char const *argv[]) {
 			std::cout << "Parser error: " << pe.get_message() << std::endl;
 		}
 
-		// std::cout << measurement.summary("milliseconds", true) << std::endl;
+		// std::cout << measurement.summary("s", true) << std::endl;
 	}
 
 	return 0;

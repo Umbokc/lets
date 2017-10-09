@@ -49,10 +49,10 @@ public:
 
 	std::string summary(std::string unit_name, bool show_summary){
 		std::string result;
-		long summary_time = 0L;
+		double summary_time = 0L;
 
 		for (std::map<std::string, std::chrono::nanoseconds>::iterator it = finished.begin(); it != finished.end(); ++it) {
-			long converted_time =	convert(unit_name, it->second);
+			double converted_time =	convert(unit_name, it->second);
 			summary_time += converted_time;
 
 			result += (it->first + ": " + std::to_string(converted_time) + " " + unit_name + "\n");
@@ -73,19 +73,21 @@ private:
 		finished[name] = std::chrono::nanoseconds(already_elapsed.count() + time.count());
 	}
 
-	long convert(std::string unit_name, std::chrono::nanoseconds time){
-		
-		if(unit_name == "nanoseconds"){
-			return std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
+	double convert(std::string unit_name, std::chrono::nanoseconds time){
+
+		double nano_sec = (double)std::chrono::duration_cast<std::chrono::nanoseconds>(time).count();
+
+		if(unit_name == "ns"){
+			return (double)nano_sec;
 		}
-		if(unit_name == "microseconds"){
-			return std::chrono::duration_cast<std::chrono::microseconds>(time).count();
+		if(unit_name == "us"){
+			return nano_sec/1000.0;
 		}
-		if(unit_name == "seconds"){
-			return std::chrono::duration_cast<std::chrono::seconds>(time).count();
+		if(unit_name == "s"){
+			return nano_sec/1000000000.0;
 		}
 
-		return std::chrono::duration_cast<std::chrono::milliseconds>(time).count();
+		return nano_sec/1000000.0;
 	}
 };
 

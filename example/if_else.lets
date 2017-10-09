@@ -6,39 +6,40 @@ if !false:
 end
 
 if true :
-	print ('if 3')
-	print ('if 3s')
-else
-	print ('not if 2')
+	print ('if block')
+:else
+	print ('else one st')
 
-if true 
-	print ('if 3')
+if ~(-1)
+	print ('if one st')
 else :
-	print ('not if 3')
-	print ('not if 2')
+	print ('else block')
 end
 
 print "\n"
 
-if false : 
-	print ('if 1')
-	print ('if 2')
-	print ('if 3')
-else :
-	print ('not if 1')
-	print ('not if 2')
-	print ('not if 3')
+if 0 == '' : 
+	print ('if block')
+:else :
+	print ('else block')
 end
 
 print ''
 
 a = 2
-
 if a == 1 :
-	print 1
-else if a == 2 :
-	print 2
-	print 22
-else :
-	print 3
+	print ('if block')
+:else if a == 2 :
+	print ('else if block')
+:else :
+	print ('else block')
 end
+
+if 0 == '':
+	if true 
+		print ('if block 1')
+:else :
+	print ('else block')
+	print ('else block')
+end
+

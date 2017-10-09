@@ -4,59 +4,54 @@
 #include "function.h"
 #include "function_container.h"
 
-namespace LetsFunctions{
+namespace Functions{
 	std::map<std::string, FunctionContainer*> functions;
-}
-
-class Functions{
-public:
 
 	static bool is_exists(std::string key){
-		return LetsFunctions::functions.find(key) != LetsFunctions::functions.end();
+		return functions.find(key) != functions.end();
 	}
 
 	static bool is_constexpr(std::string key){
-		return LetsFunctions::functions[key]->is_constant;
+		return functions[key]->is_constant;
 	}
 
 	static Function* get(std::string key){
 		if(!is_exists(key)) throw ParseException("Unknown function \"" + key + "\"");
-		return LetsFunctions::functions[key]->body;
+		return functions[key]->body;
 	}
 
 	static void set(std::string key, Function* function){
 		if(is_exists(key) && is_constexpr(key)) throw ParseException("Cannot rewrite constant function \"" + key + "\"");
-		LetsFunctions::functions[key] = new FunctionContainer(function);
+		functions[key] = new FunctionContainer(function);
 	}
 	
 	static void set_constexpr(std::string key, Function* function){
 		if(is_exists(key) && is_constexpr(key)) throw ParseException("Cannot rewrite constant function \"" + key + "\"");
-		LetsFunctions::functions[key] =  new FunctionContainer(function, true);
+		functions[key] =  new FunctionContainer(function, true);
 	}
 
 	static void set_lets_funcs(std::string key, Function* function, bool is_constexpr){
-		LetsFunctions::functions[key] =  new FunctionContainer(function, is_constexpr);
+		functions[key] =  new FunctionContainer(function, is_constexpr);
 	}
 
-	static void show(){
-		std::string result = "Functions: \n";
-			int i = 0;
-			int size = LetsFunctions::functions.size();
-			for (auto& elem : LetsFunctions::functions){
-				result += "\t";
-				result += elem.first;
-				result +=  " : ";
-				result += elem.second->body->to_s();
+	// static void show(){
+	// 	std::string result = "Functions: \n";
+	// 		int i = 0;
+	// 		int size = functions.size();
+	// 		for (auto& elem : functions){
+	// 			result += "\t";
+	// 			result += elem.first;
+	// 			result +=  " : ";
+	// 			result += elem.second->body->to_s();
 				
-				if(i != size-1) result +=  ", \n";
-				i++;
-			}
-			result +=  "\nend";
+	// 			if(i != size-1) result +=  ", \n";
+	// 			i++;
+	// 		}
+	// 		result +=  "\nend";
 
-			std::cout << result << std::endl;
-	}
+	// 		std::cout << result << std::endl;
+	// }
 
-	~Functions();
 };
 
 #endif

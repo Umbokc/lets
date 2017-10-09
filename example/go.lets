@@ -23,17 +23,52 @@ use 'std'
 # print '$x = ' + $x
 # $x = 3
 # print '$x = ' + $x
-$a = true
-def fact(n):
-	# print n
-	return n < 0 ? 0 
-		: n == 0 ? 1 
-		: n * fact(n-1)
+# $a = true
+# def fact(n):
+# 	# print n
+# 	return n < 0 ? 0 
+# 		: n == 0 ? 1 
+# 		: n * fact(n-1)
+# end
+
+# my_funcs = {
+# 	'facttorial' : def (n) = n < 0 ? 0 : n == 0 ? 1 : n * my_funcs.facttorial(n-1)
+# }
+# N = 200
+# str = "\\ - /"
+
+# for i = 0, i < N, ++i
+# 	for j = 0, j < N, ++j
+# 		for x in str
+# 			put x + "\b"
+			
+# print fact(5)
+# print my_funcs.facttorial(5)
+
+# __b = 1
+# print __b
+
+# map = {
+	# 'split' : def (a):
+	def split(line sep):
+		commands = []
+		buffer = ''
+		for i = 0, i < len(line), ++i :
+			if line[i] != sep
+				buffer += line[i]
+			else :
+				commands << buffer
+				buffer = ''
+			end
+		end
+		if buffer != ''
+			commands << buffer
+		return commands
+	end
+# }
+
+def name():
+	return map
 end
 
-my_funcs = {
-	'facttorial' : def (n) = n < 0 ? 0 : n == 0 ? 1 : n * my_funcs.facttorial(n-1)
-}
-
-print fact(5)
-# print my_funcs.facttorial(5)
+print split("first things first", ' ')

@@ -4,9 +4,9 @@
 #include <string>
 
 class UserDefineFunction : public Function {
+public:
 	Arguments args;
 	Statement *body;
-public:
 
 	UserDefineFunction(Arguments args, Statement *body):
 				args(std::move(args)), body(std::move(body)){}

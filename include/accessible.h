@@ -4,7 +4,7 @@
 #include "node.h"
 #include "expression.h"
 
-class Accessible : public Node {
+class Accessible : virtual public Node {
 public:
 	virtual Value* get() = 0;
 	virtual Value* set(Value* value) = 0;

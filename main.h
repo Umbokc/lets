@@ -15,6 +15,7 @@
 #include "exceptions/exceptions_error.cpp"
 #include "exceptions/parse_exception.cpp"
 #include "exceptions/variable_does_not_exists_exception.cpp"
+#include "exceptions/operation_is_not_supported_exception.cpp"
 
 #include "lib/types.h"
 #include "lib/arguments_check.h"
@@ -35,72 +36,73 @@
 #include "include/token.cpp"
 #include "lexer.cpp"
 
-#include "include/visitor.h"
 #include "include/node.h"
 #include "include/accessible.h"
 
 #include "include/expression.h"
 #include "include/statement.h"
 
-#include "argument.cpp"
-#include "arguments.cpp"
+#include "ast/argument.cpp"
+#include "ast/arguments.cpp"
 
-#include "value_expression.cpp"
-#include "array_access_expression.cpp"
-#include "array_expression.cpp"
-#include "map_expression.cpp"
-#include "binary_expression.cpp"
-#include "conditional_expression.cpp"
-#include "unary_expression.cpp"
-#include "ternary_expression.cpp"
-#include "variable_expression.cpp"
-#include "assignment_expression.cpp"
-#include "container_access_expression.cpp"
-#include "input_expression.cpp"
-#include "match_expression.cpp"
+#include "ast/expressions/value_expression.cpp"
+#include "ast/expressions/array_access_expression.cpp"
+#include "ast/expressions/array_expression.cpp"
+#include "ast/expressions/map_expression.cpp"
+#include "ast/expressions/binary_expression.cpp"
+#include "ast/expressions/conditional_expression.cpp"
+#include "ast/expressions/unary_expression.cpp"
+#include "ast/expressions/ternary_expression.cpp"
+#include "ast/expressions/variable_expression.cpp"
+#include "ast/expressions/assignment_expression.cpp"
+#include "ast/expressions/container_access_expression.cpp"
+#include "ast/expressions/input_expression.cpp"
+#include "ast/expressions/match_expression.cpp"
 
 
-#include "break_statement.cpp"
-#include "continue_statement.cpp"
-#include "block_statement.cpp"
-#include "assignment_statement.cpp"
-#include "array_assignment_statement.cpp"
-#include "return_statement.cpp"
-#include "for_statement.cpp"
-#include "foreach_statement.cpp"
-#include "do_while_statement.cpp"
-#include "while_statement.cpp"
-#include "if_statement.cpp"
-#include "print_statement.cpp"
-#include "put_statement.cpp"
-#include "mode_programm_statment.cpp"
-#include "self_statement.cpp"
+#include "ast/statements/break_statement.cpp"
+#include "ast/statements/continue_statement.cpp"
+#include "ast/statements/block_statement.cpp"
+#include "ast/statements/assignment_statement.cpp"
+#include "ast/statements/array_assignment_statement.cpp"
+#include "ast/statements/return_statement.cpp"
+#include "ast/statements/for_statement.cpp"
+#include "ast/statements/foreach_statement.cpp"
+#include "ast/statements/do_while_statement.cpp"
+#include "ast/statements/while_statement.cpp"
+#include "ast/statements/if_statement.cpp"
+#include "ast/statements/print_statement.cpp"
+#include "ast/statements/put_statement.cpp"
+#include "ast/statements/mode_programm_statement.cpp"
+#include "ast/statements/self_statement.cpp"
 
 #include "lib/user_define_function.h"
-#include "functional_expression.cpp"
+#include "ast/expressions/functional_expression.cpp"
 
-#include "function_define_statement.cpp"
-#include "expr_statement.cpp"
+#include "ast/statements/function_define_statement.cpp"
+#include "ast/statements/expr_statement.cpp"
 
-#include "use_statement.cpp"
+#include "ast/statements/use_statement.cpp"
 
 #include "parser.cpp"
 
+#include "utils/optimization/optimizer.cpp"
+
 // #include "include/lets.cpp"
 
-class Options {
-	bool showTokens = false, showAst = false, showMeasurements = false;
-	bool lintMode = false;
-	int optimizationLevel = 0;
-public:
-	void validate() {
-		if (lintMode == true) {
-			showTokens = false;
-			showAst = false;
-			showMeasurements = false;
-			optimizationLevel = 0;
-		}
-	}
-};
+// class Options {
+// 	bool showTokens = false, showAst = false, showMeasurements = false;
+// 	bool lintMode = false;
+// 	int optimizationLevel = 0;
+// public:
+// 	void validate() {
+// 		if (lintMode == true) {
+// 			showTokens = false;
+// 			showAst = false;
+// 			showMeasurements = false;
+// 			optimizationLevel = 0;
+// 		}
+// 	}
+// };
 
 #endif

@@ -8,7 +8,7 @@
 
 namespace NS_Parser{
 	static std::map<TokenType, NS_Binary::Operator> ASSIGN_OPERATORS = {
-		{TokenType::TT_EQ, NS_Binary::Operator::EQ},
+		{TokenType::TT_EQ, NS_Binary::Operator::THE_NULL},
 		{TokenType::TT_PLUSEQ, NS_Binary::Operator::ADD},
 		{TokenType::TT_MINUSEQ, NS_Binary::Operator::SUBTRACT},
 		{TokenType::TT_STAREQ, NS_Binary::Operator::MULTIPLY},
@@ -45,8 +45,8 @@ private:
 
 	Statement* get_parsed_statement();
 
-	Statement* block(int);
-	Statement* statement_or_block(int);
+	Statement* block();
+	Statement* statement_or_block();
 	Statement* statement();
 	Statement* assignment_statement();
 	Statement* if_else();
@@ -90,11 +90,6 @@ private:
 	bool match(std::vector<TokenType>);
 	bool look_match(int, TokenType);
 	Token get(int);
-
-	bool end_the_block(int);
-	bool end_block();
-	bool end_block_if();
-	bool end_block_else_if();
 
 	void error_pars(std::string, Token);
 
