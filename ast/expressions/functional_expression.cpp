@@ -80,7 +80,6 @@ private:
 	}
 	
 	Function* get_function(std::string key){
-		if(Functions::is_exists(key)) return Functions::get(key);
 		
 		if(Variables::is_exists_all(key)){
 			Value* variable = Variables::get(key);
@@ -89,6 +88,7 @@ private:
 			}
 		}
 		
+		if(Functions::is_exists(key)) return Functions::get(key);
 
 		throw ParseException("Unknown function \"" + key + "\"");
 	}

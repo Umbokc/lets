@@ -49,30 +49,29 @@ public:
 		}
 	}
 
-	NS_Number::evil as_num(){ return this->val; }
-	
 	int as_int(){
-		return static_cast<int>(
-				(is_double()) ? this->val.d :
-				(is_long()) ? this->val.l :
-				this->val.i
-		);
+		return as_number<int>();
 	}
 
 	double as_double(){
-		return static_cast<double>(
-				(is_int()) ? this->val.i :
-				(is_long()) ? this->val.l :
-				this->val.d
-		);
+		return as_number<double>();
 	}
 
 	long as_long(){
-		return static_cast<long>(
-				(is_int()) ? this->val.i :
-				(is_double()) ? this->val.d :
-				this->val.l
-		);
+		return as_number<long>();
+	}
+
+	template<typename T>
+	T as_number(){
+		switch(type){
+			case NS_Number::types::TYPE_INT:
+				return static_cast<T>(this->val.i);
+			case NS_Number::types::TYPE_LONG:
+				return static_cast<T>(this->val.l);
+			case NS_Number::types::TYPE_DOUBLE:
+			default:
+				return static_cast<T>(this->val.d);
+		}
 	}
 
 	bool is_int(){ return (type == NS_Number::types::TYPE_INT); }
@@ -80,7 +79,9 @@ public:
 	bool is_long(){ return (type == NS_Number::types::TYPE_LONG); }
 	
 	std::string as_string(){
-		return func::number_to_s((is_double()) ? this->val.d : (is_long()) ? this->val.l : this->val.i);
+		return func::number_to_s(
+			(is_double()) ? this->val.d : (is_long()) ? this->val.l : this->val.i
+		);
 	}
 	
 	std::string to_s(){
