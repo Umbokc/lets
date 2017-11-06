@@ -1,9 +1,0 @@
-def	sdef():
-	print 'text'
-	def	sdef2():
-		print 'text2'
-	end
-end
-
-sdef()
-sdef2()

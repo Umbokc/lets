@@ -1,0 +1,43 @@
+use ['echos'] in 'std'
+use ['*'] in 'math'
+
+echos (
+	'PI          = ' + PI
+	'E.          = ' + E
+	'LOG2E.      = ' + LOG2E
+	'LOG10E      = ' + LOG10E
+	'LN2         = ' + LN2
+	'LN10        = ' + LN10
+	'PI_2        = ' + PI_2
+	'PI_4        = ' + PI_4
+	'M_1_PI      = ' + M_1_PI
+	'M_2_PI      = ' + M_2_PI
+	'SQRTPI      = ' + SQRTPI
+	'M_2_SQRTPI  = ' + M_2_SQRTPI
+	'SQRT2       = ' + SQRT2
+	'SQRT3       = ' + SQRT3
+	'SQRT1_2     = ' + SQRT1_2
+	'NAN         = ' + NAN
+	'I_MAX       = ' + I_MAX
+	'L_MAX       = ' + L_MAX
+	'INF         = ' + INF
+)
+
+print "\n\n"
+
+echos(
+	'sin(PI_2)    = ' + sin(PI_2)
+	'cos(PI)      = ' + cos(PI)
+	'tan(PI_4)    = ' + tan(PI_4)
+	'acos(1)      = ' + acos(1)
+	'asin(0)      = ' + asin(0)
+	'atan(PI_2)   = ' + atan(PI_2)
+	'atan2(0 1)   = ' + atan2(0 1)
+	'cosh(0)      = ' + cosh(0)
+	'sinh(0)      = ' + sinh(0)
+	'tanh(0)      = ' + tanh(0)
+	'acosh(1)     = ' + acosh(1)
+	'asinh(0)     = ' + asinh(0)
+	'atanh(PI_4)  = ' + atanh(PI_4)
+	'sqrt(1)      = ' + sqrt(1)
+)

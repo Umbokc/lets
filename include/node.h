@@ -1,16 +1,38 @@
-#ifndef LL_INCLUDE_NODE_H
-#define LL_INCLUDE_NODE_H
+//
+//  node.h
+//  lets
+//
+//  Created by Dragan Stepan on 30.10.17.
+//  Copyright © 2017 umbokc. All rights reserved.
+//
 
-#include "../utils/visitors/visitor.h"
-#include "../utils/visitors/result_visitor.h"
+#ifndef node_h
+#define node_h
+
+// #include <iostream> #include "main.h" // for dbg() 
+#include "visitors/visitor.h"
+#include "visitors/result_visitor.h"
 
 class Node {
 public:
-	virtual void accept(Visitor *visitor) = 0;
 
-	template<class R> R accept_r(ResultVisitor<R>* visitor);
+	template <class C>
+	void accept(C s, Visitor* v){
+		v->visit(s);
+	}
 
-	virtual ~Node(){}
+	template <class C, class R, class T>
+	R accept(C s, ResultVisitor<R, T> *visitor, T t){
+		// dbg(typeid(s).name())
+		return visitor->visit(s, t);
+	}
+
+   // virtual Node* accept_r(ResultVisitor* visitor) = 0;
+
+//    template<typename T> Node* accept_r_a(ResultVisitorWithArg<T>* visitor, T t);
+
+	virtual ~Node() {}
 };
 
-#endif
+
+#endif /* node_h */

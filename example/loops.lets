@@ -1,0 +1,40 @@
+print "For loop"
+for i = 0, i < 10, ++i :
+	print i + ' / 10'
+end
+
+print "\nForeach loop string"
+for elem in "Umbokc" :
+	print elem
+end
+
+print "\nForeach loop array"
+for elem in [4 8 15 16 23 42] :
+	print elem
+end
+
+map = {
+	1 : 1
+	2 : 'val 2'
+	'three' : 3
+	'four' : 'four'
+}
+
+print "\nForeach loop map"
+for key, val in map:
+	print key + ' : ' + val
+end
+
+print "\nWhile loop"
+i = 0
+while i < 10:
+	print i + '/10'
+	++i
+end
+
+print "\nDo While loop"
+i = 0
+do:
+	print i + '/10'
+	++i
+while i < 10

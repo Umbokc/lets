@@ -1,0 +1,29 @@
+//
+//  main.h
+//  lets
+//
+//  Created by Dragan Stepan on 29.10.17.
+//  Copyright © 2017 umbokc. All rights reserved.
+//
+
+#ifndef main_h
+#define main_h
+
+#define lets_vector_t std::vector
+#define lets_map_t std::map
+#define lets_str_t std::string
+#define u_tt_t unsigned int
+
+#define to_str(x) std::to_string(x)
+
+#define dbg(s) std::cout << "debug: " << s << std::endl;
+#define lets_output(s) std::cout << s << std::endl;
+#define lets_error(s) std::cout << s << std::endl; exit(1);
+#define lets_ctos(c) lets_str_t(1, c);
+#define lets_compare(t1, t2) (t1 > t2) ? 1 : (t1 > t2) ? -1 : 0;
+
+#define FUNCS_ARGS lets_vector_t<Value *>
+
+//#define dbg(s, b) std::cout << "debug: " << s << std::endl; if (b) exit(0);
+
+#endif /* main_h */

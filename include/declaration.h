@@ -1,13 +1,22 @@
-#ifndef DECLARATION_H
-#define DECLARATION_H
+//
+//  declaration.h
+//  lets
+//
+//  Created by Dragan Stepan on 29.10.17.
+//  Copyright © 2017 umbokc. All rights reserved.
+//
+
+#ifndef declaration_h
+#define declaration_h
 
 class Value;
+class NumberValue;
 
 class Visitor;
 class Node;
 class Expression;
 class Accessible;
-// class AccessExpr;
+
 class Argument;
 class Arguments;
 class ArrayAccessExpression;
@@ -24,8 +33,10 @@ class ValueExpression;
 class VariableExpression;
 class InputExpression;
 class MatchExpression;
+class ANY_EXPR;
 
 class Statement;
+
 class ArrayAssignmentStatement;
 class AssignmentStatement;
 class BlockStatement;
@@ -45,12 +56,4 @@ class WhileStatement;
 class ModeProgrammStatement;
 class SelfStatement;
 
-class SelfStatementResponse {
-public:
-	Value* result;
-	SelfStatementResponse(Value * result):result(std::move(result)){
-		dbg("SelfStatementResponse");
-	}
-};
-
-#endif
+#endif /* declaration_h */
