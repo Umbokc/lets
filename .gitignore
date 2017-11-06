@@ -1,7 +1,9 @@
-bin/
+bin/lets
 *.o
 
+files-for-compile
 ucpp
+ucpp.sh
 dbg
 
 .DS_Store
