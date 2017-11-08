@@ -6,6 +6,8 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
+// #include <iostream> // for dbg
+
 #include "../include/l_array_value.hpp"
 #include "../include/ex_parse.h"
 #include "../include/tools.hpp"
@@ -55,7 +57,7 @@ void ArrayValue::set(int index, Value *value){
         return;
     }
     
-    throw ParseException("Undefined index "+ std::to_string(index) +" of array");
+    throw ParseException("Undefined index "+ to_str(index) +" of array");
 }
 
 int ArrayValue::as_int(){
@@ -71,6 +73,10 @@ long ArrayValue::as_long(){
 }
 
 int ArrayValue::len(){
+    return size();
+}
+
+int ArrayValue::size(){
     return (int)this->elements.size();
 }
 
@@ -89,10 +95,12 @@ Types ArrayValue::type(){
 bool ArrayValue::equals(Value* obj) {
     if (this == obj) return true;
     if (obj == NULL) return false;
+    if (!dynamic_cast<ArrayValue*>(obj)) return false;
     return std::equal(
-                      this->elements.begin(), this->elements.end(),
-                      dynamic_cast<ArrayValue*>(obj)->elements.begin()
-                      );
+        this->elements.begin(),
+        this->elements.end(),
+        dynamic_cast<ArrayValue*>(obj)->elements.begin()
+    );
 }
 
 int ArrayValue::compareTo(Value *obj){
