@@ -7,6 +7,8 @@
 //
 
 #include <iostream>
+#include <ctime>
+#include <random>
 #include "std.hpp"
 #include "../../include/l_string_value.hpp"
 #include "../../include/l_number_value.hpp"
@@ -24,7 +26,7 @@ void LetsModule__std::run(ArrayValue* elems){
 				try{
 					set(elems->get(i)->to_s());
 				} catch(std::exception& e) {
-					throw ParseException("Unknown variable or function '" + elems->get(i)->to_s() + "' in module 'use'.");
+					throw ParseException("Unknown variable or function '" + elems->get(i)->to_s() + "' in module 'std'.");
 				}
 			}
 		} else {
@@ -44,6 +46,7 @@ void LetsModule__std::set(lets_str_t name){
 	CHECK_AND_DEFINE_FUNC_MODULE("echos", Echos)
 	CHECK_AND_DEFINE_FUNC_MODULE("newArray", NewArray)
 	CHECK_AND_DEFINE_FUNC_MODULE("is_exist", IsExist)
+	CHECK_AND_DEFINE_FUNC_MODULE("rand", Rand)
 
 	if(name != "*")
 		throw std::runtime_error("not found");
@@ -103,4 +106,23 @@ Value* LetsModule__std::F_IsExist::execute(FUNCS_ARGS args){
 		}
 	}
 	return NumberValue::ONE;
+}
+
+Value* LetsModule__std::F_Rand::execute(FUNCS_ARGS args){
+	// std::srand(unsigned(std::time(0)));
+	int min = 0;
+	int max = RAND_MAX;
+
+	if(args.size() == 2){
+		min = args.at(0)->as_int();
+		max = args.at(1)->as_int() - 1;
+	} else if(args.size() == 1){
+		max = args.at(0)->as_int() - 1;
+	}
+
+	std::random_device rd;     // only used once to initialise (seed) engine
+	std::mt19937 rng(rd());    // random-number engine used (Mersenne-Twister in this case)
+	std::uniform_int_distribution<int> uni(min,max); // guaranteed unbiased
+
+	return new NumberValue(uni(rng));
 }

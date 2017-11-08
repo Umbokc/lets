@@ -35,6 +35,7 @@ private:
 		private:ArrayValue* create_array(FUNCS_ARGS, int);
 	};
 	class F_IsExist : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS);};
+	class F_Rand : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS);};
 
 };
 
