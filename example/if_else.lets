@@ -26,4 +26,4 @@ end
 
 arr = 'There 1 are two needles in this haystack with needles.'
 x = '1 arqe'
-print not x in arr
+print (not x in arr) ? 'exists' : 'not exists'

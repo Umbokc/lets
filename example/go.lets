@@ -52,3 +52,4 @@ print 'b = ' + b
 
 if is_exist('a')
 	print 'a = ' + a
+end

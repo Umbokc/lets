@@ -15,15 +15,28 @@ $operations = {
 }
 
 def call_operations(ops a b):
-	for op in ops :
-		match op
-			case x if x in $operations:
-				print $operations[x](a b)
-			default:
-				for key, operation in $operations:
-					echo(a, ' ', key, ' ', b, ' = ', operation(a b))
-				end
-				break
+	def print_op(a, b, op):
+		echo(a, ' ', op, ' ', b, ' = ', $operations[op](a b))
+	end
+
+	if '' in ops
+		for key, operation in $operations:
+			print_op(a, b, key)
+		end
+	else
+		for op in ops :
+			match op
+				case '+': print_op(a, b, op)
+				case '-': print_op(a, b, op)
+				case '*': print_op(a, b, op)
+				case '/': print_op(a, b, op)
+				case '%': print_op(a, b, op)
+				case '&': print_op(a, b, op)
+				case '|': print_op(a, b, op)
+				case '^': print_op(a, b, op)
+				case '<<': print_op(a, b, op)
+				case '>>': print_op(a, b, op)
+			end
 		end
 	end
 
@@ -34,7 +47,7 @@ print "Binary operations with: \n"
 # number
 def_c number():
 	print "Numbers"
-	call_operations(['+' '-'] 10 4)
+	call_operations([''] 10 4)
 end
 
 # array
@@ -42,15 +55,9 @@ def_c array():
 	print "Array"
 	arr1 = [1, 2]
 	arr2 = [6, 7]
-	
-	echos(
-		'arr1 + arr2 = ' + (arr1 + arr2)
-		'arr1 * 2 = ' + (arr1 * 2)
-		'arr1 << 2 = ' + (arr1 << 2)
-		'arr1 >> arr2 = ' + (arr1 >> arr2)
-		'arr1 = ' + arr1
-		'arr2 = ' + arr2
-	)
+
+	call_operations(['+' '>>' ] arr1 arr2)
+
 end
 
 # map
@@ -79,6 +86,6 @@ def_c bitwise():
 end
 
 number()
-# array()
+array()
 # map()
-# bitwise()
+bitwise()

@@ -472,6 +472,9 @@ Expression* Parser::assignment_strict(){
 }
 
 Expression* Parser::in_expression() {
+	// 1 in [1, 2, 3]
+	// 's' in "string"
+
 	Expression* result = ternary();
 
 	if (match(TT_KW_IN)) {

@@ -154,6 +154,7 @@ static const lets_str_t TokenTypeString[] = {
     "put",
     "if",
     "else",
+    "elif",
     "while",
     "for",
     "do",

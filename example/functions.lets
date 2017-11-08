@@ -24,14 +24,16 @@ def bubble_sort(a n) :
 	for i = 0, i < n-1, ++i :
 		changed = false
 		for j = 0, j < n-i-1, ++j :
-			if(a[j] > a[j + 1]) :
+			if(a[j] > a[j + 1])
 				b = a[j]
 				a[j] = a[j+1]
 				a[j+1] = b
 				changed = true
 			end
 		end
-		if(!changed) break
+		if(!changed)
+			break
+		end
 	end
 	return a
 end
@@ -41,7 +43,7 @@ def selection_sort(a n):
 		k = i
 		x = a[i]
 		for(j = i + 1, j < n, ++j):
-			if a[j] < x :
+			if a[j] < x
 				k = j
 				x = a[j]
 			end
@@ -72,7 +74,9 @@ end
 
 def isPrime(x):
 	for (i = 2, i <= to_i(sqrt(x)), ++i)
-		if (x % i == 0) return false
+		if (x % i == 0)
+			return false
+		end
 	return true
 end
 
@@ -82,6 +86,7 @@ def getPrime(x):
 	while count != x :
 		if (isPrime(candidate))
 			++count
+		end
 	end
 	return candidate
 end
@@ -98,10 +103,6 @@ print cube(arg) # cube(3) = 27
 print sum(arg)
 print sumOfCubes(arg)
 print getPrime(arg)
-
-if 0 for x in sort :
-	print x
-end
 
 print to_i('1') * 5
 print to_s(1) * 5

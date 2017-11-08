@@ -25,10 +25,10 @@ Value* InExpression::eval(){
 
 		result = (array_val->has(val));
 
-	} else if(MapValue *map_val = dynamic_cast<MapValue*>(object)){
+	// } else if(MapValue *map_val = dynamic_cast<MapValue*>(object)){
 
 		// result = (map_val->has(val->to_s()));
-		result = false;
+		// result = false;
 
 	} else if(StringValue *string_val = dynamic_cast<StringValue*>(object)){
 
