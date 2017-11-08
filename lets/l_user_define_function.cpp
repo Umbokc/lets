@@ -54,7 +54,7 @@ Value* UserDefineFunction::execute(FUNCS_ARGS values){
 		}
 		// catch(SelfStatement *ss){
 			// Value* res = execute(ss->args);
-				// throw new SelfStatementResponse(res);
+				// throw SelfStatementResponse(res);
 			// return res;
 	//}
 	Variables::pop();

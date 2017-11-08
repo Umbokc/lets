@@ -35,7 +35,7 @@ public:
     double as_number();
     long as_long();
     int len();
-    
+    int size();
     
     lets_str_t as_string();
     lets_str_t to_s();

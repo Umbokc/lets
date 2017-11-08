@@ -25,6 +25,10 @@ ValueExpression::ValueExpression(long value){
     this->value = new NumberValue(value);
 }
 
+ValueExpression::ValueExpression(Number value){
+    this->value = new NumberValue(value);
+}
+
 ValueExpression::ValueExpression(lets_str_t value){
     this->value = new StringValue(value);
 }

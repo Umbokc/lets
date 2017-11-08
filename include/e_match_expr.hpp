@@ -15,16 +15,7 @@
 #include "expression.h"
 #include "statement.h"
 #include "l_function.h"
-
-class ANY_EXPR : virtual public Expression {
-public:
-    ANY_EXPR();
-    Value *eval();
-    
-    lets_str_t to_s();
-    
-    ~ANY_EXPR();
-};
+#include "l_array_value.hpp"
 
 class MatchExpression : virtual public Expression, virtual public Statement{
 public:
@@ -32,7 +23,7 @@ public:
     class Pattern {
     public:
         Statement *result;
-        Expression *opt_condition;
+        Expression *opt_condition = NULL;
         
         lets_str_t to_s();
         
@@ -53,6 +44,12 @@ public:
         
         VariablePattern(lets_str_t);
         
+        lets_str_t to_s();
+    };
+    
+    class DefaultPattern : public Pattern {
+    public:
+        DefaultPattern();
         lets_str_t to_s();
     };
     
@@ -81,8 +78,6 @@ public:
         void add(Expression* value);
         
         lets_str_t to_s();
-        
-    private:
     };
     
     Expression *expression;
@@ -97,7 +92,12 @@ public:
     lets_str_t to_s();
     
     ~MatchExpression();
+
 private:
+    bool match_tuple_pattern(ArrayValue*, TuplePattern*);
+    bool match_list_pattern(ArrayValue*, ListPattern*);
+    bool match_list_pattern_equals_size(ListPattern*, lets_vector_t<lets_str_t>, int, ArrayValue*);
+    bool match_list_pattern_with_tail(ListPattern*, lets_vector_t<lets_str_t>, int, ArrayValue*, int);
     bool match(Value*, Value*);
     bool opt_matches(Pattern*);
     Value *eval_result(Statement*);

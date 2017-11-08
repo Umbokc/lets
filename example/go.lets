@@ -1,5 +1,5 @@
-use 'std'
-# use 'math'
+use ['rand', 'len', 'echo', 'is_exist'] in 'std'
+use ['PI'] in 'math'
 
 def first():
 	arr = [0 0]
@@ -38,14 +38,17 @@ def second():
 end
 
 # first()
-# second()
+second()
 
 print 'true: ' + true
 print 'false: ' + false
 
 echo('len(\'string\') = ' + len('string'))
 
-a = 3.141_59212312312312312
+a = PI
+b = 141_592_123_123_123_123_12
+
+print 'b = ' + b
 
 if is_exist('a')
 	print 'a = ' + a

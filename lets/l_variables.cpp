@@ -87,6 +87,10 @@ void Variables::define_lets(lets_str_t key, Value* value, bool is_const){
 	global_variables[key] = new VariableContainer(value, is_const);
 }
 
+void Variables::remove(lets_str_t key){
+	scope->variables.erase(key);
+}
+
 void Variables::show(){
 	lets_str_t result = "Variables : \n";
 	int i = 0;

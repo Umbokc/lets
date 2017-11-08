@@ -56,15 +56,15 @@ Types StringValue::type(){
 bool StringValue::equals(Value* obj) {
 	if (this == obj) return true;
 	if (obj == NULL) return false;
-	char c = lets_compare(this->value, dynamic_cast<StringValue*>(obj)->value);
+	char c = this->value.compare(dynamic_cast<StringValue*>(obj)->value);
 	return (int)c == 0;
 }
 
 int StringValue::compareTo(Value *obj) {
 	if (obj->type() == this->type()) {
-		return lets_compare(this->value, dynamic_cast<StringValue*>(obj)->value);
+		return this->value.compare(dynamic_cast<StringValue*>(obj)->value);
 	}
-	return lets_compare(as_string(), obj->as_string());
+	return this->value.compare(obj->as_string());
 }
 
 StringValue::~StringValue(){}

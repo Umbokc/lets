@@ -45,8 +45,9 @@ private:
 	Statement* get_parsed_statement();
 
 	Statement* block();
-	Statement* statement_or_block();
 	Statement* block(u_tt_t);
+	Statement* block(lets_vector_t<u_tt_t>);
+	Statement* statement_or_block();
 	Statement* statement_or_block(u_tt_t);
 	
 	Statement* statement();
@@ -86,6 +87,7 @@ private:
 	Expression* qualified_name();
 	lets_vector_t<Expression*> variable_suffix();
 	Expression* value();
+	Number create_number(Token);
 
 	Token consume(u_tt_t);
 

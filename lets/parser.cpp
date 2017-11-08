@@ -13,6 +13,7 @@
 #include "../include/arguments.hpp"
 
 #include "../include/l_user_define_function.hpp"
+#include "../include/l_string_value.hpp"
 #include "../include/include_ast.h"
 
 lets_map_t<u_tt_t, NS_Binary::Operator> Parser::ASSIGN_OPERATORS = {
@@ -64,11 +65,6 @@ Statement* Parser::block(){
 	return block;
 }
 
-Statement* Parser::statement_or_block(){
-	if(look_match(0, TT_COLON)) return block();
-	return statement();
-}
-
 Statement* Parser::block(u_tt_t end_kw_block){
 	BlockStatement* block = new BlockStatement();
 	
@@ -78,6 +74,22 @@ Statement* Parser::block(u_tt_t end_kw_block){
 	}
 	
 	return block;
+}
+
+Statement* Parser::block(lets_vector_t<u_tt_t> end_kws_block){
+	BlockStatement* block = new BlockStatement();
+	
+	consume(TT_COLON);
+	while(!match(end_kws_block)){
+		block->add(statement());
+	}
+	
+	return block;
+}
+
+Statement* Parser::statement_or_block(){
+	if(look_match(0, TT_COLON)) return block();
+	return statement();
 }
 
 Statement* Parser::statement_or_block(u_tt_t end_kw_block){
@@ -339,11 +351,100 @@ Expression* Parser::map_vals(){
 
 MatchExpression* Parser::match(){
 	// match expression :
-	//  case pattern1: result1
-	//  case pattern2 if extr: result2
+	//	case pattern1 result1
+	//	case pattern2 if extr result2
+	//	case pattern1:
+	//		return result1
+	//	defautl result_default
 	// end
-	
-	return NULL;
+
+	Expression* expr = expression();
+	lets_vector_t<MatchExpression::Pattern*> patterns;
+
+	do {
+		MatchExpression::Pattern* pattern = NULL;
+
+		if (match(TT_KW_DEFAULT)){
+			pattern = new MatchExpression::DefaultPattern();
+			if (look_match(0, TT_COLON)) {
+				pattern->result = block();
+				this->pos--;
+			} else {
+				pattern->result = new ReturnStatement(expression());
+			}
+		} else {
+			consume(TT_KW_CASE);
+			Token current = get(0);
+			if (match(TT_NUMBER)) {
+				// case 0.5: 
+				pattern = new MatchExpression::ConstantPattern(
+					new NumberValue(create_number(current))
+				);
+			} else if (match(TT_HEX_NUMBER)) {
+				// case 0xABC123: 
+				pattern = new MatchExpression::ConstantPattern(
+					new NumberValue(std::stol(&current.get_text()[0u], 0, 16))
+				);
+			} else if (match(TT_OCTAL_NUMBER)) {
+				// case 0123: 
+				pattern = new MatchExpression::ConstantPattern(
+					new NumberValue(std::stol(&current.get_text()[0u], 0, 8))
+				);
+			} else if (match(TT_BINARY_NUMBER)) {
+				// case 0b010101: 
+				pattern = new MatchExpression::ConstantPattern(
+					new NumberValue(std::stol(&current.get_text()[0u], 0, 2))
+				);
+			} else if (match(TT_STRING)) {
+				// case "text":
+				pattern = new MatchExpression::ConstantPattern(
+					new StringValue(current.get_text())
+				);
+			} else if (match(TT_IDENTIFIER)) {
+				// case value: 
+				pattern = new MatchExpression::VariablePattern(current.get_text());
+			} else if (match(TT_LBRACKET)) {
+				// case [x :: xs]:
+				MatchExpression::ListPattern *list_pattern = new MatchExpression::ListPattern();
+				while (!match(TT_RBRACKET)) {
+					list_pattern->add(consume(TT_IDENTIFIER).get_text());
+					match(TT_COLONCOLON);
+				}
+				pattern = list_pattern;
+			} else if (match(TT_LPAREN)) {
+				// case (1, 2):
+				MatchExpression::TuplePattern* tuple_pattern = new MatchExpression::TuplePattern();
+				while (!match(TT_RPAREN)) {
+					if (match(TT_QUESTION)) {
+						tuple_pattern->add_any();
+					} else {
+						tuple_pattern->add(expression());
+					}
+					match(TT_COMMA);
+				}
+				pattern = tuple_pattern;
+			}
+
+			if (pattern == NULL) {
+				throw ParseException("Wrong pattern in match expression: " + current.get_text());
+			}
+			if (match(TT_KW_IF)) {
+				// case e if e > 0:
+				pattern->opt_condition = expression();
+			}
+
+			if (look_match(0, TT_COLON)) {
+				pattern->result = block({TT_KW_CASE, TT_KW_DEFAULT, TT_KW_END});
+				this->pos--;
+			} else {
+				pattern->result = new ReturnStatement(expression());
+			}
+		}
+
+		patterns.push_back(pattern);
+	} while (!match(TT_KW_END));
+
+	return new MatchExpression(expr, patterns);
 }
 
 Expression* Parser::expression(){
@@ -397,7 +498,7 @@ Expression* Parser::ternary() {
 Expression* Parser::logicalOr(){
 	Expression* result = logicalAnd();
 	while(true){
-		if(match(TT_BARBAR)){
+		if(match({TT_BARBAR, TT_KW_OR})){
 			result = new ConditionalExpression(NS_Conditional::Operator::OR, result, logicalAnd());
 			continue;
 		}
@@ -409,7 +510,7 @@ Expression* Parser::logicalOr(){
 Expression* Parser::logicalAnd(){
 	Expression* result = bitwiseOr();
 	while(true){
-		if(match(TT_AMPAMP)){
+		if(match({TT_AMPAMP,TT_KW_AND})){
 			result = new ConditionalExpression(NS_Conditional::Operator::AND, result, bitwiseOr());
 			continue;
 		}
@@ -593,19 +694,23 @@ Expression* Parser::unary(){
 }
 
 Expression* Parser::primary(bool incr = false) {
-	
+
 	if(match(TT_LPAREN)){
 		Expression* result = expression();
 		consume(TT_RPAREN);
 		return result;
 	}
-	
+
+	if(match(TT_KW_MATCH)){
+		return match();
+	}
+
 	if(match(TT_KW_DEF)){
 		Arguments args = arguments();
 		Statement* statement = statement_body();
 		return new ValueExpression(new UserDefineFunction(args, statement));
 	}
-	
+
 	return variable(incr);
 }
 
@@ -682,45 +787,51 @@ Expression* Parser::value() {
 	Token current = this->get(0);
 	
 	if(match(TT_NUMBER)){
-		lets_str_t the_num = current.get_text();
-		if(the_num.find('.') != lets_str_t::npos){
-			return new ValueExpression(atof(&current.get_text()[0u]));
-		}else{
-			try{
-				int num = std::stoi(the_num);
-				return new ValueExpression(num);
-			} catch (std::exception& e){
-				try{
-					the_num = the_num.substr(0, 19);
-					long num = std::atol(&the_num[0u]);
-					dbg(num)
-					return new ValueExpression(num);
-				} catch (std::exception& e){
-					error_pars("Very big number", current);
-				}
-			}
-		}
+		return new ValueExpression(create_number(current));
 	}
 	
 	if(match(TT_HEX_NUMBER)){
-		return new ValueExpression((double)std::stol(&current.get_text()[0u], 0, 16));
+		return new ValueExpression((long)std::stol(&current.get_text()[0u], 0, 16));
 	}
 	if(match(TT_OCTAL_NUMBER)){
-		return new ValueExpression((double)std::stol(&current.get_text()[0u], 0, 8));
+		return new ValueExpression((long)std::stol(&current.get_text()[0u], 0, 8));
 	}
 	if(match(TT_BINARY_NUMBER)){
-		return new ValueExpression((double)std::stol(&current.get_text()[0u], 0, 2));
+		return new ValueExpression((long)std::stol(&current.get_text()[0u], 0, 2));
 	}
 	if(match(TT_STRING)){
 		return new ValueExpression(current.get_text());
 	}
 	
-	// dbg(get(-1).to_s());
 	error_pars("Unknown expression: " + current.get_text(), current);
-	//    if(!Mode_Programm::without_stop){
+	// if(!Mode_Programm::without_stop){
 	exit(1);
-	//    }
+	// }
 	return NULL;
+}
+
+Number Parser::create_number(Token current){
+
+	lets_str_t text = current.get_text();
+
+	Number value;
+
+	if(text.find('.') != lets_str_t::npos){
+		value = atof(&text[0u]);
+	}else{
+		try{
+			value = std::stoi(text);
+		} catch (std::exception& e){
+			try{
+				text = text.substr(0, 19);
+				value = std::atol(&text[0u]);
+			} catch (std::exception& e){
+				error_pars("Very big number", current);
+			}
+		}
+	}
+
+	return value;
 }
 
 Token Parser::consume(u_tt_t type){

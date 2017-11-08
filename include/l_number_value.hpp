@@ -23,6 +23,7 @@ public:
     NumberValue(int);
     NumberValue(double);
     NumberValue(long);
+    NumberValue(Number);
     
     bool as_bool();
     int as_int();

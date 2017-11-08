@@ -1,0 +1,96 @@
+use ['rand'] in 'std'
+
+def example_1():
+	v = rand(10)
+	print match v
+		case 0 "Zero"
+		case 0b01 "One"
+		case 2 "Two"
+		case x if x >= 0b11 and x <= 5: 
+			print 'x = ' + x
+			return "Three..five"
+		default:
+			print "The default"
+			return "Six..nine"
+	end
+end
+
+def example_2():
+	def the_match(v) <- match v
+		case 1:
+			print "The 1"
+			return "One"
+		case 2:
+			print "The 2"
+			return "Two"
+		case 0 "Zero"
+		default:
+			print "The default"
+			return "Nothing"
+	end
+
+	print ''
+	print the_match(0)
+	print the_match(1)
+	print the_match(2)
+	print the_match(3)
+end
+
+def example_3():
+	print "\nRecursive factorial: "
+	def factorial(n) <- match n
+		case 0 1
+		default n * factorial(n - 1)
+	end
+	print factorial(5)
+end
+
+def example_4():
+	print "\nPattern matching on arrays: "
+	def array_recursive(arr) <- match arr
+		case [head :: tail]
+			"[" + head + ", " + array_recursive(tail) + "]"
+		case []
+			"[]"
+		case last
+			"[" + last + ", []]"
+	end
+	print array_recursive([1, 2, 3, 4, 5, 6, 7])
+end
+
+def example_5():
+
+	print "\nPattern matching on arrays by value:"
+	def tuple_match(x) <- match x
+		case (0, 0) "00"
+		case (1, 0) "10"
+		case (0, 1) "01"
+		case (1, 1) "11"
+		case (2, ?): return "2?"
+		default: return "unknown"
+	end
+
+	print tuple_match([0, 1])
+	print tuple_match([1, 1])
+	print tuple_match([2, 1])
+	print tuple_match([3, 9])
+end
+
+def example_6():
+	print "\nFizzBuzz with pattern matching:"
+	for i = 1, i <= 100, i++ :
+		print match [i % 3 == 0, i % 5 == 0]
+			case (true, false) "Fizz"
+			case (false, true) "Buzz"
+			case (true, true) "FizzBuzz"
+			default i
+		end
+	end
+end
+
+example_1()
+example_2()
+example_3()
+example_4()
+example_5()
+example_6()

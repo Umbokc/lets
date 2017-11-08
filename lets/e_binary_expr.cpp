@@ -220,7 +220,7 @@ Value *BinaryExpression::BO_rshift(Value *value1, Value *value2) {
 }
 
 void BinaryExpression::operation_is_not_supported(){
-    throw new OperationIsNotSupportedException(
+    throw OperationIsNotSupportedException(
         NS_Binary::OperatorString[operation]
     );
 }

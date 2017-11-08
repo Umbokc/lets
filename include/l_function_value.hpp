@@ -26,6 +26,7 @@ public:
     lets_str_t as_string();
     lets_str_t to_s();
     Types type();
+
     bool equals(Value*);
     int compareTo(Value*);
     

@@ -21,6 +21,8 @@ NumberValue::NumberValue(long value){
     this->value = value;
 }
 
+NumberValue::NumberValue(Number value):value(std::move(value)){}
+
 bool NumberValue::as_bool(){
     return value.as_int() != 0;
 }

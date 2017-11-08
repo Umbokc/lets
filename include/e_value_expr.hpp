@@ -13,6 +13,7 @@
 #include "main.h"
 #include "expression.h"
 #include "l_function.h"
+#include "l_number.hpp"
 
 class ValueExpression : virtual public Expression {
 public:
@@ -23,6 +24,7 @@ public:
     ValueExpression(int);
     ValueExpression(double);
     ValueExpression(long);
+    ValueExpression(Number);
     
     ValueExpression(lets_str_t);
     ValueExpression(Function*);
