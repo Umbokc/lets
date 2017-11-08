@@ -88,6 +88,10 @@ lets_map_t<lets_str_t, u_tt_t> Lexer::KEYWORDS = {
     {"mode", TT_KW_MODE},
     {"self", TT_KW_SELF},
     {"match", TT_KW_MATCH},
+    {"case", TT_KW_CASE},
+    {"default", TT_KW_DEFAULT},
+    {"and", TT_KW_AND},
+    {"or", TT_KW_OR},
 };
 
 lets_vector_t<Token> Lexer::tokenize(){
@@ -144,9 +148,9 @@ void Lexer::tokenize_number() {
         current = next();
     }
     
-    if(is_octal){
+    if(is_octal && this->buffer.length() != 1){
         add_token(TT_OCTAL_NUMBER, this->buffer);
-    }	else {
+    } else {
         add_token(TT_NUMBER, this->buffer);
     }
 }
