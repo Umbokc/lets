@@ -92,6 +92,7 @@ lets_map_t<lets_str_t, u_tt_t> Lexer::KEYWORDS = {
     {"default", TT_KW_DEFAULT},
     {"and", TT_KW_AND},
     {"or", TT_KW_OR},
+    {"not", TT_KW_NOT},
 };
 
 lets_vector_t<Token> Lexer::tokenize(){
