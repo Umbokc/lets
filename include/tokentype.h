@@ -85,6 +85,10 @@
 #define TT_KW_MODE 68
 #define TT_KW_SELF 69
 #define TT_KW_MATCH 70
+#define TT_KW_CASE 71
+#define TT_KW_DEFAULT 72
+#define TT_KW_AND 73
+#define TT_KW_OR 73
 
 static const lets_str_t TokenTypeString[] = {
     "eof",
@@ -162,5 +166,9 @@ static const lets_str_t TokenTypeString[] = {
     "mode",
     "self",
     "match",
+    "case",
+    "default",
+    "and",
+    "or",
 };
 #endif /* tokentype_h */
