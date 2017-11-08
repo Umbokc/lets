@@ -41,10 +41,6 @@ public:
     
     Value * eval();
     
-//    void accept(Visitor *visitor);
-//    Node * accept_r(ResultVisitor* visitor);
-//    template<typename T> Node* accept_r_a(ResultVisitorWithArg<T>* visitor, T t);
-    
     lets_str_t to_s();
     
     ~BinaryExpression();

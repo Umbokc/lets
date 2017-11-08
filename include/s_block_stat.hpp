@@ -26,18 +26,6 @@ public:
     
     void execute();
     
-//    void accept(Visitor *visitor){
-//        visitor->visit(this);
-//    }
-    
-//    Node * accept_r(ResultVisitor* visitor){
-//        return visitor->visit(this);
-//    }
-    
-//    template<typename T> Node* accept_r_a(ResultVisitorWithArg<T>* visitor, T t){
-//        return visitor->visit(this, t);
-//    }
-    
     lets_str_t to_s();
 };
 

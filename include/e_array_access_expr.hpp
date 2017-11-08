@@ -24,10 +24,6 @@ public:
 
 	Value * eval();
 
-	// void accept(Visitor *);
-	// Node * accept_r(ResultVisitor* );
-	// template<typename T> Node* accept_r_a(ResultVisitorWithArg<T>*, T );
-
 	lets_str_t to_s();
 	ArrayValue * get_array();
 	int last_index();

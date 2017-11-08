@@ -27,18 +27,6 @@ Value * BinaryExpression::eval(){
     }
 }
 
-// void BinaryExpression::accept(Visitor *visitor){
-//     visitor->visit(this);
-// }
-
-// Node * BinaryExpression::accept_r(ResultVisitor* visitor){
-//     return visitor->visit(this);
-// }
-
-// template<typename T> Node* BinaryExpression::accept_r_a(ResultVisitorWithArg<T>* visitor, T t){
-//     return visitor->visit(this, t);
-// }
-
 lets_str_t BinaryExpression::to_s(){
     return NS_Tools::string_format(
                                    "[%s %s %s]",
@@ -159,11 +147,13 @@ Value *BinaryExpression::BO_multiply(Value *value1, Value *value2) {
 }
 
 Value *BinaryExpression::BO_divide(Value *value1, Value *value2) {
-    // if(value2->as_number() == 0)
-    // throw ParseException("Division by NumberValue::ZERO is undefined");
-    // else
-    return new NumberValue(value1->as_number() / value2->as_number());
-    
+
+    if(value2->as_number() == 0)
+        // throw ParseException("Division by zero is undefined");
+        return NumberValue::ZERO;
+    else
+        return new NumberValue(value1->as_number() / value2->as_number());
+
     return NumberValue::ZERO;
 }
 

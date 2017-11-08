@@ -27,10 +27,6 @@ public:
 		return visitor->visit(s, t);
 	}
 
-   // virtual Node* accept_r(ResultVisitor* visitor) = 0;
-
-//    template<typename T> Node* accept_r_a(ResultVisitorWithArg<T>* visitor, T t);
-
 	virtual ~Node() {}
 };
 

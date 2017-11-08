@@ -17,18 +17,6 @@ Value * ArrayAccessExpression::eval(){
 	return get_array()->get(last_index());
 }
 
-// void ArrayAccessExpression::accept(Visitor *visitor){
-// 	visitor->visit(this);
-// }
-
-// Node * ArrayAccessExpression::accept_r(ResultVisitor* visitor){
-// 	return visitor->visit(this);
-// }
-
-// template<typename T> Node* ArrayAccessExpression::accept_r_a(ResultVisitorWithArg<T>* visitor, T t){
-// 	return visitor->visit(this, t);
-// }
-
 lets_str_t ArrayAccessExpression::to_s(){ 
 	// return variable + "[" + index->to_s() + "]";
 
