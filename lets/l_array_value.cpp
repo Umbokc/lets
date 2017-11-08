@@ -126,7 +126,7 @@ namespace NS_ArrayValue{
 		return new ArrayValue(result);
 	}
 
-	ArrayValue *mserge(ArrayValue *value1, ArrayValue *value2) {
+	ArrayValue *merge(ArrayValue *value1, ArrayValue *value2) {
 		lets_vector_t<Value *> arr1 = value1->get_all(),
 		arr2 = value2->get_all();
 
