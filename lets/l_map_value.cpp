@@ -45,6 +45,16 @@ lets_map_t<lets_str_t, Value *> MapValue::get_all(){
 	return this->elems;
 }
 
+bool MapValue::has(lets_str_t key){
+	return this->elems.find(key) != elems.end();
+}
+
+bool MapValue::has(lets_str_t key, Value *value){
+	if (this == value) return false;
+	if (!has(key)) return false;
+	return this->elems[key]->equals(value);
+}
+
 void MapValue::set(Value *key, Value *value){
 	this->elems[key->to_s()] = value;
 }

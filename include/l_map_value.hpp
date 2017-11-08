@@ -17,42 +17,45 @@
 
 
 class MapValue : public Value{
-    lets_map_t<lets_str_t, Value *> elems;
+	lets_map_t<lets_str_t, Value *> elems;
 public:
-    
-    MapValue();
-    MapValue(lets_map_t<lets_str_t, Value *>);
-    MapValue(MapValue *);
-    
-    // ArrayValue* to_pairs();
-    
-    bool is_exists(Value *);
-    
-    Value *get(Value *);
-    lets_map_t<lets_str_t, Value *> get_all();
-    
-    void set(Value *, Value *);
-    void set(Value *, Function *);
-    
-    int as_int();
-    double as_number();
-    long as_long();
-    int len();
-    
-    lets_str_t as_string();
-    lets_str_t to_s();
-    
-    Types type();
-    
-    bool equals(Value*);
-    int compareTo(Value*);
-    
-    ~MapValue();
+	
+	MapValue();
+	MapValue(lets_map_t<lets_str_t, Value *>);
+	MapValue(MapValue *);
+	
+	// ArrayValue* to_pairs();
+	
+	bool is_exists(Value *);
+	
+	Value *get(Value *);
+	lets_map_t<lets_str_t, Value *> get_all();
+	
+	bool has(lets_str_t);
+	bool has(lets_str_t, Value *);
+
+	void set(Value *, Value *);
+	void set(Value *, Function *);
+	
+	int as_int();
+	double as_number();
+	long as_long();
+	int len();
+	
+	lets_str_t as_string();
+	lets_str_t to_s();
+	
+	Types type();
+	
+	bool equals(Value*);
+	int compareTo(Value*);
+	
+	~MapValue();
 };
 
 namespace NS_MapValue{
-   MapValue *add(MapValue*, Value*, Value*);
-   MapValue *merge(MapValue*, MapValue*);
+	MapValue *add(MapValue*, Value*, Value*);
+	MapValue *merge(MapValue*, MapValue*);
 }
 
 #endif /* lib__map_value_hpp */

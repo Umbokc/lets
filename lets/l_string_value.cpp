@@ -37,6 +37,13 @@ lets_str_t StringValue::get_c(int index){
 	return lets_ctos(value[index]);
 }
 
+bool StringValue::has(Value* val){
+	if (this == val) return false;
+	if (this->type() != val->type()) return false;
+
+	return (this->value.find(val->to_s()) != std::string::npos);
+}
+
 int StringValue::len(){
 	return (int)value.length();
 }

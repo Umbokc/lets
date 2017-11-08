@@ -16,6 +16,7 @@
 #include "e_conditional_expr.hpp"
 #include "e_container_access_expr.hpp"
 #include "e_functional_expr.hpp"
+#include "e_in_expr.hpp"
 #include "e_map_expr.hpp"
 #include "e_match_expr.hpp"
 #include "e_ternary_expr.hpp"

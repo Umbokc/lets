@@ -28,7 +28,9 @@ public:
     
     Value *get(int);
     lets_vector_t<Value *> get_all();
-    
+
+    bool has(Value*);
+
     void set(int , Value *);
     
     int as_int();

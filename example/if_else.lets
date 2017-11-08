@@ -1,44 +1,29 @@
-if !(!true)
-	print ('!(!true)')
-
-if !false:
-	print ('!false')
+x = 3
+if x == 1
+	print 'if x == 1'
+elif x == 2
+	print 'elif x == 2'
+elif x == 3
+	print 'elif x == 3'
+else
+	print 'else'
 end
 
-if true :
-	print ('if block')
-:else
-	print ('else one st')
 
 if ~(-1)
 	print ('if one st')
-else :
+else 
 	print ('else block')
 end
 
-print "\n"
-
-if 0 == '' : 
-	print ('if block')
-:else :
+if 0 == '' and not 0 != ""
+	if 1 in [1 2 3]
+		print '1 in [1 2 3]'
+	end
+else
 	print ('else block')
 end
 
-print ''
-
-a = 2
-if a == 1 :
-	print ('if block')
-: else if a == 2 :
-	print ('else if block')
-: else :
-	print ('else block')
-end
-
-if 0 == '':
-	if true 
-		print ('if block 1')
-: else :
-	print ('else block')
-	print ('else block')
-end
+arr = 'There 1 are two needles in this haystack with needles.'
+x = '1 arqe'
+print not x in arr

@@ -137,12 +137,17 @@ Statement* Parser::if_else(){
 	BlockStatement* if_statement = new BlockStatement();
 	BlockStatement* else_statement = NULL;
 
-	while(!match({TT_KW_ELSE, TT_KW_END})) if_statement->add(statement());
+	while(!match({TT_KW_ELSE, TT_KW_END, TT_KW_ELIF}))
+		if_statement->add(statement());
+
+	if(look_match(-1, TT_KW_ELIF)){
+		return new IfStatement(condition, if_statement, if_else());
+	}
 
 	if(look_match(-1, TT_KW_ELSE)){
 		else_statement = new BlockStatement();
 		while(!match(TT_KW_END)) else_statement->add(statement());
-	}
+	} 
 
 	return new IfStatement(condition, if_statement, else_statement);
 }
@@ -437,18 +442,18 @@ Expression* Parser::expression(){
 
 Expression* Parser::assignment(){
 	Expression* assignment = assignment_strict();
-	
+
 	if(assignment != NULL){
 		return assignment;
 	}
-	
-	return ternary();
+
+	return in_expression();
 }
 
 Expression* Parser::assignment_strict(){
 	int position = this->pos;
 	Expression* target_expr = qualified_name();
-	
+
 	if((target_expr == NULL) || !(dynamic_cast<Accessible*>(target_expr))){
 		this->pos = position;
 		return NULL;
@@ -458,24 +463,35 @@ Expression* Parser::assignment_strict(){
 		this->pos = position;
 		return NULL;
 	}
-	
+
 	match(current_type);
-	
+
 	NS_Binary::Operator op = ASSIGN_OPERATORS[current_type];
-	
+
 	return new AssignmentExpression(op, dynamic_cast<Accessible*>(target_expr), expression());
+}
+
+Expression* Parser::in_expression() {
+	Expression* result = ternary();
+
+	if (match(TT_KW_IN)) {
+		Expression* container = expression();
+		return new InExpression(result, container);
+	}
+
+	return result;
 }
 
 Expression* Parser::ternary() {
 	Expression* result = logicalOr();
-	
+
 	if (match(TT_QUESTION)) {
 		Expression* trueExpr = expression();
 		consume(TT_COLON);
 		Expression* falseExpr = expression();
 		return new TernaryExpression(result, trueExpr, falseExpr);
 	}
-	
+
 	return result;
 }
 
@@ -649,19 +665,22 @@ Expression* Parser::multiplicative(){
 }
 
 Expression* Parser::unary(){
-	
+
 	if (match(TT_PLUSPLUS)) {
 		return new UnaryExpression(NS_Unary::Operator::INCREMENT_PREFIX, primary(true));
 	}
 	if (match(TT_MINUSMINUS)) {
 		return new UnaryExpression(NS_Unary::Operator::DECREMENT_PREFIX, primary(true));
 	}
-	
+
 	if(match(TT_MINUS)) {
 		return new UnaryExpression(NS_Unary::Operator::NEGATE, primary(false));
 	}
-	if (match({TT_EXCL, TT_KW_NOT})) {
+	if (match(TT_EXCL)) {
 		return new UnaryExpression(NS_Unary::Operator::NOT, primary(false));
+	}
+	if (match(TT_KW_NOT)) {
+		return new UnaryExpression(NS_Unary::Operator::NOT, expression());
 	}
 	if (match(TT_TILDE)) {
 		return new UnaryExpression(NS_Unary::Operator::COMPLEMENT, primary(false));
@@ -669,7 +688,7 @@ Expression* Parser::unary(){
 	if(match(TT_PLUS)){
 		return primary(false);
 	}
-	
+
 	return primary(false);
 }
 

@@ -16,17 +16,18 @@
 
 class IfStatement : virtual public Statement{
 public:
-    Expression *expression;
-    Statement *if_statement;
-    Statement *else_statement;
-    
-    IfStatement(Expression *, Statement *, Statement *);
-    
-    void execute();
-    
-    lets_str_t to_s();
-    
-    ~IfStatement();
+
+	Expression *expression;
+	Statement *if_statement;
+	Statement *else_statement;
+
+	IfStatement(Expression*, Statement*, Statement*);
+
+	void execute();
+
+	lets_str_t to_s();
+
+	~IfStatement();
 };
 
 #endif /* s_if_stat_hpp */

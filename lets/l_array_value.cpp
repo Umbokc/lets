@@ -6,7 +6,7 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-// #include <iostream> // for dbg
+#include <iostream> // for dbg
 
 #include "../include/l_array_value.hpp"
 #include "../include/ex_parse.h"
@@ -39,10 +39,10 @@ void ArrayValue::add_forward(Value *val){
 }
 
 Value *ArrayValue::get(int index){
-	
+
 	if(index >= 0 && index < this->len())
 		return this->elements[index];
-	
+
 	throw ParseException("Undefined index of array");
 }
 
@@ -50,13 +50,27 @@ lets_vector_t<Value *> ArrayValue::get_all(){
 	return this->elements;
 }
 
+bool ArrayValue::has(Value *value){
+	if (this == value) return false;
+
+	uint size = this->elements.size();
+
+	for (uint i = 0; i < size; ++i){
+		if(this->elements.at(i)->equals(value)){
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void ArrayValue::set(int index, Value *value){
-	
+
 	if(index > -1 && index < this->len()){
 		this->elements[index] = value;
 		return;
 	}
-	
+
 	throw ParseException("Undefined index "+ to_str(index) +" of array");
 }
 

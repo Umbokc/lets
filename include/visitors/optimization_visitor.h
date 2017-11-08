@@ -280,16 +280,15 @@ public:
 	Node *visit(IfStatement *s, T t) {
 		Node *expression = s->expression->accept(s->expression, this, t);
 		Node *if_statement = s->if_statement->accept(s->if_statement, this, t);
-		Node *else_statement;
-		if (s->else_statement != NULL) {
-			else_statement = s->else_statement->accept(s->else_statement, this, t);
-		} else {
-			else_statement = NULL;
-		}
+		Node *else_statement = (s->else_statement != NULL) ? s->else_statement->accept(s->else_statement, this, t) : NULL;
+
 		if (expression != s->expression || if_statement != s->if_statement || else_statement != s->else_statement) {
-			return new IfStatement(dynamic_cast<Expression*>(expression), consumeStatement(if_statement),
-				(else_statement == NULL ? NULL : consumeStatement(else_statement)) );
+			return new IfStatement(
+				dynamic_cast<Expression*>(expression),
+				consumeStatement(if_statement), (else_statement == NULL ? NULL : consumeStatement(else_statement))
+			);
 		}
+
 		return s;
 	}
 

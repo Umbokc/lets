@@ -71,25 +71,26 @@
 #define TT_KW_PUT 54
 #define TT_KW_IF 55
 #define TT_KW_ELSE 56
-#define TT_KW_WHILE 57
-#define TT_KW_FOR 58
-#define TT_KW_DO 59
-#define TT_KW_BREAK 60
-#define TT_KW_CONTINUE 61
-#define TT_KW_DEF 62
-#define TT_KW_DEF_C 63
-#define TT_KW_RETURN 64
-#define TT_KW_USE 65
-#define TT_KW_END 66
-#define TT_KW_IN 67
-#define TT_KW_MODE 68
-#define TT_KW_SELF 69
-#define TT_KW_MATCH 70
-#define TT_KW_CASE 71
-#define TT_KW_DEFAULT 72
-#define TT_KW_AND 73
-#define TT_KW_OR 74
-#define TT_KW_NOT 74
+#define TT_KW_ELIF 57
+#define TT_KW_WHILE 58
+#define TT_KW_FOR 59
+#define TT_KW_DO 60
+#define TT_KW_BREAK 61
+#define TT_KW_CONTINUE 62
+#define TT_KW_DEF 63
+#define TT_KW_DEF_C 64
+#define TT_KW_RETURN 65
+#define TT_KW_USE 66
+#define TT_KW_END 67
+#define TT_KW_IN 68
+#define TT_KW_MODE 69
+#define TT_KW_SELF 70
+#define TT_KW_MATCH 71
+#define TT_KW_CASE 72
+#define TT_KW_DEFAULT 73
+#define TT_KW_AND 74
+#define TT_KW_OR 75
+#define TT_KW_NOT 75
 
 static const lets_str_t TokenTypeString[] = {
     "eof",

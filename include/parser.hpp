@@ -70,6 +70,7 @@ private:
 	Expression* expression();
 	Expression* assignment();
 	Expression* assignment_strict();
+	Expression* in_expression();
 	Expression* ternary();
 	Expression* logicalOr();
 	Expression* logicalAnd();

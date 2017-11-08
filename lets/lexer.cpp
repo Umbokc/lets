@@ -73,6 +73,7 @@ lets_map_t<lets_str_t, u_tt_t> Lexer::KEYWORDS = {
     {"put", TT_KW_PUT},
     {"if", TT_KW_IF},
     {"else", TT_KW_ELSE},
+    {"elif", TT_KW_ELIF},
     {"while", TT_KW_WHILE},
     {"for", TT_KW_FOR},
     {"do", TT_KW_DO},

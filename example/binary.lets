@@ -1,23 +1,32 @@
 use 'std'
 # mode '0x666'
 
-$operations = [
-	{"+" : def(a b) <- a + b}
-	{"-" : def(a b) <- a - b}
-	{"*" : def(a b) <- a * b}
-	{"/" : def(a b) <- a / b}
-	{"%" : def(a b) <- a % b}
-	{"&" : def(a b) <- a & b}
-	{"|" : def(a b) <- a | b}
-	{"^" : def(a b) <- a ^ b}
-]
+$operations = {
+	"+" : def(a b) <- a + b
+	"-" : def(a b) <- a - b
+	"*" : def(a b) <- a * b
+	"/" : def(a b) <- a / b
+	"%" : def(a b) <- a % b
+	"&" : def(a b) <- a & b
+	"|" : def(a b) <- a | b
+	"^" : def(a b) <- a ^ b
+	"<<" : def(a b) <- a << b
+	">>" : def(a b) <- a >> b
+}
 
-def call_operations(a b):
-	for elem in $operations :
-		for key, operation in elem:
-			echo(a, ' ', key, ' ', b, ' = ', operation(a b))
+def call_operations(ops a b):
+	for op in ops :
+		match op
+			case x if x in $operations:
+				print $operations[x](a b)
+			default:
+				for key, operation in $operations:
+					echo(a, ' ', key, ' ', b, ' = ', operation(a b))
+				end
+				break
 		end
 	end
+
 	print ''
 end
 
@@ -25,7 +34,7 @@ print "Binary operations with: \n"
 # number
 def_c number():
 	print "Numbers"
-	call_operations(10 4)
+	call_operations(['+' '-'] 10 4)
 end
 
 # array
@@ -70,6 +79,6 @@ def_c bitwise():
 end
 
 number()
-array()
+# array()
 # map()
-bitwise()
+# bitwise()
