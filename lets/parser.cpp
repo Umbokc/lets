@@ -56,7 +56,7 @@ Statement* Parser::get_parsed_statement(){
 
 Statement* Parser::block(){
 	BlockStatement* block = new BlockStatement();
-	
+
 	consume(TT_COLON);
 	while(!match(TT_KW_END)){
 		block->add(statement());
@@ -132,34 +132,18 @@ Statement* Parser::assignment_statement(){
 }
 
 Statement* Parser::if_else(){
-	
+
 	Expression* condition = expression();
-	Statement* if_statement;
-	Statement* else_statement;
-	
-	if(match(TT_COLON)){
-		BlockStatement* block = new BlockStatement();
-		while(true){
-			if(match(TT_KW_END)){
-				else_statement = NULL;
-				break;
-			}
-			if(match(TT_COLON) && match(TT_KW_ELSE)){
-				else_statement = statement_or_block();
-				break;
-			}
-			block->add(statement());
-		}
-		if_statement = block;
-	} else {
-		if_statement = statement();
-		if(match(TT_KW_ELSE)){
-			else_statement = statement_or_block();
-		} else {
-			else_statement = NULL;
-		}
+	BlockStatement* if_statement = new BlockStatement();
+	BlockStatement* else_statement = NULL;
+
+	while(!match({TT_KW_ELSE, TT_KW_END})) if_statement->add(statement());
+
+	if(look_match(-1, TT_KW_ELSE)){
+		else_statement = new BlockStatement();
+		while(!match(TT_KW_END)) else_statement->add(statement());
 	}
-	
+
 	return new IfStatement(condition, if_statement, else_statement);
 }
 
@@ -667,20 +651,16 @@ Expression* Parser::multiplicative(){
 Expression* Parser::unary(){
 	
 	if (match(TT_PLUSPLUS)) {
-		return new UnaryExpression(
-								   NS_Unary::Operator::INCREMENT_PREFIX, primary(true)
-								   );
+		return new UnaryExpression(NS_Unary::Operator::INCREMENT_PREFIX, primary(true));
 	}
 	if (match(TT_MINUSMINUS)) {
-		return new UnaryExpression(
-								   NS_Unary::Operator::DECREMENT_PREFIX, primary(true)
-								   );
+		return new UnaryExpression(NS_Unary::Operator::DECREMENT_PREFIX, primary(true));
 	}
 	
 	if(match(TT_MINUS)) {
 		return new UnaryExpression(NS_Unary::Operator::NEGATE, primary(false));
 	}
-	if (match(TT_EXCL)) {
+	if (match({TT_EXCL, TT_KW_NOT})) {
 		return new UnaryExpression(NS_Unary::Operator::NOT, primary(false));
 	}
 	if (match(TT_TILDE)) {
