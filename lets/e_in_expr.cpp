@@ -16,7 +16,7 @@ InExpression::InExpression(Expression* e, Expression* c):expression(std::move(e)
 
 Value* InExpression::eval(){
 
-	bool result;
+	bool result = false;
 
 	Value* val = expression->eval();
 	Value* object = container->eval();
