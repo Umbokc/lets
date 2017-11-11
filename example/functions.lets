@@ -91,19 +91,36 @@ def getPrime(x):
 	return candidate
 end
 
-a = [4 5 6 8 10 12 15 19 20 23 30 43 44 45 46 51 52 54 60 66 67 42 70 40 7 68 55 37 11 14 56 57 41 63 47 31 59 48 24 9]
-# sort = insertion_sort(a len(a))
-sort = bubble_sort(a len(a))
-# sort = selection_sort(a len(a))
+get_random_nums = def(min max nums):
+	arr = newArray(nums)
+	for i = 0, i < nums, ++i :
+		x = rand(min max)
+		if not x in arr
+			arr[i] = x
+		else
+			--i continue
+		end
+	end
+	return arr
+end
 
+arr = get_random_nums(1 50 40)
+
+# sort = insertion_sort(arr len(arr))
+sort = bubble_sort(arr len(arr))
+# sort = selection_sort(arr len(arr))
 print sort
-arg = 3
-print square(arg) # square(3) = 9
-print cube(arg) # cube(3) = 27
-print sum(arg)
-print sumOfCubes(arg)
-print getPrime(arg)
+
+print ''
+print 'square(3)     = ' + square(3)
+print 'cube(3)       = ' + cube(3)
+print 'sum(3)        = ' + sum(3)
+print 'sumOfCubes(3) = ' + sumOfCubes(3)
+print 'getPrime(3)   = ' + getPrime(3)
+print ''
 
 print to_i('1') * 5
 print to_s(1) * 5
 print to_a(1) * 5
+
+print 0121
