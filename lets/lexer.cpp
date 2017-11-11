@@ -124,13 +124,14 @@ void Lexer::tokenize_number() {
     clear_buffer();
     char current = peek(0);
     
-    bool is_octal = (current == '0');
+    bool is_octal = (current == '0' && find_c("0123456789", peek(1)) != -1);
     
-    if(is_octal && look_char(1, 'x')){
+    if(current == '0' && look_char(1, 'x')){
         tokenize_hex_number();
         return;
     }
-    if(is_octal && look_char(1, 'b')){
+
+    if(current == '0' && look_char(1, 'b')){
         tokenize_binary_number();
         return;
     }
@@ -150,7 +151,7 @@ void Lexer::tokenize_number() {
         current = next();
     }
     
-    if(is_octal && this->buffer.length() != 1){
+    if(is_octal){
         add_token(TT_OCTAL_NUMBER, this->buffer);
     } else {
         add_token(TT_NUMBER, this->buffer);
@@ -382,12 +383,8 @@ bool Lexer::is_word_var(char c){
 }
 
 int Lexer::find_c(lets_str_t s, char c) {
-    for (int i = 0; i < s.length(); i++) {
-        if (s[i] == c) {
-            return i;
-        }
-    }
-    return -1;
+    std::size_t pos = s.find(c);
+    return (pos == lets_str_t::npos) ? -1 : (int)pos; 
 }
 
 void Lexer::add_token(u_tt_t tt){

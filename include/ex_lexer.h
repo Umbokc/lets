@@ -28,7 +28,7 @@ public:
 
 	lets_str_t get_message() {
 		if (row >= 0 && col >= 0) {
-			return "[" + std::to_string(this->row) + ":" + std::to_string(this->col) + "]: " + message;
+			return "Lexer error [" + std::to_string(this->row) + ":" + std::to_string(this->col) + "]: " + message;
 		}
 		return message;
 	}
