@@ -1,4 +1,4 @@
-bin/lets
+/bin/*
 *.o
 
 files-for-compile
