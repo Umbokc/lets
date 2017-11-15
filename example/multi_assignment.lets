@@ -1,0 +1,28 @@
+use ['echo'] in 'std'
+
+two_vars = def():
+	a = 11 b = 33
+	echo ('a = ' + a, 'b = ' + b)
+	a,b = [b, a]
+	echo ('a = ' + a, 'b = ' + b)
+end
+
+second = def():
+	arr = [6 7 8 9]
+
+	map = {
+		'key_1' : 'val_1',
+		'key_2' : 'val_2'
+	}
+
+	a,b,c,arr[0],map.key_2 = [1 2 3 4 ['the' 'arr']]
+
+	print a
+	print b
+	print c
+	print arr
+	print map
+end
+
+two_vars()
+# second()

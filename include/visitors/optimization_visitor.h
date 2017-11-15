@@ -189,14 +189,6 @@ public:
 		return s;
 	}
 
-	Node *visit(AssignmentStatement *s, T t) {
-		Node *expression = s->expression->accept(s->expression, this, t);
-		if (expression != s->expression) {
-			return new AssignmentStatement(s->variable, dynamic_cast<Expression*>(expression));
-		}
-		return s;
-	}
-
 	Node *visit(BlockStatement *s, T t) {
 		bool changed = false;
 		BlockStatement *result = new BlockStatement();
@@ -292,6 +284,29 @@ public:
 		return s;
 	}
 
+	Node *visit(MultiAssignmentStatement *s, T t) {
+		bool changed = false;
+		lets_vector_t<Accessible*> targets;
+		Node *expression = s->expression->accept(s->expression, this, t);
+
+		for (Accessible *item : s->targets) {
+			Node *node = item->accept(item, this, t);
+			if (node != item) {
+				changed = true;
+			}
+			targets.push_back(dynamic_cast<Accessible*>(node));
+		}
+
+		if(expression != s->expression){
+			changed = true;
+		}
+
+		if (changed) {
+			return new MultiAssignmentStatement(targets, dynamic_cast<Expression*>(expression));
+		}
+		return s;
+	}
+
 	Node *visit(PrintStatement *s, T t) {
 		Node *expression = s->expression->accept(s->expression, this, t);
 		if (expression != s->expression) {
@@ -367,7 +382,6 @@ public:
 	Node *visit(Statement *s, T t) {
 
 		if(ArrayAssignmentStatement* it = dynamic_cast<ArrayAssignmentStatement*>(s)) s = dynamic_cast<Statement*>(it->accept(it, this, t));
-		else if(AssignmentStatement* it = dynamic_cast<AssignmentStatement*>(s)) s = dynamic_cast<Statement*>(it->accept(it, this, t));
 		else if(BlockStatement* it = dynamic_cast<BlockStatement*>(s)) s = dynamic_cast<Statement*>(it->accept(it, this, t));
 		else if(BreakStatement* it = dynamic_cast<BreakStatement*>(s)) s = dynamic_cast<Statement*>(it->accept(it, this, t));
 		else if(ContinueStatement* it = dynamic_cast<ContinueStatement*>(s)) s = dynamic_cast<Statement*>(it->accept(it, this, t));
@@ -377,6 +391,7 @@ public:
 		else if(ForeachStatement* it = dynamic_cast<ForeachStatement*>(s)) s = dynamic_cast<Statement*>(it->accept(it, this, t));
 		else if(FunctionDefineStatement* it = dynamic_cast<FunctionDefineStatement*>(s)) s = dynamic_cast<Statement*>(it->accept(it, this, t));
 		else if(IfStatement* it = dynamic_cast<IfStatement*>(s)) s = dynamic_cast<Statement*>(it->accept(it, this, t));
+		else if(MultiAssignmentStatement* it = dynamic_cast<MultiAssignmentStatement*>(s)) s = dynamic_cast<Statement*>(it->accept(it, this, t));
 		else if(PrintStatement* it = dynamic_cast<PrintStatement*>(s)) s = dynamic_cast<Statement*>(it->accept(it, this, t));
 		else if(PutStatement* it = dynamic_cast<PutStatement*>(s)) s = dynamic_cast<Statement*>(it->accept(it, this, t));
 		else if(ReturnStatement* it = dynamic_cast<ReturnStatement*>(s)) s = dynamic_cast<Statement*>(it->accept(it, this, t));

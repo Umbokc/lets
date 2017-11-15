@@ -29,7 +29,6 @@ public:
 	virtual R visit(VariableExpression*, T) = 0;
 
 	virtual R visit(ArrayAssignmentStatement*, T) = 0;
-	virtual R visit(AssignmentStatement*, T) = 0;
 	virtual R visit(BlockStatement*, T) = 0;
 	virtual R visit(BreakStatement*, T) = 0;
 	virtual R visit(ContinueStatement*, T) = 0;
@@ -39,6 +38,7 @@ public:
 	virtual R visit(ForeachStatement*, T) = 0;
 	virtual R visit(FunctionDefineStatement*, T) = 0;
 	virtual R visit(IfStatement*, T) = 0;
+	virtual R visit(MultiAssignmentStatement*, T) = 0;
 	virtual R visit(PrintStatement*, T) = 0;
 	virtual R visit(PutStatement*, T) = 0;
 	virtual R visit(ReturnStatement*, T) = 0;

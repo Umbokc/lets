@@ -10,50 +10,47 @@
 #define declaration_h
 
 class Value;
-class NumberValue;
 
-class Visitor;
 class Node;
-class Expression;
 class Accessible;
 
 class Argument;
 class Arguments;
+
+class Expression;
+
 class ArrayAccessExpression;
 class ArrayExpression;
 class AssignmentExpression;
 class BinaryExpression;
 class ConditionalExpression;
-class FunctionalExpression;
-class MapExpression;
-class UnaryExpression;
 class ContainerAccessExpression;
+class FunctionalExpression;
+class InExpression;
+class MapExpression;
+class MatchExpression;
 class TernaryExpression;
+class UnaryExpression;
 class ValueExpression;
 class VariableExpression;
-class InputExpression;
-class MatchExpression;
-class ANY_EXPR;
 
 class Statement;
 
 class ArrayAssignmentStatement;
-class AssignmentStatement;
 class BlockStatement;
 class BreakStatement;
 class ContinueStatement;
 class DoWhileStatement;
+class ExprStatement;
 class ForStatement;
 class ForeachStatement;
 class FunctionDefineStatement;
-class ExprStatement;
 class IfStatement;
+class MultiAssignmentStatement;
 class PrintStatement;
 class PutStatement;
 class ReturnStatement;
 class UseStatement;
 class WhileStatement;
-class ModeProgrammStatement;
-class SelfStatement;
 
 #endif /* declaration_h */

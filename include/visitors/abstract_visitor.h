@@ -18,13 +18,13 @@ public:
 // Expressions
 
 	void visit(ArrayAccessExpression *s){
-		for(auto index: s->indices){
+		for(Expression* index: s->indices){
 			index->accept(index, this);
 		}
 	}
 
 	void visit(ArrayExpression *s){
-		for(auto index: s->elements){
+		for(Expression* index: s->elements){
 			index->accept(index, this);
 		}
 	}
@@ -94,10 +94,6 @@ public:
 		s->expression->accept(s->expression,this);
 	}
 
-	void visit(AssignmentStatement *s){
-		s->expression->accept(s->expression,this);
-	}
-
 	void visit(BlockStatement *s){
 		for(Statement* statement: s->statements){
 			statement->accept(statement,this);
@@ -144,6 +140,13 @@ public:
 			s->else_statement->accept(s->else_statement,this);
 	}
 
+	void visit(MultiAssignmentStatement *s){
+		s->expression->accept(s->expression,this);
+		for(Accessible* item: s->targets){
+			item->accept(item, this);
+		}
+	}
+
 	void visit(PrintStatement *s){
 		s->expression->accept(s->expression,this);
 	}
@@ -177,7 +180,6 @@ public:
 
 	void visit(Statement* item){
 		if(ArrayAssignmentStatement* it = dynamic_cast<ArrayAssignmentStatement*>(item)) it->accept(it, this);
-		if(AssignmentStatement* it = dynamic_cast<AssignmentStatement*>(item)) it->accept(it, this);
 		if(BlockStatement* it = dynamic_cast<BlockStatement*>(item)) it->accept(it, this);
 		if(BreakStatement* it = dynamic_cast<BreakStatement*>(item)) it->accept(it, this);
 		if(ContinueStatement* it = dynamic_cast<ContinueStatement*>(item)) it->accept(it, this);
@@ -187,6 +189,7 @@ public:
 		if(ForeachStatement* it = dynamic_cast<ForeachStatement*>(item)) it->accept(it, this);
 		if(FunctionDefineStatement* it = dynamic_cast<FunctionDefineStatement*>(item)) it->accept(it, this);
 		if(IfStatement* it = dynamic_cast<IfStatement*>(item)) it->accept(it, this);
+		if(MultiAssignmentStatement* it = dynamic_cast<MultiAssignmentStatement*>(item)) it->accept(it, this);
 		if(PrintStatement* it = dynamic_cast<PrintStatement*>(item)) it->accept(it, this);
 		if(PutStatement* it = dynamic_cast<PutStatement*>(item)) it->accept(it, this);
 		if(ReturnStatement* it = dynamic_cast<ReturnStatement*>(item)) it->accept(it, this);

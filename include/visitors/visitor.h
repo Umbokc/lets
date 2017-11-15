@@ -28,7 +28,6 @@ public:
 	virtual void visit(VariableExpression*) = 0;
 
 	virtual void visit(ArrayAssignmentStatement*) = 0;
-	virtual void visit(AssignmentStatement*) = 0;
 	virtual void visit(BlockStatement*) = 0;
 	virtual void visit(BreakStatement*) = 0;
 	virtual void visit(ContinueStatement*) = 0;
@@ -38,6 +37,7 @@ public:
 	virtual void visit(ForeachStatement*) = 0;
 	virtual void visit(FunctionDefineStatement*) = 0;
 	virtual void visit(IfStatement*) = 0;
+	virtual void visit(MultiAssignmentStatement*) = 0;
 	virtual void visit(PrintStatement*) = 0;
 	virtual void visit(PutStatement*) = 0;
 	virtual void visit(ReturnStatement*) = 0;

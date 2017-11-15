@@ -27,6 +27,7 @@ public:
     void add_forward(Value *);
     
     Value *get(int);
+    Value *get_always(int);
     lets_vector_t<Value *> get_all();
 
     bool has(Value*);

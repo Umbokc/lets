@@ -111,10 +111,13 @@ Statement* Parser::statement(){
 	if(match(TT_KW_FOR))        return for_statement();
 	if(match(TT_KW_DEF))        return function_define(false);
 	if(match(TT_KW_DEF_C))      return function_define(true);
-	//    if(match(TT_KW_MODE))         return new ModeProgrammStatement(expression()->eval()->as_string());
+	// if(match(TT_KW_MODE))         return new ModeProgrammStatement(expression()->eval()->as_string());
 	if(match(TT_KW_MATCH))      return match();
 	if (look_match(0, TT_IDENTIFIER) && look_match(1,TT_LPAREN)) {
 		return new ExprStatement(function_chain(qualified_name()));
+	}
+	if (look_match(0, TT_IDENTIFIER) && look_match(1, TT_COMMA)) {
+		return multi_assignment_statement(qualified_name());
 	}
 	
 	return assignment_statement();
@@ -129,6 +132,29 @@ Statement* Parser::assignment_statement(){
 	
 	error_pars("Unknown statement " + get(-1).get_text(), get(-1));
 	return NULL;
+}
+
+Statement* Parser::multi_assignment_statement(Expression* target_expr){
+	int position;
+	lets_vector_t<Accessible*> elements;
+
+	while(true){
+		elements.push_back(dynamic_cast<Accessible*>(target_expr));
+
+		if(match(TT_EQ)) break;
+
+		consume(TT_COMMA);
+
+		position = this->pos;
+		target_expr = qualified_name();
+
+		if((target_expr == NULL) || !(dynamic_cast<Accessible*>(target_expr))){
+			this->pos = position;
+			break;
+		}
+	}
+
+	return new MultiAssignmentStatement(elements, expression());
 }
 
 Statement* Parser::if_else(){
@@ -165,33 +191,33 @@ Statement* Parser::do_while_statement(){
 }
 
 Statement* Parser::for_statement(){
-	
+
 	int foreach_index = look_match(0, TT_LPAREN) ? 1 : 0; // не обязательные скобки
-	
+
 	if(look_match(foreach_index, TT_IDENTIFIER)
-	   && look_match(foreach_index+1, TT_KW_IN)){
+		&& look_match(foreach_index+1, TT_KW_IN)){
 		return foreach_arr_statement(false);
 	}
-	
+
 	if(look_match(foreach_index, TT_IDENTIFIER)
-	   && look_match(foreach_index+1, TT_COMMA)
-	   && look_match(foreach_index+2, TT_IDENTIFIER)
-	   && look_match(foreach_index+3, TT_KW_IN)){
+		&& look_match(foreach_index+1, TT_COMMA)
+		&& look_match(foreach_index+2, TT_IDENTIFIER)
+		&& look_match(foreach_index+3, TT_KW_IN)){
 		return foreach_arr_statement(true);
 	}
-	
+
 	bool open_parent = match(TT_LPAREN); // не обязательные скобки
-	
+
 	Statement* initialization = assignment_statement();
 	consume(TT_COMMA);
 	Expression* termintion = expression();
 	consume(TT_COMMA);
 	Statement* incement = assignment_statement();
-	
+
 	if(open_parent) consume(TT_RPAREN);
-	
+
 	Statement* statement = statement_or_block();
-	
+
 	return new ForStatement(initialization, termintion, incement, statement);
 }
 
@@ -458,6 +484,7 @@ Expression* Parser::assignment_strict(){
 		this->pos = position;
 		return NULL;
 	}
+
 	int current_type = get(0).get_type();
 	if(ASSIGN_OPERATORS.find(current_type) == ASSIGN_OPERATORS.end()){
 		this->pos = position;
@@ -470,6 +497,33 @@ Expression* Parser::assignment_strict(){
 
 	return new AssignmentExpression(op, dynamic_cast<Accessible*>(target_expr), expression());
 }
+
+// // порешать что то здесь и предалть а то ошибка при 
+// // a,b = [a, 2]
+// Expression* Parser::multi_assignment_strict(Expression* target_expr){
+// 	int position;
+// 	lets_vector_t<Accessible*> elements;
+
+// 	while(true){
+
+// 		elements.push_back(dynamic_cast<Accessible*>(target_expr));
+
+// 		if(match(TT_EQ)) break;
+
+// 		consume(TT_COMMA);
+
+// 		position = this->pos;
+// 		target_expr = qualified_name();
+
+// 		if((target_expr == NULL) || !(dynamic_cast<Accessible*>(target_expr))){
+// 			this->pos = position;
+// 			break;
+// 		}
+
+// 	}
+
+// 	return new MultiAssignmentExpression(elements, expression());
+// }
 
 Expression* Parser::in_expression() {
 	// 1 in [1, 2, 3]
@@ -739,15 +793,15 @@ Expression* Parser::variable(bool incr = false) {
 		}
 		return qualified_name_expr;
 	}
-	
+
 	if(look_match(0,TT_LBRACKET)){
 		return array();
 	}
-	
+
 	if(look_match(0,TT_LBRACE)){
 		return map_vals();
 	}
-	
+
 	return value();
 }
 

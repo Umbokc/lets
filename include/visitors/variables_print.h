@@ -14,11 +14,6 @@
 class VariablesPrint : virtual public AbstractVisitor{
 public:
 
-	void visit(AssignmentStatement *s){
-		s->expression->accept(s->expression, this);
-		lets_output(s->variable);
-	}
-
 	void visit(VariableExpression *s){
 		lets_output(s->name);
 	}

@@ -9,6 +9,7 @@
 #include <iostream> // for dbg
 
 #include "../include/l_array_value.hpp"
+#include "../include/l_number_value.hpp"
 #include "../include/ex_parse.h"
 #include "../include/tools.hpp"
 
@@ -44,6 +45,14 @@ Value *ArrayValue::get(int index){
 		return this->elements[index];
 
 	throw ParseException("Undefined index of array");
+}
+
+Value *ArrayValue::get_always(int index){
+
+	if(index >= 0 && index < this->len())
+		return this->elements[index];
+
+	return NumberValue::ZERO;
 }
 
 lets_vector_t<Value *> ArrayValue::get_all(){

@@ -25,7 +25,6 @@
 #include "e_variable_expr.hpp"
 
 #include "s_array_assignment_stat.hpp"
-#include "s_assignment_stat.hpp"
 #include "s_block_stat.hpp"
 #include "s_break_stat.hpp"
 #include "s_continue_stat.hpp"
@@ -35,6 +34,7 @@
 #include "s_foreach_stat.hpp"
 #include "s_function_define_stat.hpp"
 #include "s_if_stat.hpp"
+#include "s_multi_assignment_stat.hpp"
 #include "s_print_stat.hpp"
 #include "s_put_stat.hpp"
 #include "s_return_stat.hpp"

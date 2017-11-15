@@ -52,6 +52,7 @@ private:
 	
 	Statement* statement();
 	Statement* assignment_statement();
+	Statement* multi_assignment_statement(Expression*);
 	Statement* if_else();
 	Statement* while_statement();
 	Statement* do_while_statement();
