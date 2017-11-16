@@ -7,7 +7,7 @@
 //
 
 #include "../include/e_conditional_expr.hpp"
-#include "../include/ex_parse.h"
+#include "../include/ex_execute.h"
 #include "../include/tools.hpp"
 
 ConditionalExpression::ConditionalExpression(
@@ -43,7 +43,7 @@ Value* ConditionalExpression::eval(){
         case NS_Conditional::OR : result = (number1 != 0 || number2 != 0); break;
             
         default:
-            throw ParseException("Operation is not supported");
+            throw ExecuteException("Operation is not supported");
     }
     
     return new NumberValue(result);

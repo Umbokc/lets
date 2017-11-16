@@ -9,9 +9,9 @@
 #ifndef exceptions__operation_is_not_supported_h
 #define exceptions__operation_is_not_supported_h
 
-#include "ex_parse.h"
+#include "ex_execute.h"
 
-class OperationIsNotSupportedException : public ParseException{
+class OperationIsNotSupportedException : public ExecuteException{
 public:
     OperationIsNotSupportedException(){}
     ~OperationIsNotSupportedException(){}

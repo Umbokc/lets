@@ -9,14 +9,10 @@
 #ifndef ex_pattern_matching_h
 #define ex_pattern_matching_h
 
-#include "ex_parse.h"
+#include "ex_execute.h"
 
-class PatternMatchingException : public ParseException {
+class PatternMatchingException : public ExecuteException {
 public:
-    PatternMatchingException(){}
-    PatternMatchingException(lets_str_t message): ParseException(message){}
-    ~PatternMatchingException(){}
-    
 };
 
 #endif /* ex_pattern_matching_h */

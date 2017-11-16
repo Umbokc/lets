@@ -7,7 +7,7 @@
 //
 
 #include "../include/e_array_access_expr.hpp"
-#include "../include/ex_parse.h"
+#include "../include/ex_execute.h"
 #include "../include/l_variables.h"
 
 ArrayAccessExpression::ArrayAccessExpression(lets_str_t variable, lets_vector_t<Expression*> indices):
@@ -55,6 +55,6 @@ ArrayValue *ArrayAccessExpression::consume_array(Value *value){
 	if(Value *v = dynamic_cast<ArrayValue*>(value)){
 		return dynamic_cast<ArrayValue*>(value);
 	} else {
-		throw ParseException("Array expected");
+		throw ExecuteException("Array expected");
 	}
 }

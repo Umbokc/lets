@@ -8,7 +8,7 @@
 
 #include "../include/l_functions.hpp"
 #include "../include/ex_error.h"
-#include "../include/ex_parse.h"
+#include "../include/ex_execute.h"
 #include "../include/tools.hpp"
 
 lets_map_t<lets_str_t, FunctionContainer*> Functions::functions;
@@ -23,7 +23,7 @@ bool Functions::is_constexpr(lets_str_t key){
 
 Function*Functions:: get(lets_str_t key){
     if(!is_exists(key)){
-        throw ParseException(
+        throw ExecuteException(
                              NS_Tools::string_format(ExceptionsError::E_UNKNOWN_FUNC, key.c_str())
                              );
     }
@@ -32,7 +32,7 @@ Function*Functions:: get(lets_str_t key){
 
 void Functions::set(lets_str_t key, Function* function){
     if(is_exists(key) && is_constexpr(key)){
-        throw ParseException(
+        throw ExecuteException(
                              NS_Tools::string_format(ExceptionsError::E_CNN_REWRITE_FUNC, key.c_str())
                              );
     }
@@ -41,7 +41,7 @@ void Functions::set(lets_str_t key, Function* function){
 
 void Functions::set_constexpr(lets_str_t key, Function* function){
     if(is_exists(key) && is_constexpr(key)){
-        throw ParseException(
+        throw ExecuteException(
                              NS_Tools::string_format(ExceptionsError::E_CNN_REWRITE_FUNC, key.c_str())
                              );
     }

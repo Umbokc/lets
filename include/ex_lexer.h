@@ -12,24 +12,28 @@
 #include "main.h"
 
 class LexerException {
-protected:
-	lets_str_t message;
-	int row, col;
 public:
+	lets_str_t head = "Lexer error";
+	size_t row = 0, col = 0;
+	lets_str_t message;
 
 	LexerException() {}
 
-	LexerException(lets_str_t message) :message(std::move(message)) {
-		col = row = -2;
-	}
+	LexerException(lets_str_t message)
+		:message(std::move(message)){}
 
-	LexerException(lets_str_t message, int r, int c)
-		:message(std::move(message)), row(std::move(r)), col(std::move(c)) {}
+	LexerException(lets_str_t message, lets_str_t head)
+		:message(std::move(message)), head(std::move(head)){}
+
+	LexerException(lets_str_t message, size_t row, size_t col)
+		:message(std::move(message)),
+		row(std::move(row)), col(std::move(col)){}
+
+	LexerException(lets_str_t message, lets_str_t head, size_t row, size_t col)
+		:message(std::move(message)), head(std::move(head)),
+		row(std::move(row)), col(std::move(col)){}
 
 	lets_str_t get_message() {
-		if (row >= 0 && col >= 0) {
-			return "Lexer error [" + std::to_string(this->row) + ":" + std::to_string(this->col) + "]: " + message;
-		}
 		return message;
 	}
 

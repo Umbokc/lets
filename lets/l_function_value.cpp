@@ -7,7 +7,7 @@
 //
 
 #include "../include/l_function_value.hpp"
-#include "../include/ex_parse.h"
+#include "../include/ex_execute.h"
 
 FunctionValue::FunctionValue(Function* value):value(std::move(value)){}
 
@@ -16,7 +16,7 @@ int FunctionValue::as_int(){
 }
 
 double FunctionValue::as_number(){
-    throw ParseException("Cannot cast function to number");
+    throw ExecuteException("Cannot cast function to number");
 }
 
 long FunctionValue::as_long(){

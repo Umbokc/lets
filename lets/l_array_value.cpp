@@ -10,7 +10,7 @@
 
 #include "../include/l_array_value.hpp"
 #include "../include/l_number_value.hpp"
-#include "../include/ex_parse.h"
+#include "../include/ex_execute.h"
 #include "../include/tools.hpp"
 
 
@@ -44,7 +44,7 @@ Value *ArrayValue::get(int index){
 	if(index >= 0 && index < this->len())
 		return this->elements[index];
 
-	throw ParseException("Undefined index of array");
+	throw ExecuteException("Undefined index of array");
 }
 
 Value *ArrayValue::get_always(int index){
@@ -80,7 +80,7 @@ void ArrayValue::set(int index, Value *value){
 		return;
 	}
 
-	throw ParseException("Undefined index "+ to_str(index) +" of array");
+	throw ExecuteException("Undefined index "+ to_str(index) +" of array");
 }
 
 int ArrayValue::as_int(){
@@ -88,7 +88,7 @@ int ArrayValue::as_int(){
 }
 
 double ArrayValue::as_number(){
-	throw ParseException("Cannot cast array to number");
+	throw ExecuteException("Cannot cast array to number");
 }
 
 long ArrayValue::as_long(){

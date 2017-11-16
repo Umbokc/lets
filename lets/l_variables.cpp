@@ -8,7 +8,7 @@
 
 #include <iostream>
 #include "../include/l_variables.h"
-#include "../include/ex_parse.h"
+#include "../include/ex_execute.h"
 
 Variables::Scope *Variables::scope = new Variables::Scope();
 Variables::VARIABLE_MAP Variables::global_variables = {
@@ -68,7 +68,7 @@ Value* Variables::get(lets_str_t key){
 }
 
 void Variables::set(lets_str_t key, Value* value){
-	if(is_constexpr(key)) throw ParseException("Cannot assign value to constant \"" + key + "\"");
+	if(is_constexpr(key)) throw ExecuteException("Cannot assign value to constant \"" + key + "\"");
 
 	// $var or __var
 	if(is_global_to_set(key) || is_global_const_to_set(key)){

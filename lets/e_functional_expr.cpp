@@ -89,5 +89,5 @@ Function* FunctionalExpression::get_function(lets_str_t key){
     }
     
     
-    throw ParseException("Unknown function \"" + key + "\"");
+    throw ExecuteException("Unknown function \"" + key + "\"");
 }

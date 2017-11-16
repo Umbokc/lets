@@ -7,7 +7,7 @@
 //
 
 #include "../include/s_use_stat.hpp"
-#include "../include/ex_parse.h"
+#include "../include/ex_execute.h"
 
 #include "../modules/std/std.hpp"
 #include "../modules/math/math.hpp"
@@ -30,7 +30,7 @@ void UseStatement::execute(){
    else if(name == "math") LetsModule__math::run(elems);
    else if(name == "type") LetsModule__type::run(elems);
    else
-        throw ParseException("Does not found module " + name);
+        throw ExecuteException("Does not found module " + name);
 }
 
 lets_str_t UseStatement::to_s(){

@@ -10,7 +10,7 @@
 #include "../include/l_number_value.hpp"
 #include "../include/l_variables.h"
 #include "../include/s_return_stat.hpp"
-#include "../include/ex_parse.h"
+#include "../include/ex_execute.h"
 #include "../include/tools.hpp"
 
 UserDefineFunction::UserDefineFunction(Arguments args, Statement *body):
@@ -24,13 +24,13 @@ Value* UserDefineFunction::execute(FUNCS_ARGS values){
 	int size = (int)values.size();
 	int required = args.get_required();
 	if(size < required) {
-		throw ParseException(
+		throw ExecuteException(
 			NS_Tools::string_format("Arguments count mismatch %d < %d", size, required)
 		);
 	}
 	int total_size = get_args_count();
 	if(size > total_size) {
-		throw ParseException(
+		throw ExecuteException(
 			NS_Tools::string_format("Arguments count mismatch %d > %d", size, required)
 		);
 	}

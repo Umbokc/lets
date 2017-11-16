@@ -29,7 +29,7 @@ private:
 	Token TT_EOF_T = Token(TT_EOF, "EOF", 0, 0);
 	lets_vector_t<Token> tokens;
 	size_t pos, size;
-	Statement* parsed_statement;
+	// Statement* parsed_statement;
 public:
 
 	static lets_map_t<u_tt_t, NS_Binary::Operator> ASSIGN_OPERATORS;
@@ -42,7 +42,7 @@ public:
 	~Parser() {}
 private:
 
-	Statement* get_parsed_statement();
+	// Statement* get_parsed_statement();
 
 	Statement* block();
 	Statement* block(u_tt_t);
@@ -96,9 +96,9 @@ private:
 	bool match(u_tt_t);
 	bool match(lets_vector_t<u_tt_t>);
 
-	bool look_match(size_t, u_tt_t);
+	bool look_match(int, u_tt_t);
 
-	Token get(u_tt_t);
+	Token get(int);
 
 	int find_c(lets_str_t, char);
 	void error_pars(lets_str_t, Token);

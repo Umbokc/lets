@@ -8,7 +8,7 @@
 
 #include "../include/tools.hpp"
 #include "../include/e_binary_expr.hpp"
-#include "../include/ex_parse.h"
+#include "../include/ex_execute.h"
 #include "../include/l_array_value.hpp"
 #include "../include/l_string_value.hpp"
 #include "../include/ex_operation_is_not_supported.h"
@@ -57,12 +57,12 @@ Value *BinaryExpression::eval(Value *value1, Value *value2){
             default:
                 operation_is_not_supported();
         }
-    } catch(ParseException& pe){
+    } catch(ExecuteException& pe){
 //        if(Mode_Programm::without_stop){
 //            std::cout << "Error binary operation: " << pe.get_message() << std::endl;
 //            return NumberValue::ZERO;
 //        } else {
-            throw ParseException(pe.get_message());
+            throw ExecuteException(pe.get_message());
 //        }
     }
     return NumberValue::ZERO;
@@ -82,7 +82,7 @@ Value *BinaryExpression::BO_add(Value *value1, Value *value2) {
             } else if(value2->type() == Types::T_STRING){
                 return new StringValue(value1->as_string() + value2->as_string());
             }
-            throw ParseException("Cannot merge non array value to array");
+            throw ExecuteException("Cannot merge non array value to array");
         case Types::T_STRING:
         default:
             return new StringValue(value1->as_string() + value2->as_string());
@@ -149,7 +149,7 @@ Value *BinaryExpression::BO_multiply(Value *value1, Value *value2) {
 Value *BinaryExpression::BO_divide(Value *value1, Value *value2) {
 
     if(value2->as_number() == 0)
-        // throw ParseException("Division by zero is undefined");
+        // throw ExecuteException("Division by zero is undefined");
         return NumberValue::ZERO;
     else
         return new NumberValue(value1->as_number() / value2->as_number());
@@ -197,7 +197,7 @@ Value *BinaryExpression::BO_rshift(Value *value1, Value *value2) {
     // 				dynamic_cast<ArrayValue *>(value1)
     // 			);
     // 		} else {
-    // 			throw ParseException("Cannot add element to non array value");
+    // 			throw ExecuteException("Cannot add element to non array value");
     // 		}
     // }
     

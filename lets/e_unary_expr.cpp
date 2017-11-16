@@ -11,7 +11,7 @@
 #include "../include/l_number_value.hpp"
 #include "../include/l_string_value.hpp"
 #include "../include/l_array_value.hpp"
-#include "../include/ex_parse.h"
+#include "../include/ex_execute.h"
 #include "../include/tools.hpp"
 
 
@@ -54,7 +54,7 @@ Value *UnaryExpression::eval() {
         case NS_Unary::Operator::COMPLEMENT:
             return UE_complement(value);
         default:
-            throw ParseException("Operation Is Not Supported");
+            throw ExecuteException("Operation Is Not Supported");
     }
 }
 

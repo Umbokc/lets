@@ -7,7 +7,7 @@
 //
 
 #include "../include/l_map_value.hpp"
-#include "../include/ex_parse.h"
+#include "../include/ex_execute.h"
 #include "../include/l_function_value.hpp"
 
 MapValue::MapValue(){}
@@ -38,7 +38,7 @@ bool MapValue::is_exists(Value *key){
 Value *MapValue::get(Value *key){
 	if(is_exists(key))
 		return this->elems[key->to_s()];
-	throw ParseException("Undefined key of map");
+	throw ExecuteException("Undefined key of map");
 }
 
 lets_map_t<lets_str_t, Value *> MapValue::get_all(){
@@ -68,7 +68,7 @@ int MapValue::as_int(){
 }
 
 double MapValue::as_number(){
-	throw ParseException("Cannot cast map to number");
+	throw ExecuteException("Cannot cast map to number");
 }
 
 long MapValue::as_long(){

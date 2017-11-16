@@ -14,32 +14,31 @@
 
 class Token {
 private:
-    u_tt_t type;
-    lets_str_t text;
-    int row, col;
+	u_tt_t type;
+	lets_str_t text;
+	size_t row = 0, col = 0;
 public:
-    Token();
-    Token& operator=(const Token&);
-    
-    Token(const u_tt_t&, const lets_str_t& , const int& , const int& );
-    
-    // type get/set
-    u_tt_t get_type();
-    void set_type(const int&);
-    
-    // test get/set
-    lets_str_t get_text();
-    void set_text(const lets_str_t&);
-    
-    // convert to string need data (token and text)
-    lets_str_t to_s();
-    
-    int get_row();
-    int get_col();
-    
-    lets_str_t get_position();
-    
-    ~Token();
+	Token();
+	Token& operator=(const Token&);
+
+	Token(u_tt_t, lets_str_t, size_t, size_t );
+
+	u_tt_t get_type();
+	void set_type(const u_tt_t&);
+
+	lets_str_t get_text();
+	void set_text(const lets_str_t&);
+
+	size_t get_row();
+	void set_row(size_t);
+	size_t get_col();
+	void set_col(size_t);
+
+	lets_str_t get_position();
+
+	lets_str_t to_s();
+
+	~Token();
 };
 
 #endif /* token_hpp */

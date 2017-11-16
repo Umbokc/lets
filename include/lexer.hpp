@@ -17,8 +17,6 @@
 #include <regex>
 
 
-typedef unsigned int uint_t;
-
 #include "main.h"
 #include "token.hpp"
 #include "tokentype.h"
@@ -31,7 +29,8 @@ class Lexer {
 private:
     lets_str_t input, buffer;
     lets_vector_t<Token> tokens;
-    uint_t pos, row, col, length;
+    size_t pos = 0, row = 1, col = 1;
+    size_t length;
     
     static lets_str_t OPERATORS_CHARS;
     static lets_map_t<lets_str_t, u_tt_t> OPERATORS;
@@ -42,10 +41,7 @@ public:
     Lexer& operator=(const Lexer& r) { return *this; }
     
     Lexer(const lets_str_t& i) :input(std::move(i)) {
-        pos = 0;
-        row = 1;
-        col = 1;
-        length = (uint)i.length();
+        length = i.length();
     }
     
     lets_vector_t<Token> tokenize();
@@ -75,8 +71,6 @@ private:
     void add_token(u_tt_t, lets_str_t);
     
     int find_c(lets_str_t, char);
-//    void lexer_error(lets_str_t);
-//    void lexer_error(lets_str_t, u_tt_t, int);
 };
 
 #endif /* lexer_hpp */

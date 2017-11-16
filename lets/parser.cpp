@@ -33,8 +33,10 @@ lets_map_t<u_tt_t, NS_Binary::Operator> Parser::ASSIGN_OPERATORS = {
 
 Parser::Parser(){}
 
-Parser::Parser(lets_vector_t<Token> tokens) :tokens(std::move(tokens)), pos(0) {
-	size = (int)this->tokens.size();
+Parser::Parser(lets_vector_t<Token> t) :tokens(std::move(t)), pos(0) {
+	size = this->tokens.size();
+	TT_EOF_T.set_row(this->tokens.back().get_row());
+	TT_EOF_T.set_col(this->tokens.back().get_col());
 }
 
 BlockStatement* Parser::parse(){
@@ -50,9 +52,9 @@ BlockStatement* Parser::parse(){
 	return result;
 }
 
-Statement* Parser::get_parsed_statement(){
-	return this->parsed_statement;
-}
+// Statement* Parser::get_parsed_statement(){
+	// return this->parsed_statement;
+// }
 
 Statement* Parser::block(){
 	BlockStatement* block = new BlockStatement();
@@ -106,7 +108,6 @@ Statement* Parser::statement(){
 	if(match(TT_KW_BREAK))      return new BreakStatement();
 	if(match(TT_KW_CONTINUE))   return new ContinueStatement();
 	if(match(TT_KW_RETURN))     return new ReturnStatement(expression());
-	// if(match(TT_KW_SELF))    return new SelfStatement(arguments());
 	if(match(TT_KW_USE))        return use_statement();
 	if(match(TT_KW_FOR))        return for_statement();
 	if(match(TT_KW_DEF))        return function_define(false);
@@ -135,7 +136,7 @@ Statement* Parser::assignment_statement(){
 }
 
 Statement* Parser::multi_assignment_statement(Expression* target_expr){
-	int position;
+	size_t position;
 	lets_vector_t<Accessible*> elements;
 
 	while(true){
@@ -163,8 +164,9 @@ Statement* Parser::if_else(){
 	BlockStatement* if_statement = new BlockStatement();
 	BlockStatement* else_statement = NULL;
 
-	while(!match({TT_KW_ELSE, TT_KW_END, TT_KW_ELIF}))
+	while(!match({TT_KW_ELSE, TT_KW_END, TT_KW_ELIF})){
 		if_statement->add(statement());
+	}
 
 	if(look_match(-1, TT_KW_ELIF)){
 		return new IfStatement(condition, if_statement, if_else());
@@ -172,7 +174,8 @@ Statement* Parser::if_else(){
 
 	if(look_match(-1, TT_KW_ELSE)){
 		else_statement = new BlockStatement();
-		while(!match(TT_KW_END)) else_statement->add(statement());
+		while(!match(TT_KW_END))
+			else_statement->add(statement());
 	} 
 
 	return new IfStatement(condition, if_statement, else_statement);
@@ -476,7 +479,7 @@ Expression* Parser::assignment(){
 }
 
 Expression* Parser::assignment_strict(){
-	int position = this->pos;
+	size_t position = this->pos;
 	Expression* target_expr = qualified_name();
 
 	if((target_expr == NULL) || !(dynamic_cast<Accessible*>(target_expr))){
@@ -484,7 +487,7 @@ Expression* Parser::assignment_strict(){
 		return NULL;
 	}
 
-	int current_type = get(0).get_type();
+	size_t current_type = get(0).get_type();
 	if(ASSIGN_OPERATORS.find(current_type) == ASSIGN_OPERATORS.end()){
 		this->pos = position;
 		return NULL;
@@ -549,9 +552,9 @@ Expression* Parser::logicalAnd(){
 }
 
 Expression* Parser::bitwiseOr() {
-	
+
 	Expression* expression = bitwiseXor();
-	
+
 	while (true) {
 		if (match(TT_BAR)) {
 			expression = new BinaryExpression(NS_Binary::Operator::OR, expression, bitwiseXor());
@@ -559,13 +562,13 @@ Expression* Parser::bitwiseOr() {
 		}
 		break;
 	}
-	
+
 	return expression;
 }
 
 Expression* Parser::bitwiseXor() {
 	Expression* expression = bitwiseAnd();
-	
+
 	while (true) {
 		if (match(TT_CARET)) {
 			expression = new BinaryExpression(NS_Binary::Operator::XOR, expression, bitwiseAnd());
@@ -573,13 +576,13 @@ Expression* Parser::bitwiseXor() {
 		}
 		break;
 	}
-	
+
 	return expression;
 }
 
 Expression* Parser::bitwiseAnd() {
 	Expression* expression = equality();
-	
+
 	while (true) {
 		if (match(TT_AMP)) {
 			expression = new BinaryExpression(NS_Binary::Operator::AND, expression, equality());
@@ -587,26 +590,26 @@ Expression* Parser::bitwiseAnd() {
 		}
 		break;
 	}
-	
+
 	return expression;
 }
 
 Expression* Parser::equality(){
 	Expression* result = conditional();
-	
+
 	if(match(TT_EQEQ)){
 		return new ConditionalExpression(NS_Conditional::Operator::EQUALS, result, conditional());
 	}
 	if(match(TT_EXCLEQ)){
 		return new ConditionalExpression(NS_Conditional::Operator::NOT_EQUALS, result, conditional());
 	}
-	
+
 	return result;
 }
 
 Expression* Parser::conditional(){
 	Expression* result = shift();
-	
+
 	while(true){
 		if(match(TT_LT)){
 			result = new ConditionalExpression(NS_Conditional::Operator::LT, result, shift());
@@ -626,13 +629,13 @@ Expression* Parser::conditional(){
 		}
 		break;
 	}
-	
+
 	return result;
 }
 
 Expression* Parser::shift() {
 	Expression *expression = additive();
-	
+
 	while (true) {
 		if (match(TT_LTLT)) {
 			// expression = new BinaryExpression(NS_Binary::Operator::LSHIFT, expression, additive());
@@ -645,13 +648,13 @@ Expression* Parser::shift() {
 		}
 		break;
 	}
-	
+
 	return expression;
 }
 
 Expression* Parser::additive(){
 	Expression *result = multiplicative();
-	
+
 	while (true) {
 		if (match(TT_PLUS)) {
 			result = new BinaryExpression(NS_Binary::Operator::ADD, result, multiplicative());
@@ -663,13 +666,13 @@ Expression* Parser::additive(){
 		}
 		break;
 	}
-	
+
 	return result;
 }
 
 Expression* Parser::multiplicative(){
 	Expression *result = unary();
-	
+
 	while (true) {
 		if (match(TT_STAR)) {
 			result = new BinaryExpression(NS_Binary::Operator::MULTIPLY, result, unary());
@@ -689,7 +692,7 @@ Expression* Parser::multiplicative(){
 		// }
 		break;
 	}
-	
+
 	return result;
 }
 
@@ -743,11 +746,11 @@ Expression* Parser::primary(bool incr = false) {
 }
 
 Expression* Parser::variable(bool incr = false) {
-	
+
 	if(look_match(0,TT_IDENTIFIER) && look_match(1, TT_LPAREN)){
 		return function_chain(new ValueExpression(consume(TT_IDENTIFIER).get_text()));
 	}
-	
+
 	Expression* qualified_name_expr = qualified_name();
 	if(qualified_name_expr != NULL){
 		// variable(args) || arr["key"](args) || obj.key(args)
@@ -782,7 +785,7 @@ Expression* Parser::qualified_name(){
 	Token current = get(0);
 	if(!match(TT_IDENTIFIER))
 		return NULL;
-	
+
 	lets_vector_t<Expression*> indices = variable_suffix();
 	if(indices.empty()){
 		return new VariableExpression(current.get_text());
@@ -811,13 +814,13 @@ lets_vector_t<Expression*> Parser::variable_suffix(){
 }
 
 Expression* Parser::value() {
-	
+
 	Token current = this->get(0);
-	
+
 	if(match(TT_NUMBER)){
 		return new ValueExpression(create_number(current));
 	}
-	
+
 	if(match(TT_HEX_NUMBER)){
 		return new ValueExpression((long)std::stol(&current.get_text()[0u], 0, 16));
 	}
@@ -830,11 +833,8 @@ Expression* Parser::value() {
 	if(match(TT_STRING)){
 		return new ValueExpression(current.get_text());
 	}
-	
+
 	error_pars("Unknown expression: " + current.get_text(), current);
-	// if(!Mode_Programm::without_stop){
-	exit(1);
-	// }
 	return NULL;
 }
 
@@ -863,30 +863,30 @@ Number Parser::create_number(Token current){
 }
 
 Token Parser::consume(u_tt_t type){
-	
+
 	Token current = get(0);
-	
+
 	if(type != current.get_type()){
 		error_pars("Token " + TokenTypeString[current.get_type()] + " dosn't match " + TokenTypeString[type], current);
 	}
-	
+
 	pos++;
 	return current;
 }
 
 bool Parser::match(u_tt_t type){
-	
+
 	Token current = get(0);
 	if(type != current.get_type()) return false;
 	pos++;
-	
+
 	return true;
 }
 
 bool Parser::match(lets_vector_t<u_tt_t> types){
-	
+
 	Token current = get(0);
-	
+
 	bool res = false;
 	for(auto type: types){
 		if(type == current.get_type()){
@@ -894,7 +894,7 @@ bool Parser::match(lets_vector_t<u_tt_t> types){
 			break;
 		}
 	}
-	
+
 	if(res) pos++;
 	return res;
 }
@@ -903,10 +903,12 @@ bool Parser::look_match(int pos, u_tt_t type) {
 	return get(pos).get_type() == type;
 }
 
-Token Parser::get(u_tt_t rel_pos){
-	int position = pos + rel_pos;
-	if(position >= size) return TT_EOF_T;
-	return tokens[position];
+Token Parser::get(int rel_pos){
+	size_t position = this->pos + rel_pos;
+	if(position >= size){
+		return TT_EOF_T;
+	}
+	return tokens.at(position);
 }
 
 int Parser::find_c(lets_str_t s, char c) {
@@ -920,11 +922,11 @@ int Parser::find_c(lets_str_t s, char c) {
 
 void Parser::error_pars(lets_str_t text, Token t){
 
+	// dbg(t.get_position())
+
 	if(t.get_row() == -1 || t.get_col() == -1){
 		t = get(-1);
 	}
 
-	lets_output("Parser error " << t.get_position() << ": " << text)
-	exit(1);
-
+	throw ParseException(text, "Parsing error", t.get_row(), t.get_col());
 }

@@ -10,7 +10,7 @@
 #include "../include/e_variable_expr.hpp"
 #include "../include/l_array_value.hpp"
 #include "../include/l_string_value.hpp"
-#include "../include/ex_parse.h"
+#include "../include/ex_execute.h"
 #include "../include/tools.hpp"
 
 ContainerAccessExpression::ContainerAccessExpression(){}
@@ -50,7 +50,7 @@ Value *ContainerAccessExpression::get(){
 		case Types::T_MAP:
 		return dynamic_cast<MapValue*>(container)->get(last);
 		default:
-		throw ParseException(
+		throw ExecuteException(
 			"Array or map expected. Got " + TypesString[container->type()]
 			);
 	}
@@ -67,7 +67,7 @@ Value *ContainerAccessExpression::set(Value* value){
 		dynamic_cast<MapValue*>(container)->set(last, value);
 		return value;
 		default:
-		throw ParseException(
+		throw ExecuteException(
 			"Array or map expected. Got " + TypesString[container->type()]
 			);
 	}
@@ -89,7 +89,7 @@ Value* ContainerAccessExpression::get_container(){
 				break;
 			}
 			default:
-			throw ParseException("Array or map expected");
+			throw ExecuteException("Array or map expected");
 		}
 	}
 	return container;
@@ -101,7 +101,7 @@ Value* ContainerAccessExpression::last_index() {
 
 MapValue* ContainerAccessExpression::consume_map(Value* value){
 	if(value->type() != Types::T_MAP){
-		throw ParseException("Map expected");
+		throw ExecuteException("Map expected");
 	}
 	return dynamic_cast<MapValue*>(value);
 }
