@@ -46,7 +46,7 @@ BlockStatement* Parser::parse(){
 			throw pe;
 		}
 	}
-	
+
 	return result;
 }
 
@@ -61,29 +61,29 @@ Statement* Parser::block(){
 	while(!match(TT_KW_END)){
 		block->add(statement());
 	}
-	
+
 	return block;
 }
 
 Statement* Parser::block(u_tt_t end_kw_block){
 	BlockStatement* block = new BlockStatement();
-	
+
 	consume(TT_COLON);
 	while(!match(end_kw_block)){
 		block->add(statement());
 	}
-	
+
 	return block;
 }
 
 Statement* Parser::block(lets_vector_t<u_tt_t> end_kws_block){
 	BlockStatement* block = new BlockStatement();
-	
+
 	consume(TT_COLON);
 	while(!match(end_kws_block)){
 		block->add(statement());
 	}
-	
+
 	return block;
 }
 
@@ -119,17 +119,17 @@ Statement* Parser::statement(){
 	if (look_match(0, TT_IDENTIFIER) && look_match(1, TT_COMMA)) {
 		return multi_assignment_statement(qualified_name());
 	}
-	
+
 	return assignment_statement();
 }
 
 Statement* Parser::assignment_statement(){
 	Expression *expr = expression();
-	
+
 	if(dynamic_cast<Statement*>(expr)){
 		return dynamic_cast<Statement*>(expr);
 	}
-	
+
 	error_pars("Unknown statement " + get(-1).get_text(), get(-1));
 	return NULL;
 }
@@ -232,12 +232,12 @@ Statement* Parser::use_statement(){
 }
 
 ForeachStatement* Parser::foreach_arr_statement(bool two_vars = false){
-	
+
 	bool open_parent = match(TT_LPAREN); // не обязательные скобки
-	
+
 	lets_str_t key = "";
 	lets_str_t val = "";
-	
+
 	if(two_vars){
 		key = consume(TT_IDENTIFIER).get_text();
 		consume(TT_COMMA);
@@ -245,14 +245,14 @@ ForeachStatement* Parser::foreach_arr_statement(bool two_vars = false){
 	} else {
 		val = consume(TT_IDENTIFIER).get_text();
 	}
-	
+
 	consume(TT_KW_IN);
 	Expression* container = expression();
-	
+
 	if(open_parent) consume(TT_RPAREN);
-	
+
 	Statement* body = statement_or_block();
-	
+
 	return new ForeachStatement(key, val, container, body);
 }
 
@@ -287,19 +287,19 @@ Arguments Parser::arguments(){
 Statement* Parser::statement_body(){
 	if(match(TT_LTMINUS))
 		return new ReturnStatement(expression());
-	
+
 	return statement_or_block();
 }
 
 Expression* Parser::function_chain(Expression *qualified_name_expr){
 	// f1()()() || f1().f2().f3() || f1().key
-	
+
 	Expression* expr = function(qualified_name_expr);
-	
+
 	if(look_match(0, TT_LPAREN)){
 		return function_chain(expr);
 	}
-	
+
 	if(look_match(0, TT_DOT)){
 		lets_vector_t<Expression* > indices = variable_suffix();
 		if(indices.empty()) return expr;
@@ -311,35 +311,34 @@ Expression* Parser::function_chain(Expression *qualified_name_expr){
 		// container access
 		return new ContainerAccessExpression(expr, indices);
 	}
-	
+
 	return expr;
 }
 
 FunctionalExpression* Parser::function(Expression *qualified_name_expr){
 	// function(arg1, arg2, ...)
-	
+
 	consume(TT_LPAREN);
 	FunctionalExpression* function = new FunctionalExpression(qualified_name_expr);
-	
+
 	while(!match(TT_RPAREN)){
 		function->add_arguments(expression());
 		match(TT_COMMA);
 	}
-	
-	
+
 	return function;
 }
 
 Expression* Parser::array(){
 	consume(TT_LBRACKET);
-	
+
 	lets_vector_t<Expression* > elements;
-	
+
 	while(!match(TT_RBRACKET)){
 		elements.push_back(expression());
 		match(TT_COMMA);
 	}
-	
+
 	return new ArrayExpression(elements);
 }
 
@@ -348,19 +347,19 @@ Expression* Parser::map_vals(){
 	consume(TT_LBRACE);
 	lets_map_t<Expression*, Expression*> elements;
 	while(!match(TT_RBRACE)){
-		
+
 		Expression* key = expression();
-		
+
 		if(elements.find(key) != elements.end())
 			error_pars("Key '" + key->to_s() + "' already exists", get(0));
-		
+
 		consume(TT_COLON);
 		Expression* val = expression();
-		
+
 		elements[key] = val;
 		match(TT_COMMA);
 	}
-	
+
 	return new MapExpression(elements);
 }
 
@@ -497,33 +496,6 @@ Expression* Parser::assignment_strict(){
 
 	return new AssignmentExpression(op, dynamic_cast<Accessible*>(target_expr), expression());
 }
-
-// // порешать что то здесь и предалть а то ошибка при 
-// // a,b = [a, 2]
-// Expression* Parser::multi_assignment_strict(Expression* target_expr){
-// 	int position;
-// 	lets_vector_t<Accessible*> elements;
-
-// 	while(true){
-
-// 		elements.push_back(dynamic_cast<Accessible*>(target_expr));
-
-// 		if(match(TT_EQ)) break;
-
-// 		consume(TT_COMMA);
-
-// 		position = this->pos;
-// 		target_expr = qualified_name();
-
-// 		if((target_expr == NULL) || !(dynamic_cast<Accessible*>(target_expr))){
-// 			this->pos = position;
-// 			break;
-// 		}
-
-// 	}
-
-// 	return new MultiAssignmentExpression(elements, expression());
-// }
 
 Expression* Parser::in_expression() {
 	// 1 in [1, 2, 3]
@@ -947,16 +919,12 @@ int Parser::find_c(lets_str_t s, char c) {
 }
 
 void Parser::error_pars(lets_str_t text, Token t){
-	
+
 	if(t.get_row() == -1 || t.get_col() == -1){
 		t = get(-1);
 	}
-	
-	// lets_str_t expr_err = t.to_s();
-	
+
 	lets_output("Parser error " << t.get_position() << ": " << text)
 	exit(1);
-	
-	//    if(!Mode_Programm::without_stop){
-	//    }
+
 }

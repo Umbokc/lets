@@ -26,9 +26,9 @@
 
 class Parser {
 private:
-	Token TT_EOF_T = Token(TT_EOF, "", -1, -1);
+	Token TT_EOF_T = Token(TT_EOF, "EOF", 0, 0);
 	lets_vector_t<Token> tokens;
-	int pos, size;
+	size_t pos, size;
 	Statement* parsed_statement;
 public:
 
@@ -96,7 +96,7 @@ private:
 	bool match(u_tt_t);
 	bool match(lets_vector_t<u_tt_t>);
 
-	bool look_match(int, u_tt_t);
+	bool look_match(size_t, u_tt_t);
 
 	Token get(u_tt_t);
 
