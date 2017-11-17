@@ -65,44 +65,45 @@
 #define TT_COMMA 50  // ,
 #define TT_DOT 51 // .
 #define TT_LTMINUS 52 // <-
+#define TT_EQGT 53 // =>
 
 // keywords
-#define TT_KW_PRINT 53
-#define TT_KW_PUT 54
-#define TT_KW_IF 55
-#define TT_KW_ELSE 56
-#define TT_KW_ELIF 57
-#define TT_KW_WHILE 58
-#define TT_KW_FOR 59
-#define TT_KW_DO 60
-#define TT_KW_BREAK 61
-#define TT_KW_CONTINUE 62
-#define TT_KW_DEF 63
-#define TT_KW_DEF_C 64
-#define TT_KW_RETURN 65
-#define TT_KW_USE 66
-#define TT_KW_END 67
-#define TT_KW_IN 68
-#define TT_KW_MODE 69
-#define TT_KW_SELF 70
-#define TT_KW_MATCH 71
-#define TT_KW_CASE 72
-#define TT_KW_DEFAULT 73
-#define TT_KW_AND 74
-#define TT_KW_OR 75
-#define TT_KW_NOT 75
+#define TT_KW_PRINT 54
+#define TT_KW_PUT 55
+#define TT_KW_IF 56
+#define TT_KW_ELSE 57
+#define TT_KW_ELIF 58
+#define TT_KW_WHILE 59
+#define TT_KW_FOR 60
+#define TT_KW_DO 61
+#define TT_KW_BREAK 62
+#define TT_KW_CONTINUE 63
+#define TT_KW_DEF 64
+#define TT_KW_DEF_C 65
+#define TT_KW_RETURN 66
+#define TT_KW_USE 67
+#define TT_KW_END 68
+#define TT_KW_IN 69
+#define TT_KW_MODE 70
+#define TT_KW_SELF 71
+#define TT_KW_MATCH 72
+#define TT_KW_CASE 73
+#define TT_KW_DEFAULT 74
+#define TT_KW_AND 75
+#define TT_KW_OR 76
+#define TT_KW_NOT 77
 
 static const lets_str_t TokenTypeString[] = {
     "eof",
-    
+
     "number",
     "hex_number",
     "octal_number",
     "binary_number",
-    
+
     "identifier",
     "string",
-    
+
     "plus", // +
     "minus", // -
     "star", // *
@@ -149,7 +150,9 @@ static const lets_str_t TokenTypeString[] = {
     "comma",  // ,
     "dot", // .
     "ltminus", // <-
-    
+    "eqgt", // =>
+
+    // keywords
     "print",
     "put",
     "if",
@@ -173,5 +176,6 @@ static const lets_str_t TokenTypeString[] = {
     "default",
     "and",
     "or",
+    "not",
 };
 #endif /* tokentype_h */

@@ -67,6 +67,7 @@ lets_map_t<lets_str_t, u_tt_t> Lexer::OPERATORS = {
 	{"..", TT_DOTDOT},
 	{"**", TT_STARSTAR},
 	{"<-", TT_LTMINUS},
+	{"=>", TT_EQGT},
 };
 lets_map_t<lets_str_t, u_tt_t> Lexer::KEYWORDS = {
 	{"print", TT_KW_PRINT},

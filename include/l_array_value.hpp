@@ -31,6 +31,7 @@ public:
     lets_vector_t<Value *> get_all();
 
     bool has(Value*);
+    bool has(Value*, int);
 
     void set(int , Value *);
     

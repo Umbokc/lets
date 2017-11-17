@@ -27,6 +27,7 @@ public:
     lets_str_t get_c(int);
     
     bool has(Value*);
+    bool has(Value*, int);
 
     int len();
     lets_str_t as_string();

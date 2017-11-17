@@ -503,12 +503,20 @@ Expression* Parser::assignment_strict(){
 Expression* Parser::in_expression() {
 	// 1 in [1, 2, 3]
 	// 's' in "string"
-
+	// 'x' => 1 in { 'x': 1, 'y' : 2 }
 	Expression* result = ternary();
 
-	if (match(TT_KW_IN)) {
+	if(match(TT_EQGT)){
+		lets_vector_t<Expression*> exprs = {result, ternary()};
+		consume(TT_KW_IN);
 		Expression* container = expression();
-		return new InExpression(result, container);
+		return new InExpression(exprs, container);
+	}
+
+	if (match(TT_KW_IN)) {
+		lets_vector_t<Expression*> exprs = {result};
+		Expression* container = expression();
+		return new InExpression(exprs, container);
 	}
 
 	return result;

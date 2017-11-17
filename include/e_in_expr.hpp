@@ -10,15 +10,16 @@
 #define include__e_in_expr_hpp
 
 #include <string>
+#include <vector>
 #include "main.h"
 #include "expression.h"
 
 class InExpression : virtual public Expression{
 public:
-    Expression *expression;
+    lets_vector_t<Expression*> expressions;
     Expression *container;
     
-    InExpression(Expression*, Expression*);
+    InExpression(lets_vector_t<Expression*>, Expression*);
     Value* eval();
     lets_str_t to_s();
     ~InExpression();

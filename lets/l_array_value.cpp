@@ -73,6 +73,21 @@ bool ArrayValue::has(Value *value){
 	return false;
 }
 
+bool ArrayValue::has(Value *value, int index){
+	if (this == value) return false;
+	if (index < 0) return false;
+
+	uint size = this->elements.size();
+
+	for (uint i = 0; i < size; ++i){
+		if(this->elements.at(i)->equals(value) && index == i){
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void ArrayValue::set(int index, Value *value){
 
 	if(index > -1 && index < this->len()){

@@ -6,6 +6,7 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
+#include <iostream> // for dbg
 #include <cstdlib>
 #include "../include/l_string_value.hpp"
 
@@ -42,6 +43,19 @@ bool StringValue::has(Value* val){
 	if (this->type() != val->type()) return false;
 
 	return (this->value.find(val->to_s()) != std::string::npos);
+}
+
+bool StringValue::has(Value* val, int index){
+	if (this == val) return false;
+	if (index < 0) return false;
+
+	if (this->type() != val->type()) return false;
+	auto pos = this->value.find(val->to_s());
+	if(pos != std::string::npos && int(pos) == index){
+		return true;
+	}
+
+	return false;
 }
 
 int StringValue::len(){
