@@ -14,7 +14,6 @@
 #include "../main.h"
 
 #include "variable_info.h"
-#include "../visitors/visitor_utils.h"
 #include "../visitors/optimization_visitor.h"
 
 class VariablesGrabber: virtual public OptimizationVisitor<lets_map_t<lets_str_t, VariableInfo*>>{

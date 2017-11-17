@@ -7,6 +7,7 @@
 //
 
 #include "../include/lets.hpp"
+#include "../include/s_block_stat.hpp"
 
 const lets_str_t Lets::VERSION = "0.0.1";
 lets_str_t Lets::current_file_name = "go.lets";

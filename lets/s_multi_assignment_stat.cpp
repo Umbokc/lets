@@ -10,7 +10,7 @@
 #include "../include/s_multi_assignment_stat.hpp"
 #include "../include/l_array_value.hpp"
 #include "../include/l_number_value.hpp"
-#include "../include/e_value_expr.hpp"
+#include "../include/ex_execute.h"
 #include "../include/tools.hpp"
 
 MultiAssignmentStatement::MultiAssignmentStatement(lets_vector_t<Accessible*> targets, Expression *expression):
@@ -18,21 +18,21 @@ MultiAssignmentStatement::MultiAssignmentStatement(lets_vector_t<Accessible*> ta
 
 void MultiAssignmentStatement::execute(){
 	if(ArrayValue* arr = dynamic_cast<ArrayValue*>(expression->eval())){
-		size_t size = targets.size();
-		Value* val;
+		size_t size = this->targets.size();
 		for (int i = 0; i < size; ++i){
-			targets.at(i)->set(arr->get_always(i));
+			this->targets.at(i)->set(arr->get_always(i));
 		}
+	} else {
+		throw ExecuteException("Cannot assign non ArrayValue to multiple vars");
 	}
 }
 
 lets_str_t MultiAssignmentStatement::to_s(){
-    // return NS_Tools::string_format(
-    //                                "[%s %s %s]",
-    //                                targets->to_s().c_str(),
-    //                                NS_Binary::OperatorString[operation].c_str(),
-    //                                expression->to_s().c_str()
-    //                                );
+	return NS_Tools::string_format(
+		"[%s = %s]",
+		(NS_Tools::vector_to_s<Accessible*>(targets, ", ")).c_str(),
+		expression->to_s().c_str()
+	);
 }
 
 MultiAssignmentStatement::~MultiAssignmentStatement(){}

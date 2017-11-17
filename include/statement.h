@@ -9,6 +9,7 @@
 #ifndef ast__statement_h
 #define ast__statement_h
 
+#include <string>
 #include "main.h"
 #include "node.h"
 

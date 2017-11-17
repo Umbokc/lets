@@ -7,6 +7,7 @@
 //
 
 #include "../include/optimization/variable_grabber.hpp"
+#include "../include/visitors/visitor_utils.h"
 
 VariablesGrabber::VariablesGrabber():grab_module_constants(false) {}
 VariablesGrabber::VariablesGrabber(bool gmc):grab_module_constants(std::move(gmc)) {}

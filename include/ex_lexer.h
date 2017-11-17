@@ -13,9 +13,9 @@
 
 class LexerException {
 public:
+	lets_str_t message;
 	lets_str_t head = "Lexer error";
 	size_t row = 0, col = 0;
-	lets_str_t message;
 
 	LexerException() {}
 

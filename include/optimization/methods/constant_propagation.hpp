@@ -10,7 +10,6 @@
 #define optimization__methods__constant_propagation_hpp
 
 #include "../optimizable.h"
-#include "../variable_grabber.hpp"
 #include "../../visitors/optimization_visitor.h"
 
 class ConstantPropagation : 

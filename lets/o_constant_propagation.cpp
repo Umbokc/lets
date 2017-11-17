@@ -7,6 +7,7 @@
 //
 
 #include "../include/optimization/methods/constant_propagation.hpp"
+#include "../include/optimization/variable_grabber.hpp"
 
 Node *ConstantPropagation::optimize(Node *node) {
 	lets_map_t<lets_str_t, VariableInfo*> variables;
