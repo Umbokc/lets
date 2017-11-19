@@ -1,5 +1,5 @@
 //
-//  map_value.cpp
+//  l_map_value.cpp
 //  lets
 //
 //  Created by Dragan Stepan on 30.10.17.
@@ -7,12 +7,14 @@
 //
 
 #include "../include/l_map_value.hpp"
+#include "../include/l_string_value.hpp"
+#include "../include/l_number_value.hpp"
 #include "../include/ex_execute.h"
 #include "../include/l_function_value.hpp"
 
 MapValue::MapValue(){}
 
-MapValue::MapValue(lets_map_t<lets_str_t, Value *> elems){
+MapValue::MapValue(lets_map_t<lets_str_t, Value *>& elems){
 		this->elems.swap(elems);
 }
 
@@ -20,16 +22,14 @@ MapValue::MapValue(MapValue *map_val){
 		new MapValue(map_val->elems);
 }
 
-// ArrayValue* MapValue::to_pairs(){
-// int size = elems.size();
-// ArrayValue* result = new ArrayValue(size);
-// int i = 0;
-// lets_vector_t<Value*> elem;
-// for(auto entry: elems){
-// 	elem = entry
-// 	result.set(i++, new ArrayValue());
-// }
-// }
+ArrayValue* MapValue::to_pairs(){
+	int size = this->elems.size();
+	ArrayValue* result = new ArrayValue(size);
+	lets_vector_t<Value*> elem;
+	for(auto entry: this->elems){
+		result->add(new ArrayValue({new StringValue(entry.first), entry.second}));
+	}
+}
 
 bool MapValue::is_exists(Value *key){
 	return this->elems.find(key->to_s()) != elems.end();
@@ -39,6 +39,16 @@ Value *MapValue::get(Value *key){
 	if(is_exists(key))
 		return this->elems[key->to_s()];
 	throw ExecuteException("Undefined key of map");
+}
+
+Value *MapValue::get_by_index(size_t index){
+	if(index < this->elems.size()){
+		auto it = this->elems.begin();
+    std::advance(it, index);
+		return new ArrayValue({new StringValue((*it).first), (*it).second});
+	}
+
+	return NumberValue::ZERO;
 }
 
 lets_map_t<lets_str_t, Value *> MapValue::get_all(){

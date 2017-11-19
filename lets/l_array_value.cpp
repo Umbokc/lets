@@ -26,7 +26,6 @@ ArrayValue::ArrayValue(lets_vector_t<Value *> elements){
 	this->elements.swap(elements);
 }
 
-
 ArrayValue::ArrayValue(ArrayValue *array){
 	new ArrayValue(array->elements);
 }

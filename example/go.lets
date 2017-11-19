@@ -1,7 +1,7 @@
 use ['rand', 'len', 'echo', 'is_exist'] in 'std'
 use ['PI'] in 'math'
 
-def first():
+first = def ():
 	arr = [0 0]
 	print arr # [0, 0]
 
@@ -24,7 +24,7 @@ def first():
 	print b
 end
 
-def second():
+second = def ():
 	a = 1
 
 	def func():
@@ -37,19 +37,43 @@ def second():
 	print a
 end
 
-# first()
-second()
+third = def ():
+	print 'true: ' + true
+	print 'false: ' + false
 
-print 'true: ' + true
-print 'false: ' + false
+	echo('len(\'string\') = ' + len('string'))
 
-echo('len(\'string\') = ' + len('string'))
+	a = PI
+	b = 141_592_123_123_123_123_12
 
-a = PI
-b = 141_592_123_123_123_123_12
+	print 'b = ' + b
 
-print 'b = ' + b
+	if is_exist('a')
+		print 'a = ' + a
+	end
 
-if is_exist('a')
-	print 'a = ' + a
+	val = [1,2,4]
+	val = {
+		'x' : 1
+		'y' : 2
+		'z' : 4
+	}
+	x,y,z = val
+
+	print [x y z]
 end
+
+first()
+second()
+third()
+
+map = {
+	'x' : 4,
+	'a' : 1,
+	'c' : 3,
+}
+
+a,b = map
+
+print a
+print b

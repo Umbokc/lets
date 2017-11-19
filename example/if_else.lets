@@ -25,14 +25,14 @@ else
 end
 
 arr = 'There 1 are two needles in this haystack with needles.'
-x = '1 arqe'
-print (not x in arr) ? 'exists' : 'not exists'
+x = '1 are'
+print (not x in arr) ? 'not exists' : 'exists'
 
 str = 'hello'
 print 'e' => 1 in str
 
 print 2 in [1 2 3] # true
-print 2 => 0 in [1 2 3] # false
+print 2 => 1 in [1 2 3] # false
 
 print 'x' => 1 in {
 	'x': 1
