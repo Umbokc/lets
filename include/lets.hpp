@@ -12,6 +12,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 
 #include "main.h"
 #include "lexer.hpp"
@@ -50,14 +51,16 @@ typedef struct Options {
 class Lets {
 private:
 	static lets_vector_t<lets_str_t> lets_args;
-	static lets_str_t current_file_name;
 	static Options options;
 public:
+	static lets_str_t current_file_name;
 	static const lets_str_t VERSION;
 	static void init(int, const char**);
 	static void run(lets_str_t);
+	static lets_vector_t<Token> tokenize(const lets_str_t&);
+	static Statement* parse(const lets_vector_t<Token>&);
+	static lets_str_t f2s(lets_str_t);
+	static void init_vars_file(lets_str_t);
 };
-
-lets_str_t f2s(lets_str_t);
 
 #endif /* lets_hpp */

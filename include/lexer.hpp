@@ -68,7 +68,9 @@ private:
     void clear_buffer();
     bool is_word_var(char);
     void add_token(u_tt_t);
+    void add_token(u_tt_t, size_t, size_t);
     void add_token(u_tt_t, lets_str_t);
+    void add_token(u_tt_t, lets_str_t, size_t, size_t);
     
     int find_c(lets_str_t, char);
 };

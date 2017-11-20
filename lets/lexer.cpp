@@ -86,7 +86,7 @@ lets_map_t<lets_str_t, u_tt_t> Lexer::KEYWORDS = {
 	{"use", TT_KW_USE},
 	{"end", TT_KW_END},
 	{"in", TT_KW_IN},
-	{"include", TT_KW_RETURN},
+	{"include", TT_KW_INCLUDE},
 	{"mode", TT_KW_MODE},
 	{"self", TT_KW_SELF},
 	{"match", TT_KW_MATCH},
@@ -115,12 +115,12 @@ lets_vector_t<Token> Lexer::tokenize(){
 }
 
 void Lexer::tokenize_number() {
-	
+
 	clear_buffer();
 	char current = peek(0);
-	
+
 	bool is_octal = (current == '0' && find_c("0123456789", peek(1)) != -1);
-	
+
 	if(current == '0' && look_char(1, 'x')){
 		tokenize_hex_number();
 		return;
@@ -130,9 +130,9 @@ void Lexer::tokenize_number() {
 		tokenize_binary_number();
 		return;
 	}
-	
+
 	while (true) {
-		
+
 		if(current == '.') {
 			if(find_c(this->buffer, '.') != -1 || is_octal) throw LexerException(ExceptionsError::L_INVALID_FLOAT, this->row, this->col);
 		} else if(current == '_') {
@@ -141,11 +141,11 @@ void Lexer::tokenize_number() {
 		} else if(!isdigit(current)){
 			break;
 		}
-		
+
 		this->buffer.push_back(current);
 		current = next();
 	}
-	
+
 	if(is_octal){
 		add_token(TT_OCTAL_NUMBER, this->buffer);
 	} else {
@@ -154,18 +154,18 @@ void Lexer::tokenize_number() {
 }
 
 void Lexer::tokenize_hex_number() {
-	
+
 	clear_buffer();
 	next();
 	next();
-	
+
 	char current = peek(0);
-	
+
 	while (is_hex_number(current) != -1) {
 		this->buffer.push_back(current);
 		current = next();
 	}
-	
+
 	add_token(TT_HEX_NUMBER, this->buffer);
 }
 
@@ -174,11 +174,11 @@ int Lexer::is_hex_number(char c){
 }
 
 void Lexer::tokenize_binary_number() {
-	
+
 	next();
 	next();
 	clear_buffer();
-	
+
 	char current = peek(0);
 	lets_str_t cur_s;
 	while (true) {
@@ -186,42 +186,49 @@ void Lexer::tokenize_binary_number() {
 		// cur_s.push_back(current);
 		if(std::regex_match(cur_s, std::regex("^[01]+$")) == 0)
 			break;
-		
+
 		this->buffer.push_back(current);
 		current = next();
 	}
-	
+
 	add_token(TT_BINARY_NUMBER, this->buffer);
 }
 
 void Lexer::tokenize_word() {
-	
+
 	clear_buffer();
 	char current = peek(0);
+
+	int start_row = this->row;
+	int start_col = this->col - 1;
+
+
 	while (true) {
 		if(!(isdigit(current) || is_word_var(current))){
 			break;
 		}
-		
+
 		this->buffer.push_back(current);
 		current = next();
 	}
-	
+
 	if(KEYWORDS.find(this->buffer) != KEYWORDS.end()){
-		add_token(KEYWORDS[this->buffer]);
+		add_token(KEYWORDS[this->buffer], start_row, start_col);
 	} else {
-		add_token(TT_IDENTIFIER, this->buffer);
+		add_token(TT_IDENTIFIER, this->buffer, start_row, start_col);
 	}
 }
 
 void Lexer::tokenize_extended_word() {
 	next(); // skip `
 	clear_buffer();
-	char current = peek(0);
-	
+
 	int back_row = this->row;
 	int back_col = this->col;
-	
+
+	char current = peek(0);
+
+
 	while (true) {
 		if (current == '`') break;
 		if (current == '\0') throw LexerException(ExceptionsError::L_EOF_EXTEND_WORD, back_row, back_col);
@@ -234,16 +241,16 @@ void Lexer::tokenize_extended_word() {
 }
 
 void Lexer::tokenize_text_double_quote() {
-	
+
 	next();
 	clear_buffer();
-	
+
 	char current = peek(0);
-	
+
 	int back_row = this->row;
 	int back_col = this->col;
 	while (true) {
-		
+
 		if(current == '\\'){
 			current = next();
 			switch (current) {
@@ -258,28 +265,28 @@ void Lexer::tokenize_text_double_quote() {
 			this->buffer.push_back('\\');
 			continue;
 		}
-		
+
 		if(current == '"') break;
 		if (current == '\0') throw LexerException(ExceptionsError::L_REACHED_EOF, back_row, back_col);
 		this->buffer.push_back(current);
 		current = next();
 	}
-	
+
 	next();
-	
+
 	add_token(TT_STRING , this->buffer);
 }
 
 void Lexer::tokenize_text_single_quote() {
-	
+
 	next();
 	clear_buffer();
-	
+
 	char current = peek(0);
-	
+
 	int back_row = this->row;
 	int back_col = this->col;
-	
+
 	while (true) {
 		if(current == '\\'){
 			current = next();
@@ -290,24 +297,24 @@ void Lexer::tokenize_text_single_quote() {
 			this->buffer.push_back('\\');
 			continue;
 		}
-		
+
 		if(current == '\'') break;
 		if (current == '\0') throw LexerException(ExceptionsError::L_REACHED_EOF, back_row, back_col);
 		this->buffer.push_back(current);
 		current = next();
 	}
-	
+
 	next();
-	
+
 	add_token(TT_STRING, this->buffer);
 }
 
 void Lexer::tokenize_operator() {
-	
+
 	char current = peek(0);
 	lets_str_t text;
 	clear_buffer();
-	
+
 	while (true) {
 		text = this->buffer;
 		if(!text.empty() && OPERATORS.find(text + current) == OPERATORS.end()){
@@ -315,7 +322,7 @@ void Lexer::tokenize_operator() {
 			add_token(OPERATORS[text], text);
 			return;
 		}
-		
+
 		this->buffer.push_back(current);
 		current = next();
 	}
@@ -331,17 +338,17 @@ void Lexer::tokenize_comment(){
 
 void Lexer::tokenize_multiline_comment(){
 	next(); next(); next();
-	
+
 	int back_row = this->row;
-	int back_col = this->col;
-	
+	int back_col = this->col - 1;
+
 	char current = peek(0);
 	while (true) {
 		if(current == '"' && look_char(1, '"') && look_char(2, '"')) break;
 		if(current == '\0') throw LexerException(ExceptionsError::L_MISS_CLOSE_TAG, back_row, back_col);
 		current = next();
 	}
-	
+
 	next(); next(); next();
 }
 
@@ -352,14 +359,14 @@ bool Lexer::look_char(u_tt_t rpos, char chr){
 char Lexer::next(){
 	this->pos++;
 	char res = peek(0);
-	
+
 	if(res == '\n'){
 		this->row++;
 		this->col = 1;
 	} else {
 		this->col++;
 	}
-	
+
 	return res;
 }
 
@@ -386,6 +393,14 @@ void Lexer::add_token(u_tt_t tt){
 	add_token(tt, "");
 }
 
+void Lexer::add_token(u_tt_t tt, size_t r, size_t c){
+	add_token(tt, "", r, c);
+}
+
 void Lexer::add_token(u_tt_t tt, lets_str_t txt){
 	this->tokens.push_back(Token(tt, txt, this->row, this->col));
+}
+
+void Lexer::add_token(u_tt_t tt, lets_str_t txt, size_t r, size_t c){
+	this->tokens.push_back(Token(tt, txt, r, c));
 }

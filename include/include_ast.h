@@ -34,6 +34,7 @@
 #include "s_foreach_stat.hpp"
 #include "s_function_define_stat.hpp"
 #include "s_if_stat.hpp"
+#include "s_include_stat.hpp"
 #include "s_multi_assignment_stat.hpp"
 #include "s_print_stat.hpp"
 #include "s_put_stat.hpp"

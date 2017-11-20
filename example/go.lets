@@ -63,17 +63,27 @@ third = def ():
 	print [x y z]
 end
 
+fourth = def ():
+	map = {
+		'x' : 4,
+		'a' : 1,
+		'c' : 3,
+	}
+
+	a,b = map
+
+	print a
+	print b
+end
+
+# """
 first()
 second()
 third()
+fourth()
+# """
 
-map = {
-	'x' : 4,
-	'a' : 1,
-	'c' : 3,
-}
+print __file__
+print __dir__
 
-a,b = map
-
-print a
-print b
+include 'array.lets'

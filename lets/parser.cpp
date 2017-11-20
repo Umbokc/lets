@@ -16,6 +16,23 @@
 #include "../include/l_string_value.hpp"
 #include "../include/include_ast.h"
 
+#define GET_ROW(i) get(i).get_row()
+#define GET_COL(i) get(i).get_col()
+
+#define NEW_STATEMENT_RETURN(NAME, ROW, COL) { \
+	NAME##Statement* NAME##__s = new NAME##Statement(); \
+	NAME##__s->set_position(ROW, COL); \
+	return NAME##__s; \
+};
+
+#define NEW_STATEMENT_RETURN_ARG(NAME, ROW, COL, ARG) { \
+	size_t r = ROW;\
+	size_t c = COL;\
+	NAME##Statement* NAME##__s = new NAME##Statement(ARG); \
+	NAME##__s->set_position(r, c); \
+	return NAME##__s; \
+};
+
 lets_map_t<u_tt_t, NS_Binary::Operator> Parser::ASSIGN_OPERATORS = {
 	{ TT_EQ, NS_Binary::Operator::THE_NULL },
 	{ TT_PLUSEQ, NS_Binary::Operator::ADD },
@@ -100,22 +117,23 @@ Statement* Parser::statement_or_block(u_tt_t end_kw_block){
 }
 
 Statement* Parser::statement(){
-	if(match(TT_KW_PRINT))      return new PrintStatement(expression());
-	if(match(TT_KW_PUT))        return new PutStatement(expression());
+	if(match(TT_KW_PRINT))      NEW_STATEMENT_RETURN_ARG(Print, GET_ROW(-1), GET_COL(-1), expression())
+	if(match(TT_KW_PUT))        NEW_STATEMENT_RETURN_ARG(Put, GET_ROW(-1), GET_COL(-1), expression())
 	if(match(TT_KW_IF))         return if_else();
 	if(match(TT_KW_DO))         return do_while_statement();
 	if(match(TT_KW_WHILE))      return while_statement();
-	if(match(TT_KW_BREAK))      return new BreakStatement();
-	if(match(TT_KW_CONTINUE))   return new ContinueStatement();
-	if(match(TT_KW_RETURN))     return new ReturnStatement(expression());
+	if(match(TT_KW_BREAK))      NEW_STATEMENT_RETURN(Break, GET_ROW(-1), GET_COL(-1))
+	if(match(TT_KW_CONTINUE))   NEW_STATEMENT_RETURN(Continue, GET_ROW(-1), GET_COL(-1))
+	if(match(TT_KW_RETURN))     NEW_STATEMENT_RETURN_ARG(Return, GET_ROW(-1), GET_COL(-1), expression())
 	if(match(TT_KW_USE))        return use_statement();
+	if(match(TT_KW_INCLUDE))    NEW_STATEMENT_RETURN_ARG(Include, GET_ROW(-1), GET_COL(-1), expression())
 	if(match(TT_KW_FOR))        return for_statement();
 	if(match(TT_KW_DEF))        return function_define(false);
 	if(match(TT_KW_DEF_C))      return function_define(true);
 	// if(match(TT_KW_MODE))         return new ModeProgrammStatement(expression()->eval()->as_string());
 	if(match(TT_KW_MATCH))      return match();
 	if (look_match(0, TT_IDENTIFIER) && look_match(1,TT_LPAREN)) {
-		return new ExprStatement(function_chain(qualified_name()));
+		NEW_STATEMENT_RETURN_ARG(Expr, GET_ROW(0), GET_COL(0), function_chain(qualified_name()))
 	}
 	if (look_match(0, TT_IDENTIFIER) && look_match(1, TT_COMMA)) {
 		return multi_assignment_statement(qualified_name());

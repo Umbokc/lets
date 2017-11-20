@@ -47,6 +47,34 @@ namespace NS_Tools {
 		return result;
 	}
 
+	lets_str_t splitpath( const lets_str_t& str){
+
+		lets_vector_t<lets_str_t> result;
+
+		char const* pch = str.c_str();
+		char const* start = pch;
+		for(; *pch; ++pch){
+			if (*pch == '/'){
+				if (start != pch){
+					lets_str_t str(start, pch);
+					result.push_back(str);
+				} else{
+					result.push_back("");
+				}
+				start = pch + 1;
+			}
+		}
+
+		lets_str_t r("");
+		for(auto &i : result){
+			r += i;
+			r += "/";
+		}
+
+		return r;
+
+	}
+
 	lets_str_t get_curr_dir(){
     char temp [ PATH_MAX ];
 

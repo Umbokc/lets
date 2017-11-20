@@ -39,8 +39,6 @@ void LetsModule__std::run(ArrayValue* elems){
 
 void LetsModule__std::set(lets_str_t name){
 
-	CHECK_AND_DEFINE_VAR_MODULE("__dir__", new StringValue(NS_Tools::get_curr_dir()))
-
 	CHECK_AND_DEFINE_FUNC_MODULE("len", Len)
 	CHECK_AND_DEFINE_FUNC_MODULE("echo", Echo)
 	CHECK_AND_DEFINE_FUNC_MODULE("echos", Echos)

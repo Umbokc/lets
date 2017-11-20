@@ -14,9 +14,9 @@
 
 class ConstantFolding : virtual public OptimizationVisitor<bool>, public Optimizable {
 private:
-	int binary_expression_folding_count;
-	int conditional_expression_folding_count;
-	int unary_expression_folding_count;
+	int binary_expression_folding_count = 0;
+	int conditional_expression_folding_count = 0;
+	int unary_expression_folding_count = 0;
 	lets_vector_t<lets_str_t> overloaded_operators;
 	static lets_vector_t<lets_str_t> OPERATORS;
 public:

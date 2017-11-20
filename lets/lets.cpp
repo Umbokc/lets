@@ -8,6 +8,12 @@
 
 #include "../include/lets.hpp"
 #include "../include/s_block_stat.hpp"
+#include "../include/s_break_stat.hpp"
+#include "../include/s_continue_stat.hpp"
+#include "../include/s_return_stat.hpp"
+#include "../include/l_variables.h"
+#include "../include/l_string_value.hpp"
+#include "../include/tools.hpp"
 
 const lets_str_t Lets::VERSION = "0.0.1";
 lets_str_t Lets::current_file_name = "go.lets";
@@ -85,26 +91,17 @@ void Lets::run(lets_str_t input){
 	Statement* parsed_program;
 	lets_vector_t<Token> tokens;
 
-	try{
-		measurement.start("Tokenize time");
-		tokens = (Lexer(input)).tokenize();
-		measurement.stop("Tokenize time");
-	} catch(LexerException& le){
-		show_lets_error(le.head, Lets::current_file_name, to_str(le.row), to_str(le.col), le.get_message())
-	}
-	if(Lets::options.show_tokens)
-		for(auto t : tokens) lets_output(t.to_s())
 
-	try {
-		measurement.start("Parse time");
-		parsed_program = (Parser(tokens)).parse();
-		measurement.stop("Parse time");
-	} catch (ParseException& pe){
-		show_lets_error(pe.head, Lets::current_file_name, to_str(pe.row), to_str(pe.col), pe.get_message())
-	}
-	if(Lets::options.show_ast){
-		lets_output(parsed_program->to_s())
-	}
+	measurement.start("Tokenize time");
+	tokens = Lets::tokenize(input);
+	measurement.stop("Tokenize time");
+	if(Lets::options.show_tokens) for(auto t : tokens) lets_output(t.to_s())
+
+
+	measurement.start("Parse time");
+	parsed_program = Lets::parse(tokens);
+	measurement.stop("Parse time");
+	if(Lets::options.show_ast) lets_output(parsed_program->to_s())
 
 	if(Lets::options.optimization_level > 0){
 		measurement.start("Optimization time");
@@ -118,28 +115,56 @@ void Lets::run(lets_str_t input){
 	// programm->accept(programm, new VariablesPrint());
 	// programm->accept(programm, new AssignValidator());
 
+	Lets::init_vars_file(realpath(Lets::current_file_name.c_str(), NULL));
+
 	try{
 		measurement.start("Execute time");
 		programm->execute();
 		measurement.stop("Execute time");
 	} catch (ExecuteException& pe){
 		show_lets_error(pe.head, Lets::current_file_name, to_str(pe.row), to_str(pe.col), pe.get_message())
+	} catch (ReturnStatement*& rs){
+		show_lets_error("Error", Lets::current_file_name, to_str(rs->get_position_row()), to_str(rs->get_position_col()), "'" + rs->to_s() + "' statement not in function statement")
+	} catch (BreakStatement*& bs){
+		show_lets_error("Error", Lets::current_file_name, to_str(bs->get_position_row()), to_str(bs->get_position_col()), "'" + bs->to_s() + "' statement not in loop statement")
+	} catch (ContinueStatement*& cs){
+		show_lets_error("Error", Lets::current_file_name, to_str(cs->get_position_row()), to_str(cs->get_position_col()), "'" + cs->to_s() + "' statement not in loop statement")
 	}
 
 	if(Lets::options.show_measurements){
 		lets_output(measurement.summary("s", true));
 	}
-
 }
 
-lets_str_t f2s(lets_str_t filename){
+lets_vector_t<Token> Lets::tokenize(const lets_str_t& input){
+	try{
+		return (Lexer(input)).tokenize();
+	} catch(LexerException& le){
+		show_lets_error(le.head, Lets::current_file_name, to_str(le.row), to_str(le.col), le.get_message())
+	}
+}
+
+Statement* Lets::parse(const lets_vector_t<Token>& tokens){
+	try {
+		return (Parser(tokens)).parse();
+	} catch (ParseException& pe){
+		show_lets_error(pe.head, Lets::current_file_name, to_str(pe.row), to_str(pe.col), pe.get_message())
+	}
+}
+
+void Lets::init_vars_file(lets_str_t path_file){
+	Variables::define_lets("__file__", new StringValue(path_file), true);
+	Variables::define_lets("__dir__", new StringValue(NS_Tools::splitpath(path_file)), true);
+}
+
+lets_str_t Lets::f2s(lets_str_t filename){
 	lets_str_t input;
 	std::ifstream inf;
 
 	inf.open(filename);
 
 	if (!inf) {
-		throw std::runtime_error("Cannot open file");
+		throw std::runtime_error("Cannot open file " + filename);
 		return "";
 	}
 

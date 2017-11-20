@@ -92,6 +92,7 @@
 #define TT_KW_AND 75
 #define TT_KW_OR 76
 #define TT_KW_NOT 77
+#define TT_KW_INCLUDE 78
 
 static const lets_str_t TokenTypeString[] = {
     "eof",
@@ -177,5 +178,6 @@ static const lets_str_t TokenTypeString[] = {
     "and",
     "or",
     "not",
+    "include",
 };
 #endif /* tokentype_h */
