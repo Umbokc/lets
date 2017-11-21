@@ -18,6 +18,7 @@ public:
     
     FunctionValue(Function*);
     
+    bool as_bool();
     int as_int();
     double as_number();
     long as_long();

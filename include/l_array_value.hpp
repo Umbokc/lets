@@ -34,7 +34,8 @@ public:
     bool has(Value*, int);
 
     void set(int , Value *);
-    
+
+    bool as_bool();
     int as_int();
     double as_number();
     long as_long();

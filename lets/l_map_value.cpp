@@ -73,6 +73,10 @@ void MapValue::set(Value *key, Function *function){
 	this->elems[key->to_s()] = new FunctionValue(function);
 }
 
+bool MapValue::as_bool(){
+	return this->elems.size() != 0;
+}
+
 int MapValue::as_int(){
 	return (int) as_number();
 }

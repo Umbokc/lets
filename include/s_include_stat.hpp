@@ -14,7 +14,7 @@
 #include "expression.h"
 #include "statement.h"
 
-class IncludeStatement : virtual public Statement{
+class IncludeStatement : virtual public Statement, virtual public Expression{
 public:
 
 	Expression *expression;
@@ -22,8 +22,9 @@ public:
 	IncludeStatement(Expression*);
 
 	void execute();
+	Value* eval();
 
-	Statement* load_program(lets_str_t);
+	Statement* load_program(const lets_str_t&);
 
 	lets_str_t to_s();
 

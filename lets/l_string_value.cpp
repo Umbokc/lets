@@ -15,11 +15,15 @@ StringValue::StringValue(){
 }
 
 StringValue::StringValue(char value){
-    this->value = lets_ctos(value);
+	this->value = lets_ctos(value);
 }
 
 StringValue::StringValue(lets_str_t value){
 	this->value = value;
+}
+
+bool StringValue::as_bool(){
+	return this->value != "";
 }
 
 int StringValue::as_int(){
@@ -27,7 +31,7 @@ int StringValue::as_int(){
 }
 
 double StringValue::as_number(){
-    return atof(&value[0u]);
+	return atof(&value[0u]);
 }
 
 long StringValue::as_long(){

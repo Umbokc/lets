@@ -30,6 +30,7 @@ public:
     ConditionalExpression(NS_Conditional::Operator, Expression*, Expression*);
     
     Value* eval();
+    Value* eval_and_or(Value*&, bool);
     
     lets_str_t to_s();
     

@@ -97,6 +97,10 @@ void ArrayValue::set(int index, Value *value){
 	throw ExecuteException("Undefined index "+ to_str(index) +" of array");
 }
 
+bool ArrayValue::as_bool(){
+	return this->elements.size() != 0;
+}
+
 int ArrayValue::as_int(){
 	return (int) as_number();
 }

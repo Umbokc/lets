@@ -14,6 +14,7 @@
 class Value {
 public:
     
+    virtual bool as_bool() = 0;
     virtual int as_int() = 0;
     virtual double as_number() = 0;
     virtual long as_long() = 0;

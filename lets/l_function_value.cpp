@@ -11,6 +11,10 @@
 
 FunctionValue::FunctionValue(Function* value):value(std::move(value)){}
 
+bool FunctionValue::as_bool(){
+    return (bool)as_number();
+}
+
 int FunctionValue::as_int(){
     return (int)as_number();
 }

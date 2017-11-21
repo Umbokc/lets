@@ -1,0 +1,54 @@
+use ['len'] in 'std'
+use ['to_s'] in 'type'
+
+# sort
+def insertion_sort(arr) :
+	for i = 1, i < len(arr), i++ :
+		newValue = arr[i]
+		j = i
+		while (j > 0 && arr[j - 1] > newValue) :
+			arr[j] = arr[j - 1]
+			j--
+		end
+		arr[j] = newValue
+	end
+	return arr
+end
+
+def bubble_sort(a) :
+	n = len(a)
+	for i = 0, i < n-1, ++i :
+		changed = false
+		for j = 0, j < n-i-1, ++j :
+			if(a[j] > a[j + 1])
+				b = a[j]
+				a[j] = a[j+1]
+				a[j+1] = b
+				changed = true
+			end
+		end
+		if(!changed)
+			break
+		end
+	end
+	return a
+end
+
+def selection_sort(a):
+	n = len(a)
+	for(i = 0, i < n, ++i):
+		k = i
+		x = a[i]
+		for(j = i + 1, j < n, ++j):
+			if a[j] < x
+				k = j
+				x = a[j]
+			end
+		end
+		a[k] = a[i]
+		a[i] = x
+	end
+	return a
+end
+
+__here_var = __file__

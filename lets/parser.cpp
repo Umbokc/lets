@@ -28,7 +28,21 @@
 #define NEW_STATEMENT_RETURN_ARG(NAME, ROW, COL, ARG) { \
 	size_t r = ROW;\
 	size_t c = COL;\
-	NAME##Statement* NAME##__s = new NAME##Statement(ARG); \
+	NAME##Statement* NAME##__s = new NAME##Statement ARG; \
+	NAME##__s->set_position(r, c); \
+	return NAME##__s; \
+};
+
+#define NEW_EXPRESSION_RETURN(NAME, ROW, COL) { \
+	NAME##Expression* NAME##__s = new NAME##Expression(); \
+	NAME##__s->set_position(ROW, COL); \
+	return NAME##__s; \
+};
+
+#define NEW_EXPRESSION_RETURN_ARG(NAME, ROW, COL, ARG) { \
+	size_t r = ROW;\
+	size_t c = COL;\
+	NAME##Expression* NAME##__s = new NAME##Expression ARG; \
 	NAME##__s->set_position(r, c); \
 	return NAME##__s; \
 };
@@ -50,14 +64,18 @@ lets_map_t<u_tt_t, NS_Binary::Operator> Parser::ASSIGN_OPERATORS = {
 
 Parser::Parser(){}
 
-Parser::Parser(lets_vector_t<Token> t) :tokens(std::move(t)), pos(0) {
+Parser::Parser(lets_vector_t<Token> t) : tokens(std::move(t)), pos(0) {
+
 	size = this->tokens.size();
-	TT_EOF_T.set_row(this->tokens.back().get_row());
-	TT_EOF_T.set_col(this->tokens.back().get_col());
+	if(this->tokens.size() > 0){
+		TT_EOF_T.set_row(this->tokens.back().get_row());
+		TT_EOF_T.set_col(this->tokens.back().get_col());
+	}
 }
 
 BlockStatement* Parser::parse(){
 	BlockStatement* result = new BlockStatement();
+
 	while(!match(TT_EOF)){
 		try{
 			result->add(statement());
@@ -117,23 +135,23 @@ Statement* Parser::statement_or_block(u_tt_t end_kw_block){
 }
 
 Statement* Parser::statement(){
-	if(match(TT_KW_PRINT))      NEW_STATEMENT_RETURN_ARG(Print, GET_ROW(-1), GET_COL(-1), expression())
-	if(match(TT_KW_PUT))        NEW_STATEMENT_RETURN_ARG(Put, GET_ROW(-1), GET_COL(-1), expression())
+	if(match(TT_KW_PRINT))      NEW_STATEMENT_RETURN_ARG(Print, GET_ROW(-1), GET_COL(-1), (expression()))
+	if(match(TT_KW_PUT))        NEW_STATEMENT_RETURN_ARG(Put, GET_ROW(-1), GET_COL(-1), (expression()))
 	if(match(TT_KW_IF))         return if_else();
 	if(match(TT_KW_DO))         return do_while_statement();
 	if(match(TT_KW_WHILE))      return while_statement();
 	if(match(TT_KW_BREAK))      NEW_STATEMENT_RETURN(Break, GET_ROW(-1), GET_COL(-1))
 	if(match(TT_KW_CONTINUE))   NEW_STATEMENT_RETURN(Continue, GET_ROW(-1), GET_COL(-1))
-	if(match(TT_KW_RETURN))     NEW_STATEMENT_RETURN_ARG(Return, GET_ROW(-1), GET_COL(-1), expression())
+	if(match(TT_KW_RETURN))     NEW_STATEMENT_RETURN_ARG(Return, GET_ROW(-1), GET_COL(-1), (expression()))
 	if(match(TT_KW_USE))        return use_statement();
-	if(match(TT_KW_INCLUDE))    NEW_STATEMENT_RETURN_ARG(Include, GET_ROW(-1), GET_COL(-1), expression())
+	// if(match(TT_KW_INCLUDE))    NEW_STATEMENT_RETURN_ARG(Include, GET_ROW(-1), GET_COL(-1), (expression()))
 	if(match(TT_KW_FOR))        return for_statement();
 	if(match(TT_KW_DEF))        return function_define(false);
 	if(match(TT_KW_DEF_C))      return function_define(true);
 	// if(match(TT_KW_MODE))         return new ModeProgrammStatement(expression()->eval()->as_string());
 	if(match(TT_KW_MATCH))      return match();
 	if (look_match(0, TT_IDENTIFIER) && look_match(1,TT_LPAREN)) {
-		NEW_STATEMENT_RETURN_ARG(Expr, GET_ROW(0), GET_COL(0), function_chain(qualified_name()))
+		NEW_STATEMENT_RETURN_ARG(Expr, GET_ROW(0), GET_COL(0), (function_chain((qualified_name()))))
 	}
 	if (look_match(0, TT_IDENTIFIER) && look_match(1, TT_COMMA)) {
 		return multi_assignment_statement(qualified_name());
@@ -479,7 +497,7 @@ MatchExpression* Parser::match(){
 		patterns.push_back(pattern);
 	} while (!match(TT_KW_END));
 
-	return new MatchExpression(expr, patterns);
+	NEW_EXPRESSION_RETURN_ARG(Match, expr->get_position_row(), expr->get_position_col(), (expr, patterns))
 }
 
 Expression* Parser::expression(){
@@ -493,7 +511,7 @@ Expression* Parser::assignment(){
 		return assignment;
 	}
 
-	return in_expression();
+	return include_expression();
 }
 
 Expression* Parser::assignment_strict(){
@@ -515,7 +533,18 @@ Expression* Parser::assignment_strict(){
 
 	NS_Binary::Operator op = ASSIGN_OPERATORS[current_type];
 
-	return new AssignmentExpression(op, dynamic_cast<Accessible*>(target_expr), expression());
+	NEW_EXPRESSION_RETURN_ARG(Assignment, GET_ROW(-1), GET_COL(-1), (op, dynamic_cast<Accessible*>(target_expr), expression()))
+}
+
+Expression* Parser::include_expression() {
+	// include 'file.lets'
+	// a = include 'file.lets'
+
+	if (match(TT_KW_INCLUDE)) {
+		NEW_STATEMENT_RETURN_ARG(Include, GET_ROW(-1), GET_COL(-1), (in_expression()))
+	}
+
+	return in_expression();
 }
 
 Expression* Parser::in_expression() {
@@ -527,14 +556,12 @@ Expression* Parser::in_expression() {
 	if(match(TT_EQGT)){
 		lets_vector_t<Expression*> exprs = {result, ternary()};
 		consume(TT_KW_IN);
-		Expression* container = expression();
-		return new InExpression(exprs, container);
+		NEW_EXPRESSION_RETURN_ARG(In, result->get_position_row(), result->get_position_col(), (exprs, expression()))
 	}
 
 	if (match(TT_KW_IN)) {
 		lets_vector_t<Expression*> exprs = {result};
-		Expression* container = expression();
-		return new InExpression(exprs, container);
+		NEW_EXPRESSION_RETURN_ARG(In, result->get_position_row(), result->get_position_col(), (exprs, expression()))
 	}
 
 	return result;

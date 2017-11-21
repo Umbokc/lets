@@ -9,6 +9,7 @@
 #include <sstream>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include "../include/tools.hpp"
 
 namespace NS_Tools {
@@ -47,6 +48,18 @@ namespace NS_Tools {
 		return result;
 	}
 
+	inline bool fils_exists (const lets_str_t& name) {
+		struct stat buffer;   
+		return (stat (name.c_str(), &buffer) == 0); 
+	}
+
+	lets_str_t get_path( const lets_str_t& str){
+		if(fils_exists(str))
+			return realpath(str.c_str(), NULL);
+		else
+			throw std::runtime_error("File '"+ str +"' not found");
+	}
+
 	lets_str_t splitpath( const lets_str_t& str){
 
 		lets_vector_t<lets_str_t> result;
@@ -72,7 +85,6 @@ namespace NS_Tools {
 		}
 
 		return r;
-
 	}
 
 	lets_str_t get_curr_dir(){

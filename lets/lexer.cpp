@@ -98,6 +98,7 @@ lets_map_t<lets_str_t, u_tt_t> Lexer::KEYWORDS = {
 };
 
 lets_vector_t<Token> Lexer::tokenize(){
+
 	while (this->pos < this->length) {
 		char current = peek(0);
 		if(isdigit(current)) tokenize_number();

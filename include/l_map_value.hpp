@@ -38,6 +38,7 @@ public:
 	void set(Value *, Value *);
 	void set(Value *, Function *);
 
+	bool as_bool();
 	int as_int();
 	double as_number();
 	long as_long();

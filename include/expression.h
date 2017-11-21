@@ -15,8 +15,8 @@
 
 class Expression : virtual public Node {
 public:
-    virtual Value *eval() = 0;
-    virtual lets_str_t to_s() = 0;
+	virtual Value *eval() = 0;
+	virtual lets_str_t to_s() = 0;
 };
 
 #endif /* ast__expression_h */

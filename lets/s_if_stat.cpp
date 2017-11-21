@@ -13,8 +13,7 @@ IfStatement::IfStatement(Expression *expression, Statement *if_statement, Statem
 	if_statement(std::move(if_statement)), else_statement(std::move(else_statement)){}
 
 void IfStatement::execute(){
-	double result = expression->eval()->as_number();
-	if(result != 0){
+	if(expression->eval()->as_bool()){
 		if_statement->execute();
 	} else if(else_statement != NULL){
 		else_statement->execute();

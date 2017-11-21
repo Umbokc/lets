@@ -1,89 +1,15 @@
-use ['rand', 'len', 'echo', 'is_exist'] in 'std'
-use ['PI'] in 'math'
-
-first = def ():
-	arr = [0 0]
-	print arr # [0, 0]
-
-	arr1 = [1, 2, 3]
-	arr2 = [4, 5, 6]
-
-	print arr1 # [ 1, 2, 3, [ 8, 4, 5, 6, 7 ] ]
-	print arr2 # [ 8, 4, 5, 6, 7 ]
-	print arr # [ 9, 0, 0, [ 8, 4, 5, 6, 7 ] ]
-	print arr # [ 9, 0, 0, [ 8, 4, 5, 6, 7 ], 0 
-
-	N = 500
-	b = 1
-	b += a = 2 + 5
-
-	for i = 0, i < N, ++i
-		for j = 0, j < N, ++j
-			a = 5 + 2
-
-	print b
-end
-
-second = def ():
-	a = 1
-
-	def func():
-		a = 5
-		print a
-	end
-
-	print a
-	func()
-	print a
-end
-
-third = def ():
-	print 'true: ' + true
-	print 'false: ' + false
-
-	echo('len(\'string\') = ' + len('string'))
-
-	a = PI
-	b = 141_592_123_123_123_123_12
-
-	print 'b = ' + b
-
-	if is_exist('a')
-		print 'a = ' + a
-	end
-
-	val = [1,2,4]
-	val = {
-		'x' : 1
-		'y' : 2
-		'z' : 4
-	}
-	x,y,z = val
-
-	print [x y z]
-end
-
-fourth = def ():
-	map = {
-		'x' : 4,
-		'a' : 1,
-		'c' : 3,
-	}
-
-	a,b = map
-
-	print a
-	print b
-end
-
-# """
-first()
-second()
-third()
-fourth()
-# """
+use 'std'
+use 'math'
 
 print __file__
 print __dir__
 
-include 'array.lets'
+include 'sort-function.lets'
+
+arr = [3 2 1]
+
+print insertion_sort(arr)
+print __here_var
+
+a = include 'return-file.lets'
+print a

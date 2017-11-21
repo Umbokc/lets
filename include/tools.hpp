@@ -31,6 +31,9 @@ namespace NS_Tools{
 		return result;
 	}
 
+	inline bool fils_exists (const lets_str_t&);
+	lets_str_t get_path( const lets_str_t&);
+
 	lets_str_t splitpath( const lets_str_t&);
 
 	lets_str_t get_curr_dir();

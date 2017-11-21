@@ -20,6 +20,7 @@ public:
     StringValue(char);
     StringValue(lets_str_t);
     
+    bool as_bool();
     int as_int();
     double as_number();
     long as_long();

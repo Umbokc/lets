@@ -79,8 +79,6 @@ void Lets::init(int argc, const char** argv){
 			}
 		}
 	}
-	if(input == "")
-		input = "lets='"+Lets::VERSION+"'";
 
 	Lets::run(input);
 }
@@ -91,12 +89,10 @@ void Lets::run(lets_str_t input){
 	Statement* parsed_program;
 	lets_vector_t<Token> tokens;
 
-
 	measurement.start("Tokenize time");
 	tokens = Lets::tokenize(input);
 	measurement.stop("Tokenize time");
 	if(Lets::options.show_tokens) for(auto t : tokens) lets_output(t.to_s())
-
 
 	measurement.start("Parse time");
 	parsed_program = Lets::parse(tokens);
@@ -115,7 +111,7 @@ void Lets::run(lets_str_t input){
 	// programm->accept(programm, new VariablesPrint());
 	// programm->accept(programm, new AssignValidator());
 
-	Lets::init_vars_file(realpath(Lets::current_file_name.c_str(), NULL));
+	Lets::init_vars_file(NS_Tools::get_path(Lets::current_file_name));
 
 	try{
 		measurement.start("Execute time");

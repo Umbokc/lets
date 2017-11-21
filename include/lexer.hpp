@@ -28,7 +28,7 @@
 class Lexer {
 private:
     lets_str_t input, buffer;
-    lets_vector_t<Token> tokens;
+    lets_vector_t<Token> tokens = lets_vector_t<Token>(0);
     size_t pos = 0, row = 1, col = 1;
     size_t length;
     
