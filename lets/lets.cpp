@@ -20,6 +20,7 @@ lets_str_t Lets::current_file_name = "go.lets";
 Options Lets::options = Options();
 
 void Lets::init(int argc, const char** argv){
+	bool command_line_script = false;
 	if (argc == 1) {
 		try {
 			options.show_ast = false;
@@ -63,6 +64,7 @@ void Lets::init(int argc, const char** argv){
 				Lets::options.optimization_level = 2;
 			}
 		} else if(lets_str_t(argv[i]) == "-e"){
+			command_line_script = true;
 			Lets::current_file_name = "line";
 			input = argv[i + 1];
 			i++;
@@ -79,6 +81,9 @@ void Lets::init(int argc, const char** argv){
 			}
 		}
 	}
+
+	if(!command_line_script)
+		Lets::init_vars_file(NS_Tools::get_path(Lets::current_file_name));
 
 	Lets::run(input);
 }
@@ -110,8 +115,6 @@ void Lets::run(lets_str_t input){
 	// programm->accept(programm, new FunctionAdder());
 	// programm->accept(programm, new VariablesPrint());
 	// programm->accept(programm, new AssignValidator());
-
-	Lets::init_vars_file(NS_Tools::get_path(Lets::current_file_name));
 
 	try{
 		measurement.start("Execute time");

@@ -5,13 +5,15 @@
 //  Created by Dragan Stepan on 03.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
-
+#include <iostream> // for dbg
 #include "../include/e_conditional_expr.hpp"
 #include "../include/ex_execute.h"
 #include "../include/tools.hpp"
 
+const lets_str_t ConditionalExpression::OperatorString[8] =  { "==", "!=", "<", "<=", ">", ">=", "&&", "||" };
+
 ConditionalExpression::ConditionalExpression(
-	NS_Conditional::Operator operation, Expression* expr1, Expression* expr2):
+	ConditionalExpression::Operator operation, Expression* expr1, Expression* expr2):
 	operation(std::move(operation)), expr1(std::move(expr1)), expr2(std::move(expr2)){}
 
 Value* ConditionalExpression::eval(){
@@ -20,28 +22,30 @@ Value* ConditionalExpression::eval(){
 	double number1, number2;
 	bool result;
 
-	value1 = expr1->eval();
+	value1 = this->expr1->eval();
 
-	if(operation == NS_Conditional::AND) return eval_and_or(value1, true);
-	if(operation == NS_Conditional::OR) return eval_and_or(value1, false);
+	if(this->operation == ConditionalExpression::AND)
+		return new NumberValue((value1->as_bool()) ? this->expr2->eval()->as_bool() : false);
+	if(this->operation == ConditionalExpression::OR)
+		return new NumberValue((value1->as_bool()) ? true : this->expr2->eval()->as_bool());
 
-	value2 = expr2->eval();
+	value2 = this->expr2->eval();
 
 	if(value1->type() == Types::T_STRING){
-		number1 = lets_compare(value1->as_string(), value2->as_string());
+		number1 = int(value1->as_string() != value2->as_string());
 		number2 = 0;
 	} else {
 		number1 = value1->as_number();
 		number2 = value2->as_number();
 	}
 
-	switch(operation){
-		case NS_Conditional::LT : result = (number1 < number2); break;
-		case NS_Conditional::LTEQ : result = (number1 <= number2); break;
-		case NS_Conditional::GT : result = (number1 > number2); break;
-		case NS_Conditional::GTEQ : result = (number1 >= number2); break;
-		case NS_Conditional::NOT_EQUALS : result = (number1 != number2); break;
-		case NS_Conditional::EQUALS : result = (number1 == number2); break;
+	switch(this->operation){
+		case ConditionalExpression::LT : result = (number1 < number2); break;
+		case ConditionalExpression::LTEQ : result = (number1 <= number2); break;
+		case ConditionalExpression::GT : result = (number1 > number2); break;
+		case ConditionalExpression::GTEQ : result = (number1 >= number2); break;
+		case ConditionalExpression::NOT_EQUALS : result = (number1 != number2); break;
+		case ConditionalExpression::EQUALS : result = (number1 == number2); break;
 		default:
 			throw ExecuteException("Operation is not supported");
 	}
@@ -49,26 +53,14 @@ Value* ConditionalExpression::eval(){
 	return new NumberValue(result);
 }
 
-Value* ConditionalExpression::eval_and_or(Value* &value1, bool is_and){
-
-	bool result;
-
-	if (is_and) result = (value1->as_bool()) ? expr2->eval()->as_bool() : false;
-	else result = (value1->as_bool()) ? true : expr2->eval()->as_bool();
-
-	return new NumberValue(result);
-}
-
 lets_str_t ConditionalExpression::to_s(){
 	return NS_Tools::string_format("[%s %s %s]",
-		expr1->to_s().c_str(),
-		NS_Conditional::OperatorString[operation].c_str(),
-		expr2->to_s().c_str()
+		this->expr1->to_s().c_str(),
+		ConditionalExpression::OperatorString[this->operation].c_str(),
+		this->expr2->to_s().c_str()
 	);
 }
 
 
 ConditionalExpression::~ConditionalExpression(){
-	// delete[] expr1;
-	// delete[] expr2;
 }

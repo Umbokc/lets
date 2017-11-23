@@ -16,18 +16,18 @@
 
 class FunctionDefineStatement : virtual public Statement{
 public:
-    lets_str_t name;
-    Arguments args;
-    Statement *body;
-    bool is_constexpr;
-    
-    FunctionDefineStatement(lets_str_t,Arguments,Statement *,bool);
-    
-    void execute();
+	lets_str_t name;
+	Arguments args;
+	Statement *body;
 
-    lets_str_t to_s();
-    
-    ~FunctionDefineStatement();
+	FunctionDefineStatement(lets_str_t,Arguments,Statement*);
+
+	void execute();
+
+	lets_str_t beauty();
+	lets_str_t to_s();
+
+	~FunctionDefineStatement();
 };
 
 #endif /* s_function_define_stat_hpp */

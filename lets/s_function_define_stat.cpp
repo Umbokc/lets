@@ -10,22 +10,30 @@
 #include "../include/l_user_define_function.hpp"
 #include "../include/l_functions.hpp"
 
-FunctionDefineStatement::FunctionDefineStatement(lets_str_t name, Arguments args, Statement *body, bool is_constexpr):
-name(std::move(name)), args(std::move(args)), body(std::move(body)), is_constexpr(std::move(is_constexpr))
+FunctionDefineStatement::FunctionDefineStatement(lets_str_t name, Arguments args, Statement *body):
+name(std::move(name)), args(std::move(args)), body(std::move(body))
 {}
 
 void FunctionDefineStatement::execute(){
-    if(is_constexpr)
-        Functions::set_constexpr(name, new UserDefineFunction(args, body));
-    else
-        Functions::set(name, new UserDefineFunction(args, body));
+	if(this->name[0] == '_')
+		Functions::set_constexpr(this->name, new UserDefineFunction(this->args, this->body));
+	else
+		Functions::set(this->name, new UserDefineFunction(this->args, this->body));
+}
+
+lets_str_t FunctionDefineStatement::beauty(){
+	lets_str_t result = "def " + this->name;
+	result +=  "(" + this->args.to_s() + " ):";
+	result += this->body->to_s();
+	result +=  "end";
+	return result;
 }
 
 lets_str_t FunctionDefineStatement::to_s(){
-    lets_str_t result = "def " + name;
-    result +=  " ( " + args.to_s() + " ) ";
-    result += body->to_s();
-    return result;
+	lets_str_t result = "def " + this->name;
+	result +=  " ( " + this->args.to_s() + " ) ";
+	result += this->body->to_s();
+	return result;
 }
 
 FunctionDefineStatement::~FunctionDefineStatement(){

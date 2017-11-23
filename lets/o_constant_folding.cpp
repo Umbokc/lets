@@ -62,7 +62,7 @@ Node *ConstantFolding::visit(BinaryExpression *s, bool t) {
 }
 
 Node *ConstantFolding::visit(ConditionalExpression *s, bool t) {
-	if (overloaded_operators_contains(NS_Conditional::OperatorString[s->operation])) {
+	if (overloaded_operators_contains(ConditionalExpression::OperatorString[s->operation])) {
 		return OptimizationVisitor::visit(s, t);
 	}
 	if ( dynamic_cast<ValueExpression*>(s->expr1) && dynamic_cast<ValueExpression*>(s->expr2) ) {

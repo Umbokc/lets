@@ -47,6 +47,14 @@
 	return NAME##__s; \
 };
 
+#define NEW_EXPRESSION_EQUAL_ARG(TO_EQ, NAME, ROW, COL, ARG) { \
+	size_t r = ROW;\
+	size_t c = COL;\
+	NAME##Expression* NAME##__s = new NAME##Expression ARG; \
+	NAME##__s->set_position(r, c); \
+	TO_EQ = NAME##__s; \
+};
+
 lets_map_t<u_tt_t, NS_Binary::Operator> Parser::ASSIGN_OPERATORS = {
 	{ TT_EQ, NS_Binary::Operator::THE_NULL },
 	{ TT_PLUSEQ, NS_Binary::Operator::ADD },
@@ -146,15 +154,14 @@ Statement* Parser::statement(){
 	if(match(TT_KW_USE))        return use_statement();
 	// if(match(TT_KW_INCLUDE))    NEW_STATEMENT_RETURN_ARG(Include, GET_ROW(-1), GET_COL(-1), (expression()))
 	if(match(TT_KW_FOR))        return for_statement();
-	if(match(TT_KW_DEF))        return function_define(false);
-	if(match(TT_KW_DEF_C))      return function_define(true);
+	if(match(TT_KW_DEF))        return function_define();
 	// if(match(TT_KW_MODE))         return new ModeProgrammStatement(expression()->eval()->as_string());
 	if(match(TT_KW_MATCH))      return match();
 	if (look_match(0, TT_IDENTIFIER) && look_match(1,TT_LPAREN)) {
 		NEW_STATEMENT_RETURN_ARG(Expr, GET_ROW(0), GET_COL(0), (function_chain((qualified_name()))))
 	}
 	if (look_match(0, TT_IDENTIFIER) && look_match(1, TT_COMMA)) {
-		return multi_assignment_statement(qualified_name());
+		return multi_assignment_statement();
 	}
 
 	return assignment_statement();
@@ -171,9 +178,11 @@ Statement* Parser::assignment_statement(){
 	return NULL;
 }
 
-Statement* Parser::multi_assignment_statement(Expression* target_expr){
+Statement* Parser::multi_assignment_statement(){
+	size_t row = GET_ROW(0), col = GET_COL(0);
 	size_t position;
 	lets_vector_t<Accessible*> elements;
+	Expression* target_expr = qualified_name();
 
 	while(true){
 		elements.push_back(dynamic_cast<Accessible*>(target_expr));
@@ -190,11 +199,12 @@ Statement* Parser::multi_assignment_statement(Expression* target_expr){
 			break;
 		}
 	}
-
-	return new MultiAssignmentStatement(elements, expression());
+	NEW_STATEMENT_RETURN_ARG(MultiAssignment, row, col, (elements, expression()))
 }
 
 Statement* Parser::if_else(){
+
+	size_t row = GET_ROW(-1), col = GET_COL(-1);
 
 	Expression* condition = expression();
 	BlockStatement* if_statement = new BlockStatement();
@@ -205,7 +215,7 @@ Statement* Parser::if_else(){
 	}
 
 	if(look_match(-1, TT_KW_ELIF)){
-		return new IfStatement(condition, if_statement, if_else());
+		NEW_STATEMENT_RETURN_ARG(If, row, col, (condition, if_statement, if_else()))
 	}
 
 	if(look_match(-1, TT_KW_ELSE)){
@@ -214,35 +224,38 @@ Statement* Parser::if_else(){
 			else_statement->add(statement());
 	} 
 
-	return new IfStatement(condition, if_statement, else_statement);
+	NEW_STATEMENT_RETURN_ARG(If, row, col, (condition, if_statement, else_statement))
 }
 
 Statement* Parser::while_statement(){
+	size_t row = GET_ROW(-1), col = GET_COL(-1);
 	Expression* condition = expression();
 	Statement* statement = statement_or_block();
-	return new WhileStatement(condition, statement);
+	NEW_STATEMENT_RETURN_ARG(While, row, col, (condition, statement))
 }
 
 Statement* Parser::do_while_statement(){
+	size_t row = GET_ROW(-1), col = GET_COL(-1);
 	Statement* statement = statement_or_block(TT_KW_WHILE);
 	Expression* condition = expression();
-	return new DoWhileStatement(condition, statement);
+	NEW_STATEMENT_RETURN_ARG(DoWhile, row, col, (condition, statement))
 }
 
 Statement* Parser::for_statement(){
 
+	size_t row = GET_ROW(-1), col = GET_COL(-1);
 	int foreach_index = look_match(0, TT_LPAREN) ? 1 : 0; // не обязательные скобки
 
 	if(look_match(foreach_index, TT_IDENTIFIER)
 		&& look_match(foreach_index+1, TT_KW_IN)){
-		return foreach_arr_statement(false);
+		return foreach_arr_statement(row, col, false);
 	}
 
 	if(look_match(foreach_index, TT_IDENTIFIER)
 		&& look_match(foreach_index+1, TT_COMMA)
 		&& look_match(foreach_index+2, TT_IDENTIFIER)
 		&& look_match(foreach_index+3, TT_KW_IN)){
-		return foreach_arr_statement(true);
+		return foreach_arr_statement(row, col, true);
 	}
 
 	bool open_parent = match(TT_LPAREN); // не обязательные скобки
@@ -257,20 +270,21 @@ Statement* Parser::for_statement(){
 
 	Statement* statement = statement_or_block();
 
-	return new ForStatement(initialization, termintion, incement, statement);
+	NEW_STATEMENT_RETURN_ARG(For, row, col, (initialization, termintion, incement, statement))
 }
 
 Statement* Parser::use_statement(){
+	size_t row = GET_ROW(-1), col = GET_COL(-1);
 	if(look_match(0, TT_LBRACKET)){
 		Expression *elements = array();
 		consume(TT_KW_IN);
-		return new UseStatement(expression(), elements);
+		NEW_STATEMENT_RETURN_ARG(Use, row, col, (expression(), elements))
 	} else {
-		return new UseStatement(expression());
+		NEW_STATEMENT_RETURN_ARG(Use, row, col, (expression()))
 	}
 }
 
-ForeachStatement* Parser::foreach_arr_statement(bool two_vars = false){
+ForeachStatement* Parser::foreach_arr_statement(size_t& row, size_t&col ,bool two_vars = false){
 
 	bool open_parent = match(TT_LPAREN); // не обязательные скобки
 
@@ -292,15 +306,16 @@ ForeachStatement* Parser::foreach_arr_statement(bool two_vars = false){
 
 	Statement* body = statement_or_block();
 
-	return new ForeachStatement(key, val, container, body);
+	NEW_STATEMENT_RETURN_ARG(Foreach, row, col, (key, val, container, body))
 }
 
-FunctionDefineStatement* Parser::function_define(bool is_constexpr){
+FunctionDefineStatement* Parser::function_define(){
 	// def name(arg1, arg2 = val): ... end || def name(args) = expr
+	size_t row = GET_ROW(-1), col = GET_COL(-1);
 	lets_str_t name = consume(TT_IDENTIFIER).get_text();
 	Arguments args = arguments();
 	Statement* body = statement_body();
-	return new FunctionDefineStatement(name, args, body, is_constexpr);
+	NEW_STATEMENT_RETURN_ARG(FunctionDefine, row, col, (name, args, body))
 }
 
 Arguments Parser::arguments(){
@@ -316,7 +331,7 @@ Arguments Parser::arguments(){
 		} else if (!start_optional_args){
 			arguments.add_required(name);
 		} else {
-			error_pars("Required argument cannot be after optional", get(0));
+			throw ParseException("Required argument cannot be after optional", "Error parse", GET_ROW(-1), GET_COL(-1));
 		}
 		match(TT_COMMA);
 	}
@@ -325,7 +340,7 @@ Arguments Parser::arguments(){
 
 Statement* Parser::statement_body(){
 	if(match(TT_LTMINUS))
-		return new ReturnStatement(expression());
+		NEW_STATEMENT_RETURN_ARG(Return, GET_ROW(-1), GET_COL(-1), (expression()))
 
 	return statement_or_block();
 }
@@ -347,8 +362,7 @@ Expression* Parser::function_chain(Expression *qualified_name_expr){
 			// next function call
 			return function_chain(new ContainerAccessExpression(expr, indices));
 		}
-		// container access
-		return new ContainerAccessExpression(expr, indices);
+		NEW_EXPRESSION_RETURN_ARG(ContainerAccess, expr->get_position_row(), expr->get_position_col(), (expr, indices))
 	}
 
 	return expr;
@@ -356,10 +370,11 @@ Expression* Parser::function_chain(Expression *qualified_name_expr){
 
 FunctionalExpression* Parser::function(Expression *qualified_name_expr){
 	// function(arg1, arg2, ...)
+	size_t row = GET_ROW(-1), col = GET_COL(-1);
 
 	consume(TT_LPAREN);
 	FunctionalExpression* function = new FunctionalExpression(qualified_name_expr);
-
+	function->set_position(row, col);
 	while(!match(TT_RPAREN)){
 		function->add_arguments(expression());
 		match(TT_COMMA);
@@ -369,6 +384,7 @@ FunctionalExpression* Parser::function(Expression *qualified_name_expr){
 }
 
 Expression* Parser::array(){
+	size_t row = GET_ROW(0), col = GET_COL(0);
 	consume(TT_LBRACKET);
 
 	lets_vector_t<Expression* > elements;
@@ -378,20 +394,17 @@ Expression* Parser::array(){
 		match(TT_COMMA);
 	}
 
-	return new ArrayExpression(elements);
+	NEW_EXPRESSION_RETURN_ARG(Array, row, col, (elements))
 }
 
 Expression* Parser::map_vals(){
 	// {key1: value1, key2: value2, ...}
+	size_t row = GET_ROW(0), col = GET_COL(0);
 	consume(TT_LBRACE);
 	lets_map_t<Expression*, Expression*> elements;
 	while(!match(TT_RBRACE)){
 
 		Expression* key = expression();
-
-		if(elements.find(key) != elements.end())
-			error_pars("Key '" + key->to_s() + "' already exists", get(0));
-
 		consume(TT_COLON);
 		Expression* val = expression();
 
@@ -399,7 +412,7 @@ Expression* Parser::map_vals(){
 		match(TT_COMMA);
 	}
 
-	return new MapExpression(elements);
+	NEW_EXPRESSION_RETURN_ARG(Map, row, col, (elements))
 }
 
 MatchExpression* Parser::match(){
@@ -571,10 +584,13 @@ Expression* Parser::ternary() {
 	Expression* result = logicalOr();
 
 	if (match(TT_QUESTION)) {
+
+		size_t row = GET_ROW(-2), col = GET_COL(-2);
 		Expression* trueExpr = expression();
 		consume(TT_COLON);
 		Expression* falseExpr = expression();
-		return new TernaryExpression(result, trueExpr, falseExpr);
+
+		NEW_EXPRESSION_RETURN_ARG(Ternary, row, col, (result, trueExpr, falseExpr))
 	}
 
 	return result;
@@ -584,7 +600,7 @@ Expression* Parser::logicalOr(){
 	Expression* result = logicalAnd();
 	while(true){
 		if(match({TT_BARBAR, TT_KW_OR})){
-			result = new ConditionalExpression(NS_Conditional::Operator::OR, result, logicalAnd());
+			NEW_EXPRESSION_EQUAL_ARG(result, Conditional, GET_ROW(0), GET_COL(0), (ConditionalExpression::Operator::OR, result, logicalAnd()))
 			continue;
 		}
 		break;
@@ -596,7 +612,7 @@ Expression* Parser::logicalAnd(){
 	Expression* result = bitwiseOr();
 	while(true){
 		if(match({TT_AMPAMP,TT_KW_AND})){
-			result = new ConditionalExpression(NS_Conditional::Operator::AND, result, bitwiseOr());
+			NEW_EXPRESSION_EQUAL_ARG(result, Conditional, GET_ROW(0), GET_COL(0), (ConditionalExpression::Operator::AND, result, bitwiseOr()))
 			continue;
 		}
 		break;
@@ -610,7 +626,7 @@ Expression* Parser::bitwiseOr() {
 
 	while (true) {
 		if (match(TT_BAR)) {
-			expression = new BinaryExpression(NS_Binary::Operator::OR, expression, bitwiseXor());
+			NEW_EXPRESSION_EQUAL_ARG(expression, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::OR, expression, bitwiseXor()))
 			continue;
 		}
 		break;
@@ -624,7 +640,7 @@ Expression* Parser::bitwiseXor() {
 
 	while (true) {
 		if (match(TT_CARET)) {
-			expression = new BinaryExpression(NS_Binary::Operator::XOR, expression, bitwiseAnd());
+			NEW_EXPRESSION_EQUAL_ARG(expression, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::XOR, expression, bitwiseAnd()))
 			continue;
 		}
 		break;
@@ -638,7 +654,7 @@ Expression* Parser::bitwiseAnd() {
 
 	while (true) {
 		if (match(TT_AMP)) {
-			expression = new BinaryExpression(NS_Binary::Operator::AND, expression, equality());
+			NEW_EXPRESSION_EQUAL_ARG(expression, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::AND, expression, equality()))
 			continue;
 		}
 		break;
@@ -651,10 +667,10 @@ Expression* Parser::equality(){
 	Expression* result = conditional();
 
 	if(match(TT_EQEQ)){
-		return new ConditionalExpression(NS_Conditional::Operator::EQUALS, result, conditional());
+		NEW_EXPRESSION_RETURN_ARG(Conditional, GET_ROW(0), GET_COL(0), (ConditionalExpression::Operator::EQUALS, result, conditional()))
 	}
 	if(match(TT_EXCLEQ)){
-		return new ConditionalExpression(NS_Conditional::Operator::NOT_EQUALS, result, conditional());
+		NEW_EXPRESSION_RETURN_ARG(Conditional, GET_ROW(0), GET_COL(0), (ConditionalExpression::Operator::NOT_EQUALS, result, conditional()))
 	}
 
 	return result;
@@ -665,19 +681,19 @@ Expression* Parser::conditional(){
 
 	while(true){
 		if(match(TT_LT)){
-			result = new ConditionalExpression(NS_Conditional::Operator::LT, result, shift());
+			NEW_EXPRESSION_EQUAL_ARG(result, Conditional, GET_ROW(0), GET_COL(0), (ConditionalExpression::Operator::LT, result, shift()))
 			continue;
 		}
 		if(match(TT_LTEQ)){
-			result = new ConditionalExpression(NS_Conditional::Operator::LTEQ, result, shift());
+			NEW_EXPRESSION_EQUAL_ARG(result, Conditional, GET_ROW(0), GET_COL(0), (ConditionalExpression::Operator::LTEQ, result, shift()))
 			continue;
 		}
 		if(match(TT_GT)){
-			result = new ConditionalExpression(NS_Conditional::Operator::GT, result, shift());
+			NEW_EXPRESSION_EQUAL_ARG(result, Conditional, GET_ROW(0), GET_COL(0), (ConditionalExpression::Operator::GT, result, shift()))
 			continue;
 		}
 		if(match(TT_GTEQ)){
-			result = new ConditionalExpression(NS_Conditional::Operator::GTEQ, result, shift());
+			NEW_EXPRESSION_EQUAL_ARG(result, Conditional, GET_ROW(0), GET_COL(0), (ConditionalExpression::Operator::GTEQ, result, shift()))
 			continue;
 		}
 		break;
@@ -691,12 +707,11 @@ Expression* Parser::shift() {
 
 	while (true) {
 		if (match(TT_LTLT)) {
-			// expression = new BinaryExpression(NS_Binary::Operator::LSHIFT, expression, additive());
-			expression = new BinaryExpression(NS_Binary::Operator::LSHIFT, expression, additive());
+			NEW_EXPRESSION_EQUAL_ARG(expression, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::LSHIFT, expression, additive()))
 			continue;
 		}
 		if (match(TT_GTGT)) {
-			expression = new BinaryExpression(NS_Binary::Operator::RSHIFT, expression, additive());
+			NEW_EXPRESSION_EQUAL_ARG(expression, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::RSHIFT, expression, additive()))
 			continue;
 		}
 		break;
@@ -710,11 +725,11 @@ Expression* Parser::additive(){
 
 	while (true) {
 		if (match(TT_PLUS)) {
-			result = new BinaryExpression(NS_Binary::Operator::ADD, result, multiplicative());
+			NEW_EXPRESSION_EQUAL_ARG(result, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::ADD, result, multiplicative()))
 			continue;
 		}
 		if (match(TT_MINUS)) {
-			result = new BinaryExpression(NS_Binary::Operator::SUBTRACT, result, multiplicative());
+			NEW_EXPRESSION_EQUAL_ARG(result, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::SUBTRACT, result, multiplicative()))
 			continue;
 		}
 		break;
@@ -728,19 +743,20 @@ Expression* Parser::multiplicative(){
 
 	while (true) {
 		if (match(TT_STAR)) {
-			result = new BinaryExpression(NS_Binary::Operator::MULTIPLY, result, unary());
+			NEW_EXPRESSION_EQUAL_ARG(result, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::MULTIPLY, result, unary()))
 			continue;
 		}
 		if (match(TT_SLASH)) {
-			result = new BinaryExpression(NS_Binary::Operator::DIVIDE, result, unary());
+			NEW_EXPRESSION_EQUAL_ARG(result, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::DIVIDE, result, unary()))
 			continue;
 		}
 		if (match(TT_PERCENT)) {
-			result = new BinaryExpression(NS_Binary::Operator::REMAINDER, result, unary());
+			NEW_EXPRESSION_EQUAL_ARG(result, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::REMAINDER, result, unary()))
 			continue;
 		}
 		// if (match(TT_STARSTAR)) {
 		//  result = new BinaryExpression(NS_Binary::Operator::POWER, result, unary());
+			// NEW_EXPRESSION_EQUAL_ARG(result, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::POWER, result, unary()))
 		//  continue;
 		// }
 		break;
@@ -752,23 +768,23 @@ Expression* Parser::multiplicative(){
 Expression* Parser::unary(){
 
 	if (match(TT_PLUSPLUS)) {
-		return new UnaryExpression(NS_Unary::Operator::INCREMENT_PREFIX, primary(true));
+		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::INCREMENT_PREFIX, primary(true)))
 	}
 	if (match(TT_MINUSMINUS)) {
-		return new UnaryExpression(NS_Unary::Operator::DECREMENT_PREFIX, primary(true));
+		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::DECREMENT_PREFIX, primary(true)))
 	}
 
 	if(match(TT_MINUS)) {
-		return new UnaryExpression(NS_Unary::Operator::NEGATE, primary(false));
+		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::NEGATE, primary(false)))
 	}
 	if (match(TT_EXCL)) {
-		return new UnaryExpression(NS_Unary::Operator::NOT, primary(false));
+		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::NOT, primary(false)))
 	}
 	if (match(TT_KW_NOT)) {
-		return new UnaryExpression(NS_Unary::Operator::NOT, expression());
+		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::NOT, expression()))
 	}
 	if (match(TT_TILDE)) {
-		return new UnaryExpression(NS_Unary::Operator::COMPLEMENT, primary(false));
+		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::COMPLEMENT, primary(false)))
 	}
 	if(match(TT_PLUS)){
 		return primary(false);
@@ -790,9 +806,10 @@ Expression* Parser::primary(bool incr = false) {
 	}
 
 	if(match(TT_KW_DEF)){
+		size_t row = GET_ROW(-1), col = GET_COL(-1);
 		Arguments args = arguments();
 		Statement* statement = statement_body();
-		return new ValueExpression(new UserDefineFunction(args, statement));
+		NEW_EXPRESSION_RETURN_ARG(Value, row, col, (new UserDefineFunction(args, statement)))
 	}
 
 	return variable(incr);
@@ -801,7 +818,9 @@ Expression* Parser::primary(bool incr = false) {
 Expression* Parser::variable(bool incr = false) {
 
 	if(look_match(0,TT_IDENTIFIER) && look_match(1, TT_LPAREN)){
-		return function_chain(new ValueExpression(consume(TT_IDENTIFIER).get_text()));
+		Expression* val;
+		NEW_EXPRESSION_EQUAL_ARG(val, Value, GET_ROW(0), GET_COL(0), (consume(TT_IDENTIFIER).get_text()))
+		return function_chain(val);
 	}
 
 	Expression* qualified_name_expr = qualified_name();
@@ -813,10 +832,10 @@ Expression* Parser::variable(bool incr = false) {
 		if(!incr){
 			// postfix increment/decrement
 			if(match(TT_PLUSPLUS)){
-				return new UnaryExpression(NS_Unary::Operator::INCREMENT_POSTFIX, qualified_name_expr);
+				NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::INCREMENT_POSTFIX, qualified_name_expr))
 			}
 			if(match(TT_MINUSMINUS)){
-				return new UnaryExpression(NS_Unary::Operator::DECREMENT_POSTFIX, qualified_name_expr);
+				NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::DECREMENT_POSTFIX, qualified_name_expr))
 			}
 		}
 		return qualified_name_expr;
@@ -841,9 +860,9 @@ Expression* Parser::qualified_name(){
 
 	lets_vector_t<Expression*> indices = variable_suffix();
 	if(indices.empty()){
-		return new VariableExpression(current.get_text());
+		NEW_EXPRESSION_RETURN_ARG(Variable, current.get_row(), current.get_col(), (current.get_text()))
 	}
-	return new ContainerAccessExpression(current.get_text(), indices);
+	NEW_EXPRESSION_RETURN_ARG(ContainerAccess, current.get_row(), current.get_col(), (current.get_text(), indices))
 }
 
 lets_vector_t<Expression*> Parser::variable_suffix(){
@@ -854,8 +873,8 @@ lets_vector_t<Expression*> Parser::variable_suffix(){
 	lets_vector_t<Expression*> indices;
 	while(look_match(0, TT_DOT) || look_match(0, TT_LBRACKET)){
 		if(match(TT_DOT)){
-			lets_str_t field_name = consume(TT_IDENTIFIER).get_text();
-			Expression* key = new ValueExpression(field_name);
+			Expression* key;
+			NEW_EXPRESSION_EQUAL_ARG(key, Value, GET_ROW(-1), GET_COL(-1), (consume(TT_IDENTIFIER).get_text()))
 			indices.push_back(key);
 		}
 		if(match(TT_LBRACKET)){
@@ -871,24 +890,23 @@ Expression* Parser::value() {
 	Token current = this->get(0);
 
 	if(match(TT_NUMBER)){
-		return new ValueExpression(create_number(current));
+		NEW_EXPRESSION_RETURN_ARG(Value, current.get_row(), current.get_col(), (create_number(current)))
 	}
 
 	if(match(TT_HEX_NUMBER)){
-		return new ValueExpression((long)std::stol(&current.get_text()[0u], 0, 16));
+		NEW_EXPRESSION_RETURN_ARG(Value, current.get_row(), current.get_col(), ((long)std::stol(&current.get_text()[0u], 0, 16)))
 	}
 	if(match(TT_OCTAL_NUMBER)){
-		return new ValueExpression((long)std::stol(&current.get_text()[0u], 0, 8));
+		NEW_EXPRESSION_RETURN_ARG(Value, current.get_row(), current.get_col(), ((long)std::stol(&current.get_text()[0u], 0, 8)))
 	}
 	if(match(TT_BINARY_NUMBER)){
-		return new ValueExpression((long)std::stol(&current.get_text()[0u], 0, 2));
+		NEW_EXPRESSION_RETURN_ARG(Value, current.get_row(), current.get_col(), ((long)std::stol(&current.get_text()[0u], 0, 2)))
 	}
 	if(match(TT_STRING)){
-		return new ValueExpression(current.get_text());
+		NEW_EXPRESSION_RETURN_ARG(Value, current.get_row(), current.get_col(), (current.get_text()))
 	}
 
-	error_pars("Unknown expression: " + current.get_text(), current);
-	return NULL;
+	throw ParseException("Unknown expression: " + current.get_text(), "Parser error", current.get_row(), current.get_col());
 }
 
 Number Parser::create_number(Token current){
@@ -974,12 +992,5 @@ int Parser::find_c(lets_str_t s, char c) {
 }
 
 void Parser::error_pars(lets_str_t text, Token t){
-
-	// dbg(t.get_position())
-
-	if(t.get_row() == -1 || t.get_col() == -1){
-		t = get(-1);
-	}
-
 	throw ParseException(text, "Parsing error", t.get_row(), t.get_col());
 }

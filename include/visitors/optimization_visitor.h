@@ -221,7 +221,7 @@ public:
 		Node *condition = s->condition->accept(s->condition, this, t);
 		Node *statement = s->statement->accept(s->statement, this, t);
 		if (condition != s->condition || statement != s->statement) {
-			return new DoWhileStatement(dynamic_cast<Expression*>(condition), consumeStatement(statement));
+			return new DoWhileStatement(dynamic_cast<Expression*>(condition), consume_statement(statement));
 		}
 		return s;
 	}
@@ -242,8 +242,8 @@ public:
 		if (initialization != s->initialization || termination != s->termination
 			|| increment != s->increment || statement != s->statement) {
 			return new ForStatement(
-				consumeStatement(initialization),
-				dynamic_cast<Expression*>(termination), consumeStatement(increment), consumeStatement(statement)
+				consume_statement(initialization),
+				dynamic_cast<Expression*>(termination), consume_statement(increment), consume_statement(statement)
 			);
 		}
 		return s;
@@ -253,7 +253,7 @@ public:
 		Node *container = s->container->accept(s->container, this, t);
 		Node *body = s->body->accept(s->body, this, t);
 		if (container != s->container || body != s->body) {
-			return new ForeachStatement(s->key, s->val, dynamic_cast<Expression*>(container), consumeStatement(body));
+			return new ForeachStatement(s->key, s->val, dynamic_cast<Expression*>(container), consume_statement(body));
 		}
 		return s;
 	}
@@ -264,7 +264,7 @@ public:
 
 		Node *body = s->body->accept(s->body, this, t);
 		if (changed || body != s->body) {
-			return new FunctionDefineStatement(s->name, newArgs, consumeStatement(body), s->is_constexpr);
+			return new FunctionDefineStatement(s->name, newArgs, consume_statement(body));
 		}
 		return s;
 	}
@@ -277,7 +277,7 @@ public:
 		if (expression != s->expression || if_statement != s->if_statement || else_statement != s->else_statement) {
 			return new IfStatement(
 				dynamic_cast<Expression*>(expression),
-				consumeStatement(if_statement), (else_statement == NULL ? NULL : consumeStatement(else_statement))
+				consume_statement(if_statement), (else_statement == NULL ? NULL : consume_statement(else_statement))
 			);
 		}
 
@@ -344,7 +344,7 @@ public:
 		Node *condition = s->condition->accept(s->condition, this, t);
 		Node *statement = s->statement->accept(s->statement, this, t);
 		if (condition != s->condition || statement != s->statement) {
-			return new WhileStatement(dynamic_cast<Expression*>(condition), consumeStatement(statement));
+			return new WhileStatement(dynamic_cast<Expression*>(condition), consume_statement(statement));
 		}
 		return s;
 	}
@@ -364,7 +364,7 @@ public:
 		Node *body = s->body->accept(s->body, this, t);
 
 		if (changed || body != s->body) {
-			return new UserDefineFunction(newArgs, consumeStatement(body));
+			return new UserDefineFunction(newArgs, consume_statement(body));
 		}
 		return s;
 	}
@@ -441,7 +441,7 @@ protected:
 	}
 
 private:
-	Statement* consumeStatement(Node *node) {
+	Statement* consume_statement(Node *node) {
 		if (dynamic_cast<Statement*>(node)) {
 			return dynamic_cast<Statement*>(node);
 		}

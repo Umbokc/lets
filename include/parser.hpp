@@ -52,14 +52,14 @@ private:
 	
 	Statement* statement();
 	Statement* assignment_statement();
-	Statement* multi_assignment_statement(Expression*);
+	Statement* multi_assignment_statement();
 	Statement* if_else();
 	Statement* while_statement();
 	Statement* do_while_statement();
 	Statement* for_statement();
 	Statement* use_statement();
-	ForeachStatement* foreach_arr_statement(bool);
-	FunctionDefineStatement* function_define(bool);
+	ForeachStatement* foreach_arr_statement(size_t&, size_t&, bool);
+	FunctionDefineStatement* function_define();
 	Arguments arguments();
 	Statement* statement_body();
 

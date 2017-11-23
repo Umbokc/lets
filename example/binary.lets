@@ -45,13 +45,13 @@ end
 
 print "Binary operations with: \n"
 # number
-def_c number():
+def number():
 	print "Numbers"
 	call_operations([''] 10 4)
 end
 
 # array
-def_c array():
+def array():
 	print "Array"
 	arr1 = [1, 2]
 	arr2 = [6, 7]
@@ -61,7 +61,7 @@ def_c array():
 end
 
 # map
-def_c map():
+def map():
 	print "\nMap:"
 
 	map = {
@@ -72,7 +72,7 @@ def_c map():
 	print map + 2	
 end
 
-def_c bitwise():
+def bitwise():
 	print "\nBitwise"
 	for a = 0, a <= 1, a++ :
 		for b = 0, b <= 1, b++ :
