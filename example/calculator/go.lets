@@ -1,0 +1,12 @@
+include 'lexer.lets'
+include 'parser.lets'
+
+def _main_():
+	input = input('Enter expression: ')
+	tokens = Lexer(input)
+	print parse(tokens)
+end
+
+_main_()
+
+print 'Done'

@@ -60,6 +60,7 @@ public:
 	static lets_vector_t<Token> tokenize(const lets_str_t&);
 	static Statement* parse(const lets_vector_t<Token>&);
 	static lets_str_t f2s(lets_str_t);
+	static void init_functions();
 	static void init_vars_file(lets_str_t);
 };
 

@@ -1,4 +1,5 @@
 use 'std'
+use 'type'
 use 'math'
 
 print __file__
@@ -13,3 +14,27 @@ print __here_var
 
 a = include 'return-file.lets'
 print a
+
+a,b,c = [1 2 3]
+
+print [a b c]
+
+c = ''
+
+print c == '2'
+
+if c == '2'
+	print 'if'
+elif c == '+'
+	print 'else if'
+else
+	print 'else'
+end
+
+a = 1
+
+if 1 == 12 or 3 == 3
+	++a print a
+end
+
+print input('Enter: ')

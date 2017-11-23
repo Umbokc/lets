@@ -12,6 +12,7 @@
 #include "../include/s_continue_stat.hpp"
 #include "../include/s_return_stat.hpp"
 #include "../include/l_variables.h"
+#include "../include/l_functions.hpp"
 #include "../include/l_string_value.hpp"
 #include "../include/tools.hpp"
 
@@ -112,6 +113,7 @@ void Lets::run(lets_str_t input){
 		programm = parsed_program;
 	}
 
+	Lets::init_functions();
 	// programm->accept(programm, new FunctionAdder());
 	// programm->accept(programm, new VariablesPrint());
 	// programm->accept(programm, new AssignValidator());
@@ -149,6 +151,26 @@ Statement* Lets::parse(const lets_vector_t<Token>& tokens){
 	} catch (ParseException& pe){
 		show_lets_error(pe.head, Lets::current_file_name, to_str(pe.row), to_str(pe.col), pe.get_message())
 	}
+}
+
+void Lets::init_functions(){
+	class LetsBootFuncs :  public Function{
+	public:
+		LetsBootFuncs(){}
+		~LetsBootFuncs(){}
+		Value* execute(FUNCS_ARGS args){
+			if(args.size() >= 1)
+				std::cout << args[0]->as_string();
+			lets_str_t i;
+			getline(std::cin, i);
+			return new StringValue(i);
+		}
+		lets_str_t to_s(){
+			return "input()";
+		}
+	};
+
+	Functions::set_lets_funcs("input", new LetsBootFuncs(), true);
 }
 
 void Lets::init_vars_file(lets_str_t path_file){

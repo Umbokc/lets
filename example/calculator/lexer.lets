@@ -1,0 +1,39 @@
+use ['len'] in 'std'
+
+def is_digit(c):
+	nums = '1234567890'
+	return c in nums
+end
+
+def	Lexer(input):
+
+	tokens = []
+	_size = len(input)
+	_operators = {
+		'+' : 'PLUS'
+		'-' : 'MINUS'
+		'*' : 'STAR'
+		'/' : 'SLASH'
+		'(' : 'LPAREN'
+		')' : 'RPAREN'
+	}
+
+	for (i = 0, i < _size, ++i) :
+		curr = input[i]
+		if is_digit(curr)
+			buffer = ''
+			while true :
+				if !is_digit(curr) break end
+				buffer += curr
+				i++
+				curr = input[i]
+			end
+			--i
+			tokens << { 'type' : 'NUMBER', 'value' : buffer}
+		elif curr in _operators
+			tokens << { 'type' : _operators[curr], 'value' : curr}
+		end
+	end
+
+	return tokens
+end
