@@ -21,14 +21,6 @@ void FunctionDefineStatement::execute(){
 		Functions::set(this->name, new UserDefineFunction(this->args, this->body));
 }
 
-lets_str_t FunctionDefineStatement::beauty(){
-	lets_str_t result = "def " + this->name;
-	result +=  "(" + this->args.to_s() + " ):";
-	result += this->body->to_s();
-	result +=  "end";
-	return result;
-}
-
 lets_str_t FunctionDefineStatement::to_s(){
 	lets_str_t result = "def " + this->name;
 	result +=  " ( " + this->args.to_s() + " ) ";

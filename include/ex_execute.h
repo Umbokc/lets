@@ -17,6 +17,7 @@ protected:
 	lets_str_t message;
 public:
 	lets_str_t head = "Error";
+	lets_str_t file_name = "";
 	size_t row = 0, col = 0;
 
 	ExecuteException(){}
@@ -34,6 +35,11 @@ public:
 	ExecuteException(lets_str_t message, size_t row, size_t col)
 		:message(std::move(message)),
 		row(std::move(row)), col(std::move(col)){}
+
+	ExecuteException(lets_str_t message, size_t row, size_t col, lets_str_t file)
+		:message(std::move(message)),
+		row(std::move(row)), col(std::move(col)),
+		file_name(std::move(file)){}
 
 	lets_str_t get_message(){ return message; }
 

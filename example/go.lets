@@ -10,7 +10,7 @@ include 'sort-function.lets'
 arr = [3 2 1]
 
 print insertion_sort(arr)
-print __here_var
+# print __here_var	
 
 a = include 'return-file.lets'
 print a
@@ -37,4 +37,6 @@ if 1 == 12 or 3 == 3
 	++a print a
 end
 
-print input('Enter: ')
+# print input('Enter: ')
+
+

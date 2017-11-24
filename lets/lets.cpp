@@ -16,6 +16,9 @@
 #include "../include/l_string_value.hpp"
 #include "../include/tools.hpp"
 
+#define SHOW_LETS_ERROR_EXCEPTIONS(VAR, MESS) \
+	show_lets_error("Error", Lets::current_file_name, to_str(VAR->get_position_row()), to_str(VAR->get_position_col()), MESS)
+
 const lets_str_t Lets::VERSION = "0.0.1";
 lets_str_t Lets::current_file_name = "go.lets";
 Options Lets::options = Options();
@@ -96,12 +99,12 @@ void Lets::run(lets_str_t input){
 	lets_vector_t<Token> tokens;
 
 	measurement.start("Tokenize time");
-	tokens = Lets::tokenize(input);
+	tokens = Lets::tokenize(input, true);
 	measurement.stop("Tokenize time");
 	if(Lets::options.show_tokens) for(auto t : tokens) lets_output(t.to_s())
 
 	measurement.start("Parse time");
-	parsed_program = Lets::parse(tokens);
+	parsed_program = Lets::parse(tokens, true);
 	measurement.stop("Parse time");
 	if(Lets::options.show_ast) lets_output(parsed_program->to_s())
 
@@ -122,14 +125,14 @@ void Lets::run(lets_str_t input){
 		measurement.start("Execute time");
 		programm->execute();
 		measurement.stop("Execute time");
-	} catch (ExecuteException& pe){
-		show_lets_error(pe.head, Lets::current_file_name, to_str(pe.row), to_str(pe.col), pe.get_message())
+	} catch (ExecuteException& ee){
+		show_lets_error(ee.head, ((ee.file_name != "") ? ee.file_name : Lets::current_file_name), to_str(ee.row), to_str(ee.col), ee.get_message())
 	} catch (ReturnStatement*& rs){
-		show_lets_error("Error", Lets::current_file_name, to_str(rs->get_position_row()), to_str(rs->get_position_col()), "'" + rs->to_s() + "' statement not in function statement")
+		SHOW_LETS_ERROR_EXCEPTIONS(rs, "'" + rs->to_s() + "' statement not in function statement")
 	} catch (BreakStatement*& bs){
-		show_lets_error("Error", Lets::current_file_name, to_str(bs->get_position_row()), to_str(bs->get_position_col()), "'" + bs->to_s() + "' statement not in loop statement")
+		SHOW_LETS_ERROR_EXCEPTIONS(bs, "'" + bs->to_s() + "' statement not in loop statement")
 	} catch (ContinueStatement*& cs){
-		show_lets_error("Error", Lets::current_file_name, to_str(cs->get_position_row()), to_str(cs->get_position_col()), "'" + cs->to_s() + "' statement not in loop statement")
+		SHOW_LETS_ERROR_EXCEPTIONS(cs, "'" + cs->to_s() + "' statement not in loop statement")
 	}
 
 	if(Lets::options.show_measurements){
@@ -137,19 +140,27 @@ void Lets::run(lets_str_t input){
 	}
 }
 
-lets_vector_t<Token> Lets::tokenize(const lets_str_t& input){
+lets_vector_t<Token> Lets::tokenize(const lets_str_t& input, bool stop = false){
 	try{
 		return (Lexer(input)).tokenize();
 	} catch(LexerException& le){
-		show_lets_error(le.head, Lets::current_file_name, to_str(le.row), to_str(le.col), le.get_message())
+		if(stop){
+			show_lets_error(le.head, Lets::current_file_name, to_str(le.row), to_str(le.col), le.get_message())
+		} else{
+			throw le;
+		}
 	}
 }
 
-Statement* Lets::parse(const lets_vector_t<Token>& tokens){
+Statement* Lets::parse(const lets_vector_t<Token>& tokens, bool stop = false){
 	try {
 		return (Parser(tokens)).parse();
 	} catch (ParseException& pe){
-		show_lets_error(pe.head, Lets::current_file_name, to_str(pe.row), to_str(pe.col), pe.get_message())
+		if(stop){
+			show_lets_error(pe.head, Lets::current_file_name, to_str(pe.row), to_str(pe.col), pe.get_message())
+		} else{
+			throw pe;
+		}
 	}
 }
 

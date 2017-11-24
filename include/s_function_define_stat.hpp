@@ -24,7 +24,6 @@ public:
 
 	void execute();
 
-	lets_str_t beauty();
 	lets_str_t to_s();
 
 	~FunctionDefineStatement();
