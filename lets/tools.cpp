@@ -10,6 +10,9 @@
 #include <errno.h>
 #include <unistd.h>
 #include <sys/stat.h>
+#include <algorithm> 
+#include <cctype>
+#include <locale>
 #include "../include/tools.hpp"
 
 namespace NS_Tools {
@@ -114,5 +117,37 @@ namespace NS_Tools {
             throw std::runtime_error(str.str());
         }
     }
+	}
+
+	void ltrim(lets_str_t &s) {
+		s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+			return !std::isspace(ch);
+		}));
+	}
+
+	void rtrim(lets_str_t &s) {
+		s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+			return !std::isspace(ch);
+		}).base(), s.end());
+	}
+
+	void trim(lets_str_t &s) {
+		ltrim(s);
+		rtrim(s);
+	}
+
+	lets_str_t ltrim_copy(lets_str_t s) {
+		ltrim(s);
+		return s;
+	}
+
+	lets_str_t rtrim_copy(lets_str_t s) {
+		rtrim(s);
+		return s;
+	}
+
+	lets_str_t trim_copy(lets_str_t s) {
+		trim(s);
+		return s;
 	}
 }

@@ -33,10 +33,22 @@ namespace NS_Tools{
 
 	inline bool fils_exists (const lets_str_t&);
 	lets_str_t get_path( const lets_str_t&);
-
 	lets_str_t splitpath( const lets_str_t&);
-
 	lets_str_t get_curr_dir();
+
+	// trim from start (in place)
+	void ltrim(lets_str_t &s);
+	// trim from end (in place)
+	void rtrim(lets_str_t &);
+	// trim from both ends (in place)
+	void trim(lets_str_t &);
+	// trim from start (copying)
+	lets_str_t ltrim_copy(lets_str_t);
+	// trim from end (copying)
+	lets_str_t rtrim_copy(lets_str_t);
+	// trim from both ends (copying)
+	lets_str_t trim_copy(lets_str_t);
+
 }
 
 

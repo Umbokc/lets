@@ -15,6 +15,7 @@
 #include "../include/l_functions.hpp"
 #include "../include/l_string_value.hpp"
 #include "../include/tools.hpp"
+#include "../include/utils/minifier.hpp"
 
 #define SHOW_LETS_ERROR_EXCEPTIONS(VAR, MESS) \
 	show_lets_error("Error", Lets::current_file_name, to_str(VAR->get_position_row()), to_str(VAR->get_position_col()), MESS)
@@ -25,6 +26,7 @@ Options Lets::options = Options();
 
 void Lets::init(int argc, const char** argv){
 	bool command_line_script = false;
+	bool minifier_mode = false;
 	if (argc == 1) {
 		try {
 			options.show_ast = false;
@@ -38,10 +40,11 @@ void Lets::init(int argc, const char** argv){
 				"  options:\n" +
 				"      -f, --file [input]  Run program file. Required.\n" +
 				"      -o N, --optimize N  Perform optimization with N passes\n" +
-				"      -a, --showast       Show AST of program\n" +
-				"      -e  'command'       One line of script\n" +
-				"      -t, --showtokens    Show lexical tokens\n" +
-				"      -m, --showtime      Show elapsed time of parsing and execution");
+				"      -m,  --minify        Minify source code\n" +
+				"      -e   'command'       One line of script\n" +
+				"      -a,  --showast       Show AST of program\n" +
+				"      -tn, --showtokens   Show lexical tokens\n" +
+				"      -t,  --showtime      Show elapsed time of parsing and execution");
 		}
 		return;
 	}
@@ -50,11 +53,11 @@ void Lets::init(int argc, const char** argv){
 	for (int i = 1; i < argc; i++) {
 		if(lets_str_t(argv[i]) == "-a" || lets_str_t(argv[i]) == "--showast"){
 			Lets::options.show_ast = true;
-		} else if(lets_str_t(argv[i]) == "-b" || lets_str_t(argv[i]) == "--beautify"){
-			// Lets::beautify_mode = true;
-		} else if(lets_str_t(argv[i]) == "-t" || lets_str_t(argv[i]) == "--showtokens"){
+		} else if(lets_str_t(argv[i]) == "-m" || lets_str_t(argv[i]) == "--minify"){
+			minifier_mode = true;
+		} else if(lets_str_t(argv[i]) == "-tn" || lets_str_t(argv[i]) == "--showtokens"){
 			Lets::options.show_tokens = true;
-		} else if(lets_str_t(argv[i]) == "-m" || lets_str_t(argv[i]) == "--showtime"){
+		} else if(lets_str_t(argv[i]) == "-t" || lets_str_t(argv[i]) == "--showtime"){
 			Lets::options.show_measurements = true;
 		} else if(lets_str_t(argv[i]) == "-o" || lets_str_t(argv[i]) == "--optimize"){
 			if (i + 1 < argc) {
@@ -88,6 +91,10 @@ void Lets::init(int argc, const char** argv){
 
 	if(!command_line_script)
 		Lets::init_vars_file(NS_Tools::get_path(Lets::current_file_name));
+	if(minifier_mode){
+		lets_output(Minifier::minify(input))
+		return;
+	}
 
 	Lets::run(input);
 }
