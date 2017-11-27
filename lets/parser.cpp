@@ -768,23 +768,23 @@ Expression* Parser::multiplicative(){
 Expression* Parser::unary(){
 
 	if (match(TT_PLUSPLUS)) {
-		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::INCREMENT_PREFIX, primary(true)))
+		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::INCREMENT_PREFIX, primary(true)))
 	}
 	if (match(TT_MINUSMINUS)) {
-		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::DECREMENT_PREFIX, primary(true)))
+		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::DECREMENT_PREFIX, primary(true)))
 	}
 
 	if(match(TT_MINUS)) {
-		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::NEGATE, primary(false)))
+		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::NEGATE, primary(false)))
 	}
 	if (match(TT_EXCL)) {
-		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::NOT, primary(false)))
+		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::NOT, primary(false)))
 	}
 	if (match(TT_KW_NOT)) {
-		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::NOT, expression()))
+		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::NOT, expression()))
 	}
 	if (match(TT_TILDE)) {
-		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::COMPLEMENT, primary(false)))
+		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::COMPLEMENT, primary(false)))
 	}
 	if(match(TT_PLUS)){
 		return primary(false);
@@ -832,10 +832,10 @@ Expression* Parser::variable(bool incr = false) {
 		if(!incr){
 			// postfix increment/decrement
 			if(match(TT_PLUSPLUS)){
-				NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::INCREMENT_POSTFIX, qualified_name_expr))
+				NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::INCREMENT_POSTFIX, qualified_name_expr))
 			}
 			if(match(TT_MINUSMINUS)){
-				NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (NS_Unary::Operator::DECREMENT_POSTFIX, qualified_name_expr))
+				NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::DECREMENT_POSTFIX, qualified_name_expr))
 			}
 		}
 		return qualified_name_expr;

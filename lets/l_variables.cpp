@@ -9,11 +9,13 @@
 #include <iostream>
 #include "../include/l_variables.h"
 #include "../include/ex_execute.h"
+#include "../include/l_bool_value.hpp"
+#include "../include/l_number_value.hpp"
 
 Variables::Scope *Variables::scope = new Variables::Scope();
 Variables::VARIABLE_MAP Variables::global_variables = {
-	{"false", new VariableContainer(NumberValue::ZERO, true)},
-	{"true", new VariableContainer(NumberValue::ONE, true)},
+	{"false", new VariableContainer(BoolValue::FALSE, true)},
+	{"true", new VariableContainer(BoolValue::TRUE, true)},
 };
 
 void Variables::push() {

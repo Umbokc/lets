@@ -5,10 +5,11 @@
 //  Created by Dragan Stepan on 03.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
-#include <iostream> // for dbg
+// #include <iostream> // for dbg
 #include "../include/e_conditional_expr.hpp"
 #include "../include/ex_execute.h"
 #include "../include/tools.hpp"
+#include "../include/l_bool_value.hpp"
 
 const lets_str_t ConditionalExpression::OperatorString[8] =  { "==", "!=", "<", "<=", ">", ">=", "&&", "||" };
 
@@ -25,9 +26,9 @@ Value* ConditionalExpression::eval(){
 	value1 = this->expr1->eval();
 
 	if(this->operation == ConditionalExpression::AND)
-		return new NumberValue((value1->as_bool()) ? this->expr2->eval()->as_bool() : false);
+		return new BoolValue((value1->as_bool()) ? this->expr2->eval()->as_bool() : false);
 	if(this->operation == ConditionalExpression::OR)
-		return new NumberValue((value1->as_bool()) ? true : this->expr2->eval()->as_bool());
+		return new BoolValue((value1->as_bool()) ? true : this->expr2->eval()->as_bool());
 
 	value2 = this->expr2->eval();
 
@@ -50,7 +51,7 @@ Value* ConditionalExpression::eval(){
 			throw ExecuteException("Operation is not supported");
 	}
 
-	return new NumberValue(result);
+	return new BoolValue(result);
 }
 
 lets_str_t ConditionalExpression::to_s(){

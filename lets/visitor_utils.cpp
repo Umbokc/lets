@@ -73,7 +73,7 @@ lets_vector_t<lets_str_t> VisitorUtils::operators() {
 	for (lets_str_t op : NS_Binary::OperatorString) {
 		operators.push_back(op);
 	}
-	for (lets_str_t op : NS_Unary::OperatorString) {
+	for (lets_str_t op : UnaryExpression::OperatorString) {
 		operators.push_back(op);
 	}
 	for (lets_str_t op : ConditionalExpression::OperatorString) {

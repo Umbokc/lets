@@ -10,7 +10,7 @@
 #include "../include/l_array_value.hpp"
 #include "../include/l_map_value.hpp"
 #include "../include/l_string_value.hpp"
-#include "../include/l_number_value.hpp"
+#include "../include/l_bool_value.hpp"
 
 InExpression::InExpression(lets_vector_t<Expression*> e, Expression* c):expressions(std::move(e)), container(std::move(c)){}
 
@@ -40,11 +40,14 @@ Value* InExpression::eval(){
 		}
 	}
 
-	return result ? NumberValue::ONE : NumberValue::ZERO;
+	return result ? BoolValue::TRUE : BoolValue::FALSE;
 }
 
 lets_str_t InExpression::to_s(){
-	return expressions.at(0)->to_s() + " in " + container->to_s();
+	if (expressions.size() == 2)
+		return expressions.at(0)->to_s() + ", " + expressions.at(1)->to_s() + " in " + container->to_s();
+	else
+		return expressions.at(0)->to_s() + " in " + container->to_s();
 }
 
 InExpression::~InExpression(){}

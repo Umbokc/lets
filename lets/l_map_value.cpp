@@ -9,6 +9,7 @@
 #include "../include/l_map_value.hpp"
 #include "../include/l_string_value.hpp"
 #include "../include/l_number_value.hpp"
+#include "../include/l_array_value.hpp"
 #include "../include/ex_execute.h"
 #include "../include/l_function_value.hpp"
 

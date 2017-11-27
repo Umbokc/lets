@@ -11,21 +11,28 @@
 
 #include "l_types.h"
 
+class BoolValue;
+class NumberValue;
+class StringValue;
+class ArrayValue;
+class MapValue;
+class FunctionValue;
+
 class Value {
 public:
-    
-    virtual bool as_bool() = 0;
-    virtual int as_int() = 0;
-    virtual double as_number() = 0;
-    virtual long as_long() = 0;
-    virtual lets_str_t as_string() = 0;
-    virtual lets_str_t to_s() = 0;
-    virtual int len() = 0;
-    virtual Types type() = 0;
-    virtual bool equals(Value*) = 0;
-    virtual int compareTo(Value *obj) = 0;
-    
-    //virtual ~Value();
+
+	virtual bool as_bool() = 0;
+	virtual int as_int() = 0;
+	virtual double as_number() = 0;
+	virtual long as_long() = 0;
+	virtual lets_str_t as_string() = 0;
+	virtual lets_str_t to_s() = 0;
+	virtual int len() = 0;
+	virtual Types type() = 0;
+	virtual bool equals(Value*) = 0;
+	virtual int compareTo(Value *obj) = 0;
+
+	//virtual ~Value();
 };
 
 #endif /* lib__value_h */

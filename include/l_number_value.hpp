@@ -1,13 +1,13 @@
 //
-//  l_number_value.hpp
+//  include/l_number_value.hpp
 //  lets
 //
 //  Created by Dragan Stepan on 30.10.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef lib__number_value_hpp
-#define lib__number_value_hpp
+#ifndef include__number_value_hpp
+#define include__number_value_hpp
 
 #include "l_value.h"
 #include "l_number.hpp"
@@ -42,4 +42,4 @@ public:
     ~NumberValue();
 };
 
-#endif /* lib__number_value_hpp */
+#endif /* include__number_value_hpp */

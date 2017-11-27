@@ -77,7 +77,7 @@ Node *ConstantFolding::visit(ConditionalExpression *s, bool t) {
 }
 
 Node *ConstantFolding::visit(UnaryExpression* s, bool t) {
-	if (overloaded_operators_contains(NS_Unary::OperatorString[s->operation])) {
+	if (overloaded_operators_contains(UnaryExpression::OperatorString[s->operation])) {
 		return OptimizationVisitor::visit(s, t);
 	}
 	if (dynamic_cast<ValueExpression*>(s->expr)) {

@@ -14,11 +14,21 @@
 #include "../include/l_variables.h"
 #include "../include/l_functions.hpp"
 #include "../include/l_string_value.hpp"
+#include "../include/l_number_value.hpp"
 #include "../include/tools.hpp"
 #include "../include/utils/minifier.hpp"
 
 #define SHOW_LETS_ERROR_EXCEPTIONS(VAR, MESS) \
 	show_lets_error("Error", Lets::current_file_name, to_str(VAR->get_position_row()), to_str(VAR->get_position_col()), MESS)
+#define LETS_BOOT_FUCS_PATTERN(STRING_NAME, NAME, BODY, TO_STRING) \
+	class NAME##LetsBootFuncs :  public Function{ \
+	public: \
+		NAME##LetsBootFuncs(){} \
+		~NAME##LetsBootFuncs(){} \
+		Value* execute(FUNCS_ARGS args) BODY \
+		lets_str_t to_s() TO_STRING \
+	}; \
+	Functions::set_lets_funcs(STRING_NAME, new NAME##LetsBootFuncs(), true);
 
 const lets_str_t Lets::VERSION = "0.0.1";
 lets_str_t Lets::current_file_name = "go.lets";
@@ -33,6 +43,7 @@ void Lets::init(int argc, const char** argv){
 			options.show_tokens = false;
 			options.show_measurements = false;
 			options.optimization_level = 0;
+			Lets::init_vars_file(NS_Tools::get_path(Lets::current_file_name));
 			Lets::run(f2s(Lets::current_file_name));
 		} catch (std::exception& e) {
 			lets_output("Lets version " + VERSION + "\n\n" +
@@ -172,23 +183,26 @@ Statement* Lets::parse(const lets_vector_t<Token>& tokens, bool stop = false){
 }
 
 void Lets::init_functions(){
-	class LetsBootFuncs :  public Function{
-	public:
-		LetsBootFuncs(){}
-		~LetsBootFuncs(){}
-		Value* execute(FUNCS_ARGS args){
-			if(args.size() >= 1)
-				std::cout << args[0]->as_string();
-			lets_str_t i;
-			getline(std::cin, i);
-			return new StringValue(i);
-		}
-		lets_str_t to_s(){
-			return "input()";
-		}
-	};
+	LETS_BOOT_FUCS_PATTERN("input", input, {
+		if(args.size() >= 1)
+			std::cout << args[0]->as_string();
+		lets_str_t i;
+		getline(std::cin, i);
+		return new StringValue(i);
+	},
+	{
+		return "input()";
+	})
 
-	Functions::set_lets_funcs("input", new LetsBootFuncs(), true);
+	LETS_BOOT_FUCS_PATTERN("system", system, {
+		if(args.size() != 1)
+			throw ExecuteException("Function system(arg*) one args expected");
+		system(args[0]->as_string().c_str());
+		return NumberValue::ONE;
+	},
+	{
+		return "system(arg*)";
+	})
 }
 
 void Lets::init_vars_file(lets_str_t path_file){

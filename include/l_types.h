@@ -13,6 +13,7 @@
 #include "main.h"
 
 enum Types {
+    T_BOOL,
     T_NUMBER,
     T_STRING,
     T_ARRAY,
@@ -28,6 +29,7 @@ enum Types {
 };
 
 const lets_str_t TypesString[] = {
+    "bool",
     "number",
     "string",
     "array",
