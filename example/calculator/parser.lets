@@ -6,21 +6,40 @@ $pos = 0
 $size = 0
 $EOF = {'type' : 'EOF'}
 
-def get(rel_pos):
-	position = $pos + rel_pos
-	if position >= $size
-		return $EOF
-	end
-	return $tokens[position]
+def parse(ts):
+	$tokens = ts
+	$pos = 0
+	$size = len($tokens)
+	return expression()
 end
 
-def match_t(type):
-	current = get(0)
-	if type != current.type
-		return false
+def expression():
+	return additive()
+end
+
+def additive():
+	result = multiplicative()
+	while(true):
+		if match_t('PLUS') result += multiplicative() continue end
+		if match_t('MINUS') result -= multiplicative() continue end
+		break
 	end
-	$pos++
-	return true
+	return result
+end
+
+def multiplicative():
+	result = unary()
+	while(true):
+		if match_t('STAR') result *= multiplicative() continue end
+		if match_t('SLASH') result /= multiplicative() continue end
+		break
+	end
+	return result
+end
+
+def unary():
+	if match_t('MINUS') return -1 * primary() end
+	return primary()
 end
 
 def primary():
@@ -41,38 +60,19 @@ def primary():
 	return false
 end
 
-def unary():
-	if match_t('MINUS') return -1 * primary() end
-	return primary()
-end
-
-def multiplicative():
-	result = unary()
-	while(true):
-		if match_t('STAR') result *= multiplicative() continue end
-		if match_t('SLASH') result /= multiplicative() continue end
-		break
+def match_t(type):
+	current = get(0)
+	if type != current.type
+		return false
 	end
-	return result
+	$pos++
+	return true
 end
 
-def additive():
-	result = multiplicative()
-	while(true):
-		if match_t('PLUS') result += multiplicative() continue end
-		if match_t('MINUS') result -= multiplicative() continue end
-		break
+def get(rel_pos):
+	position = $pos + rel_pos
+	if position >= $size
+		return $EOF
 	end
-	return result
-end
-
-def expression():
-	return additive()
-end
-
-def parse(ts):
-	$tokens = ts
-	$pos = 0
-	$size = len($tokens)
-	return expression()
+	return $tokens[position]
 end
