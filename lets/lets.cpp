@@ -203,20 +203,21 @@ void Lets::init_functions(){
 		lets_str_t i;
 		getline(std::cin, i);
 		return new StringValue(i);
-	},
-	{
-		return "input()";
-	})
+	}, { return "input()"; })
 
 	LETS_BOOT_FUCS_PATTERN("system", system, {
 		if(args.size() != 1)
 			throw ExecuteException("Function system(arg*) one args expected");
 		system(args[0]->as_string().c_str());
 		return NumberValue::ONE;
-	},
-	{
-		return "system(arg*)";
-	})
+	}, { return "system(arg*)"; })
+
+	LETS_BOOT_FUCS_PATTERN("exit", exit, {
+		if(args.size() > 1)
+			throw ExecuteException("Function exit(arg*) one args expected");
+		exit(args.size() == 1 ? args[0]->as_int() : 0);
+		return NumberValue::ONE;
+	}, { return "exit(arg*)"; })
 }
 
 void Lets::init_vars_file(lets_str_t path_file){

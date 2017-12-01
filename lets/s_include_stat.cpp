@@ -53,8 +53,12 @@ Value* IncludeStatement::eval(){
 		try{
 			program->execute();
 		} catch (ReturnStatement* &rs) {
+			Lets::current_file_name = parent_file;
+			Lets::init_vars_file(Lets::current_file_name);
 			return rs->get_result();
 		} catch (ExecuteException &ee) {
+			Lets::current_file_name = parent_file;
+			Lets::init_vars_file(Lets::current_file_name);
 			throw ExecuteException(ee.get_message(), ee.row, ee.col, file_path);
 		}
 
