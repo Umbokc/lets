@@ -16,17 +16,19 @@
 
 class TernaryExpression : virtual public Expression{
 public:
-    Expression *condition;
-    Expression *trueExpr, *falseExpr;
-    
-    
-    TernaryExpression(Expression*,Expression*,Expression*);
-    
-    Value* eval();    
+	Expression *condition;
+	Expression *trueExpr, *falseExpr;
 
-    lets_str_t to_s();
-    
-    ~TernaryExpression();
+
+	TernaryExpression(Expression*,Expression*,Expression*);
+
+	Value* eval();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~TernaryExpression();
 };
 
 #endif /* e_ternary_expr_hpp */

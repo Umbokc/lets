@@ -24,6 +24,8 @@ public:
 	void execute();
 	Value* eval();
 
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
 	Statement* load_program(const lets_str_t&);
 
 	lets_str_t to_s();

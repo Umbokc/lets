@@ -7,6 +7,7 @@
 //
 
 #include "../include/lexer.hpp"
+#include "../include/lets.hpp"
 
 #include "../include/ex_error.h"
 #include "../include/ex_lexer.h"
@@ -332,6 +333,18 @@ void Lexer::tokenize_operator() {
 void Lexer::tokenize_comment(){
 	next();
 	char current = peek(0);
+	if(current == '*' and peek(1) == '-' and peek(2) == '*'){
+		next(); next();
+		lets_str_t buf;
+		while (true) {
+			current = next();
+			if(current == '\r' or current == '\n' or current == '\0') return;
+			if(current == '*' and peek(1) == '-' and peek(2) == '*') break;
+			if(current == ' ') continue;
+			buf.push_back(current);
+		}
+		if(buf == "FunctionAdder") Lets::ModeFunctionAdder = true;
+	}
 	while (current != '\r' && current != '\n' && current != '\0') {
 		current = next();
 	}

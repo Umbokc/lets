@@ -28,7 +28,7 @@ public:
 	int optimizations_count();
 	lets_str_t summary_info();
 
-	Node *visit(VariableExpression*,THE_TYPE);
+	Node *visit(VariableExpression*, THE_TYPE&);
 	
 };
 

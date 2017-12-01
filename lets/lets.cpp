@@ -18,6 +18,26 @@
 #include "../include/tools.hpp"
 #include "../include/utils/minifier.hpp"
 
+#include "../include/visitors/function_adder.h"
+// #include "visitors/variables_print.h"
+// #include "visitors/assign_validator.h"
+
+#include "../include/optimization/optimizer.h"
+
+
+#define LETS_SHOW_HELP_MENU \
+	lets_output("Lets version " + VERSION + "\n\n" + \
+		"Usage: lets [options]\n" + \
+		"  options:\n" + \
+		"      -f, --file [input]  Run program file. Required.\n" + \
+		"      -o N, --optimize N  Perform optimization with N passes\n" + \
+		"      -m,  --minify        Minify source code\n" + \
+		"      -e   'command'       One line of script\n" + \
+		"      -a,  --showast       Show AST of program\n" + \
+		"      -tn, --showtokens    Show lexical tokens\n" + \
+		"      -t,  --showtime      Show elapsed time of parsing and execution"); \
+	exit(0);
+
 #define SHOW_LETS_ERROR_EXCEPTIONS(VAR, MESS) \
 	show_lets_error("Error", Lets::current_file_name, to_str(VAR->get_position_row()), to_str(VAR->get_position_col()), MESS)
 #define LETS_BOOT_FUCS_PATTERN(STRING_NAME, NAME, BODY, TO_STRING) \
@@ -30,9 +50,10 @@
 	}; \
 	Functions::set_lets_funcs(STRING_NAME, new NAME##LetsBootFuncs(), true);
 
-const lets_str_t Lets::VERSION = "0.0.1";
+const lets_str_t Lets::VERSION = "0.0.2";
 lets_str_t Lets::current_file_name = "go.lets";
 Options Lets::options = Options();
+bool Lets::ModeFunctionAdder = false;
 
 void Lets::init(int argc, const char** argv){
 	bool command_line_script = false;
@@ -46,23 +67,16 @@ void Lets::init(int argc, const char** argv){
 			Lets::init_vars_file(NS_Tools::get_path(Lets::current_file_name));
 			Lets::run(f2s(Lets::current_file_name));
 		} catch (std::exception& e) {
-			lets_output("Lets version " + VERSION + "\n\n" +
-				"Usage: lets [options]\n" +
-				"  options:\n" +
-				"      -f, --file [input]  Run program file. Required.\n" +
-				"      -o N, --optimize N  Perform optimization with N passes\n" +
-				"      -m,  --minify        Minify source code\n" +
-				"      -e   'command'       One line of script\n" +
-				"      -a,  --showast       Show AST of program\n" +
-				"      -tn, --showtokens   Show lexical tokens\n" +
-				"      -t,  --showtime      Show elapsed time of parsing and execution");
+			LETS_SHOW_HELP_MENU
 		}
 		return;
 	}
 
 	lets_str_t input = "";
 	for (int i = 1; i < argc; i++) {
-		if(lets_str_t(argv[i]) == "-a" || lets_str_t(argv[i]) == "--showast"){
+		if(lets_str_t(argv[i]) == "-h" || lets_str_t(argv[i]) == "--help"){
+			LETS_SHOW_HELP_MENU
+		} else if(lets_str_t(argv[i]) == "-a" || lets_str_t(argv[i]) == "--showast"){
 			Lets::options.show_ast = true;
 		} else if(lets_str_t(argv[i]) == "-m" || lets_str_t(argv[i]) == "--minify"){
 			minifier_mode = true;
@@ -128,16 +142,16 @@ void Lets::run(lets_str_t input){
 
 	if(Lets::options.optimization_level > 0){
 		measurement.start("Optimization time");
-		programm = Optimizer::optimize(parsed_program, 10, true);
+		programm = Optimizer::optimize(parsed_program, Lets::options.optimization_level, Lets::options.show_ast);
 		measurement.stop("Optimization time");
+		if(Lets::options.show_ast) lets_output(programm->to_s())
 	} else {
 		programm = parsed_program;
 	}
 
 	Lets::init_functions();
-	// programm->accept(programm, new FunctionAdder());
-	// programm->accept(programm, new VariablesPrint());
-	// programm->accept(programm, new AssignValidator());
+
+	if(Lets::ModeFunctionAdder) { programm->accept(new FunctionAdder()); Lets::ModeFunctionAdder = false;}
 
 	try{
 		measurement.start("Execute time");

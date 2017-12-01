@@ -16,12 +16,14 @@
 
 class ArrayExpression : public Expression{
 public:
-    lets_vector_t<Expression *> elements;
-    
-    ArrayExpression(lets_vector_t<Expression *> elements);
-    Value *eval();
-    lets_str_t to_s();
-    ~ArrayExpression();
+	lets_vector_t<Expression *> elements;
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	ArrayExpression(lets_vector_t<Expression *> elements);
+	Value *eval();
+	lets_str_t to_s();
+	~ArrayExpression();
 };
 
 

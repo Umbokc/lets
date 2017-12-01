@@ -16,17 +16,18 @@
 
 class DoWhileStatement : virtual public Statement{
 public:
-    Expression *condition;
-    Statement *statement;
-    
-    DoWhileStatement(Expression*,Statement*);
-    
-    void execute();
+	Expression *condition;
+	Statement *statement;
 
-    
-    lets_str_t to_s();
-    
-    ~DoWhileStatement();
+	DoWhileStatement(Expression*,Statement*);
+
+	void execute();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~DoWhileStatement();
 };
 
 #endif /* s_do_while_stat_hpp */

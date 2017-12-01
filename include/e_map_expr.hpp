@@ -17,15 +17,17 @@
 
 class MapExpression : virtual public Expression{
 public:
-    lets_map_t<Expression*, Expression*> elements;
-    
-    MapExpression(lets_map_t<Expression*, Expression*>);
-    
-    Value *eval();
-    
-    lets_str_t to_s();
-    
-    ~MapExpression();
+	lets_map_t<Expression*, Expression*> elements;
+
+	MapExpression(lets_map_t<Expression*, Expression*>);
+
+	Value *eval();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~MapExpression();
 };
 
 

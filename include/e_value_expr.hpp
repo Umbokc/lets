@@ -17,25 +17,26 @@
 
 class ValueExpression : virtual public Expression {
 public:
-    Value *value;
-    
-    ValueExpression();
-    
-    ValueExpression(int);
-    ValueExpression(double);
-    ValueExpression(long);
-    ValueExpression(Number);
-    
-    ValueExpression(lets_str_t);
-    ValueExpression(Function*);
-    ValueExpression(Value*);
-    
-    Value *eval();
+	Value *value;
 
-    
-    lets_str_t to_s();
-    
-    ~ValueExpression();
+	ValueExpression();
+
+	ValueExpression(int);
+	ValueExpression(double);
+	ValueExpression(long);
+	ValueExpression(Number);
+
+	ValueExpression(lets_str_t);
+	ValueExpression(Function*);
+	ValueExpression(Value*);
+
+	Value *eval();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~ValueExpression();
 };
 
 #endif /* ast__expr__value_expr_hpp */

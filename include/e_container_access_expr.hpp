@@ -18,32 +18,34 @@
 
 class ContainerAccessExpression : virtual public Expression, virtual public Accessible {
 private:
-    bool root_is_var;
+	bool root_is_var;
 public:
-    Expression* root;
-    lets_vector_t<Expression*> indices;
-    
-    ContainerAccessExpression();
-    ContainerAccessExpression(lets_str_t, lets_vector_t<Expression*>);
-    ContainerAccessExpression(Expression*, lets_vector_t<Expression*>);
-    
-    bool root_is_variable();
-    
-    Expression *get_root();
-    
-    Value *eval();
-    Value *get();
-    Value *set(Value* value);
-    
-    Value* get_container();
-    Value* last_index();
-    MapValue* consume_map(Value* value);
-    
-    lets_str_t to_s();
-    
-    ~ContainerAccessExpression();
+	Expression* root;
+	lets_vector_t<Expression*> indices;
+
+	ContainerAccessExpression();
+	ContainerAccessExpression(lets_str_t, lets_vector_t<Expression*>);
+	ContainerAccessExpression(Expression*, lets_vector_t<Expression*>);
+
+	bool root_is_variable();
+
+	Expression *get_root();
+
+	Value *eval();
+	Value *get();
+	Value *set(Value* value);
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	Value* get_container();
+	Value* last_index();
+	MapValue* consume_map(Value* value);
+
+	lets_str_t to_s();
+
+	~ContainerAccessExpression();
 private:
-    Value* index(int i);
+	Value* index(int i);
 };
 
 #endif /* e_container_access_expr_hpp */

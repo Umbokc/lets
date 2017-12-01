@@ -46,6 +46,7 @@ class ForStatement;
 class ForeachStatement;
 class FunctionDefineStatement;
 class IfStatement;
+class IncludeStatement;
 class MultiAssignmentStatement;
 class PrintStatement;
 class PutStatement;

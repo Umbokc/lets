@@ -17,17 +17,19 @@
 
 class ForeachStatement : virtual public Statement{
 public:
-    lets_str_t key, val;
-    Expression *container;
-    Statement *body;
-    
-    ForeachStatement(lets_str_t,lets_str_t,Expression*,Statement*);
-    
-    void execute();
-    
-    lets_str_t to_s();
-    
-    ~ForeachStatement();
+	lets_str_t key, val;
+	Expression *container;
+	Statement *body;
+
+	ForeachStatement(lets_str_t,lets_str_t,Expression*,Statement*);
+
+	void execute();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~ForeachStatement();
 };
 
 

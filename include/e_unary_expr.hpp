@@ -35,11 +35,13 @@ public:
 	Expression *expr;
 	
 	UnaryExpression(Operator,Expression*);
-	
+
 	void execute();
-	
+
 	Value *eval();
-	
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
 	Value *UE_increment(Value*);
 	Value *UE_decrement(Value*);
 	Value *UE_complement(Value*);

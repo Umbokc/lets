@@ -16,17 +16,19 @@
 
 class ExprStatement : virtual public Expression, virtual public Statement{
 public:
-    Expression *expr;
-    
-    ExprStatement(Expression*);
-    
-    void execute();
-    
-    Value *eval();
-    
-    lets_str_t to_s();
-    
-    ~ExprStatement();
+	Expression *expr;
+
+	ExprStatement(Expression*);
+
+	void execute();
+
+	Value *eval();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~ExprStatement();
 };
 
 #endif /* s_expr_stat_hpp */

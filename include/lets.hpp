@@ -22,12 +22,6 @@
 #include "ex_parse.h"
 #include "ex_execute.h"
 
-// #include "visitors/function_adder.h"
-// #include "visitors/variables_print.h"
-// #include "visitors/assign_validator.h"
-
-#include "optimization/optimizer.h"
-
 #define show_tokens(ts)  
 #define show_lets_error(HEAD, FILE_NAME, ROW, COL, MESS) \
 	lets_output("" << (HEAD == "" ? "Error" : HEAD) << ":\n" << FILE_NAME << ":[" << ROW << ":" << COL << "]: " << MESS) \
@@ -55,6 +49,8 @@ private:
 public:
 	static lets_str_t current_file_name;
 	static const lets_str_t VERSION;
+	static bool ModeFunctionAdder;
+
 	static void init(int, const char**);
 	static void run(lets_str_t);
 	static lets_vector_t<Token> tokenize(const lets_str_t&, bool);

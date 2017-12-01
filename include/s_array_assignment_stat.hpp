@@ -16,16 +16,18 @@
 
 class ArrayAssignmentStatement : virtual public Statement{
 public:
-    Expression *expression;
-    ArrayAccessExpression *array;
-    
-    ArrayAssignmentStatement(ArrayAccessExpression *, Expression *);
-    
-    void execute();
-    
-    lets_str_t to_s();
-    
-    ~ArrayAssignmentStatement();
+	Expression *expression;
+	ArrayAccessExpression *array;
+
+	ArrayAssignmentStatement(ArrayAccessExpression *, Expression *);
+
+	void execute();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~ArrayAssignmentStatement();
 };
 
 #endif /* s_array_assignment_stat_hpp */

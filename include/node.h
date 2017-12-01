@@ -9,9 +9,19 @@
 #ifndef node_h
 #define node_h
 
-// #include <iostream> #include "main.h" // for dbg() 
+#include <iostream> #include "main.h" // for dbg() 
+#include "declaration.h"
 #include "visitors/visitor.h"
 #include "visitors/result_visitor.h"
+
+#define LETS_VISITORS_FUCTION_ACCEPT_MACROS() \
+	void accept(Visitor* v){ \
+		v->visit(this); \
+	} \
+	template <class R, class T> \
+	R accept(ResultVisitor<R, T> *visitor, T& t){ \
+		return visitor->visit(this, t); \
+	}
 
 class Node {
 protected:
@@ -26,14 +36,11 @@ public:
 	const size_t get_position_row() const { return __node__row;}
 	const size_t get_position_col() const { return __node__col;}
 
-	template <class C>
-	void accept(C s, Visitor* v){
-		v->visit(s);
-	}
+	virtual void accept(Visitor*) = 0;
 
-	template <class C, class R, class T>
-	R accept(C s, ResultVisitor<R, T> *visitor, T t){
-		return visitor->visit(s, t);
+	template <class R, class T>
+	R accept(ResultVisitor<R, T> *visitor, T& t){
+		return visitor->visit(this, t);
 	}
 
 	virtual ~Node() {}

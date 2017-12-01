@@ -27,10 +27,10 @@ public:
 	int optimizations_count();
 	lets_str_t summary_info();
 
-	Node *visit(BinaryExpression*, bool);
-	Node *visit(ConditionalExpression*, bool);
-	Node *visit(UnaryExpression*, bool);
-	Node *visit(FunctionDefineStatement*, bool);
+	Node *visit(BinaryExpression*, bool&);
+	Node *visit(ConditionalExpression*, bool&);
+	Node *visit(UnaryExpression*, bool&);
+	Node *visit(FunctionDefineStatement*, bool&);
 
 private:
 

@@ -16,13 +16,16 @@
 
 class InExpression : virtual public Expression{
 public:
-    lets_vector_t<Expression*> expressions;
-    Expression *container;
-    
-    InExpression(lets_vector_t<Expression*>, Expression*);
-    Value* eval();
-    lets_str_t to_s();
-    ~InExpression();
+	lets_vector_t<Expression*> expressions;
+	Expression *container;
+
+	InExpression(lets_vector_t<Expression*>, Expression*);
+	Value* eval();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+	~InExpression();
 };
 
 #endif /* include__e_in_expr_hpp */

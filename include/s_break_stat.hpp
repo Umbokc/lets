@@ -15,14 +15,16 @@
 
 class BreakStatement : virtual public Statement{
 public:
-    
-    BreakStatement();
-    
-    void execute();
-    
-    lets_str_t to_s();
-    
-    ~BreakStatement();
+
+	BreakStatement();
+
+	void execute();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~BreakStatement();
 };
 
 #endif /* s_break_stat_hpp */

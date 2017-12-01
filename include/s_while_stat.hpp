@@ -16,16 +16,18 @@
 
 class WhileStatement : virtual public Statement{
 public:
-    Expression *condition;
-    Statement *statement;
-    
-    WhileStatement(Expression *, Statement *);
-    
-    void execute();
-    
-    lets_str_t to_s();
-    
-    ~WhileStatement();
+	Expression *condition;
+	Statement *statement;
+
+	WhileStatement(Expression *, Statement *);
+
+	void execute();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~WhileStatement();
 };
 
 

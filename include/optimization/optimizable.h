@@ -22,4 +22,3 @@ public:
 };
 
 #endif /* optimization__optimizable_h */
-

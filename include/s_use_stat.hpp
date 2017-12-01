@@ -17,17 +17,19 @@
 class UseStatement : virtual public Statement{
 public:
 
-    Expression *expression;
-    Expression *elements;
-    
-    UseStatement(Expression*);
-    UseStatement(Expression*, Expression*);
-    
-    void execute();
-    
-    lets_str_t to_s();
-    
-    ~UseStatement();
+	Expression *expression;
+	Expression *elements;
+
+	UseStatement(Expression*);
+	UseStatement(Expression*, Expression*);
+
+	void execute();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~UseStatement();
 };
 
 #endif /* s_use_stat_hpp */

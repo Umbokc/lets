@@ -20,9 +20,9 @@ Statement* Optimizer::optimize(Statement *statement, int level, bool show_summar
 	lets_vector_t<Optimizable*> all_opt = {
 		new ConstantFolding(),
 		new ConstantPropagation(),
-			// new DeadCodeElimination(),
-			// new ExpressionSimplification(),
-			// new InstructionCombining()
+		// new DeadCodeElimination(),
+		// new ExpressionSimplification(),
+		// new InstructionCombining()
 	};
 
 	Optimizable* optimization = new SummaryOptimization(all_opt);

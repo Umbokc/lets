@@ -34,10 +34,15 @@ void MultiAssignmentStatement::execute(){
 }
 
 lets_str_t MultiAssignmentStatement::to_s(){
+	lets_str_t tgs = "";
+	for (int i = 0; i < this->targets.size(); ++i) {
+		tgs += this->targets[i]->to_s();
+		if(i < this->targets.size()-1) tgs += ", ";
+	}
 	return NS_Tools::string_format(
-		"[%s = %s]",
-		(NS_Tools::vector_to_s<Accessible*>(targets, ", ")).c_str(),
-		expression->to_s().c_str()
+		"%s = %s",
+		tgs.c_str(),
+		this->expression->to_s().c_str()
 	);
 }
 

@@ -6,6 +6,7 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
+// #include <iostream> // for dbg
 #include "../include/optimization/methods/constant_folding.hpp"
 #include "../include/visitors/visitor_utils.h"
 #include "../include/ex_operation_is_not_supported.h"
@@ -15,7 +16,8 @@ lets_vector_t<lets_str_t> ConstantFolding::OPERATORS = VisitorUtils::operators()
 ConstantFolding::ConstantFolding() {}
 
 Node *ConstantFolding::optimize(Node *node) {
-	return node->accept(node, this, false);
+	bool tmp = false;
+	return node->accept(this, tmp);
 }
 
 int ConstantFolding::optimizations_count() {
@@ -45,7 +47,7 @@ lets_str_t ConstantFolding::summary_info() {
 	return sb;
 }
 
-Node *ConstantFolding::visit(BinaryExpression *s, bool t) {
+Node *ConstantFolding::visit(BinaryExpression *s, bool& t) {
 	if (overloaded_operators_contains(NS_Binary::OperatorString[s->operation])) {
 		return OptimizationVisitor::visit(s, t);
 	}
@@ -61,7 +63,7 @@ Node *ConstantFolding::visit(BinaryExpression *s, bool t) {
 	return OptimizationVisitor::visit(s, t);
 }
 
-Node *ConstantFolding::visit(ConditionalExpression *s, bool t) {
+Node *ConstantFolding::visit(ConditionalExpression *s, bool& t) {
 	if (overloaded_operators_contains(ConditionalExpression::OperatorString[s->operation])) {
 		return OptimizationVisitor::visit(s, t);
 	}
@@ -76,7 +78,7 @@ Node *ConstantFolding::visit(ConditionalExpression *s, bool t) {
 	return OptimizationVisitor::visit(s, t);
 }
 
-Node *ConstantFolding::visit(UnaryExpression* s, bool t) {
+Node *ConstantFolding::visit(UnaryExpression* s, bool& t) {
 	if (overloaded_operators_contains(UnaryExpression::OperatorString[s->operation])) {
 		return OptimizationVisitor::visit(s, t);
 	}
@@ -91,7 +93,7 @@ Node *ConstantFolding::visit(UnaryExpression* s, bool t) {
 	return OptimizationVisitor::visit(s, t);
 }
 
-Node *ConstantFolding::visit(FunctionDefineStatement *s, bool t) {
+Node *ConstantFolding::visit(FunctionDefineStatement *s, bool& t) {
 	if (operators_contains(s->name)) {
 		overloaded_operators.push_back(s->name);
 	}

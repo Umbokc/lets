@@ -14,7 +14,7 @@
 class FunctionAdder : virtual public AbstractVisitor{
 public:
 	void visit(FunctionDefineStatement *s){
-		s->body->accept(s->body, this);
+		s->body->accept(this);
 		s->execute();
 	}
 };

@@ -20,15 +20,17 @@
 
 class AssignmentExpression : virtual public Expression, virtual public Statement{
 public:
-    NS_Binary::Operator operation;
-    Accessible *target;
-    Expression *expression;
-    
-    AssignmentExpression(NS_Binary::Operator, Accessible*, Expression*);
-    void execute();
-    Value* eval();
-    lets_str_t to_s();
-    ~AssignmentExpression();
+	NS_Binary::Operator operation;
+	Accessible *target;
+	Expression *expression;
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	AssignmentExpression(NS_Binary::Operator, Accessible*, Expression*);
+	void execute();
+	Value* eval();
+	lets_str_t to_s();
+	~AssignmentExpression();
 };
 
 #endif /* ast__expr__assignment_expr_hpp */

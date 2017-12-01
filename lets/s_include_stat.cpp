@@ -14,6 +14,8 @@
 #include "../include/s_return_stat.hpp"
 #include "../include/tools.hpp"
 
+#include "../include/visitors/function_adder.h"
+
 IncludeStatement::IncludeStatement(Expression *expression): expression(std::move(expression)){}
 
 void IncludeStatement::execute(){
@@ -45,6 +47,8 @@ Value* IncludeStatement::eval(){
 		lets_str_t parent_file = Variables::get("__file__")->to_s();
 		Lets::current_file_name = file_path;
 		Lets::init_vars_file(Lets::current_file_name);
+
+		if(Lets::ModeFunctionAdder) { program->accept(new FunctionAdder()); Lets::ModeFunctionAdder = false;}
 
 		try{
 			program->execute();

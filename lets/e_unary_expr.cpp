@@ -130,7 +130,7 @@ Value *UnaryExpression::UE_not(Value *value){
 
 lets_str_t UnaryExpression::to_s(){
 	return NS_Tools::string_format(
-		"[%s %s]",
+		"%s%s",
 		OperatorString[operation].c_str(),
 		expr->to_s().c_str()
 	);

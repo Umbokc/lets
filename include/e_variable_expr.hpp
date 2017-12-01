@@ -17,18 +17,20 @@
 
 class VariableExpression : virtual public Expression, virtual public Accessible{
 public:
-    
-    mutable lets_str_t name;
-    
-    VariableExpression(lets_str_t);
-    
-    Value* eval();
-    Value* get();
-    Value* set(Value*);
-    
-    lets_str_t to_s();
-    
-    ~VariableExpression();
+
+	mutable lets_str_t name;
+
+	VariableExpression(lets_str_t);
+
+	Value* eval();
+	Value* get();
+	Value* set(Value*);
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~VariableExpression();
 };
 
 #endif /* e_variable_expr_hpp */

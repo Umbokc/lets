@@ -14,19 +14,20 @@
 #include "main.h"
 #include "statement.h"
 
-
 class BlockStatement : virtual public Statement {
 public:
-    
-    lets_vector_t<Statement*> statements;
-    
-    BlockStatement();
-    
-    void add(Statement*);
-    
-    void execute();
-    
-    lets_str_t to_s();
+
+	lets_vector_t<Statement*> statements;
+
+	BlockStatement();
+
+	void add(Statement*);
+
+	void execute();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
 };
 
 

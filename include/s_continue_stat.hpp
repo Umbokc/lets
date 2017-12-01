@@ -15,14 +15,16 @@
 
 class ContinueStatement : virtual public Statement{
 public:
-    
-    ContinueStatement();
-    
-    void execute();
-    
-    lets_str_t to_s();
-    
-    ~ContinueStatement();
+
+	ContinueStatement();
+
+	void execute();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~ContinueStatement();
 };
 
 #endif /* s_continue_stat_h */

@@ -20,6 +20,7 @@ public:
 	virtual void visit(ConditionalExpression*) = 0;
 	virtual void visit(ContainerAccessExpression*) = 0;
 	virtual void visit(FunctionalExpression*) = 0;
+	virtual void visit(InExpression*) = 0;
 	virtual void visit(MapExpression*) = 0;
 	virtual void visit(MatchExpression*) = 0;
 	virtual void visit(TernaryExpression*) = 0;
@@ -37,17 +38,13 @@ public:
 	virtual void visit(ForeachStatement*) = 0;
 	virtual void visit(FunctionDefineStatement*) = 0;
 	virtual void visit(IfStatement*) = 0;
+	virtual void visit(IncludeStatement*) = 0;
 	virtual void visit(MultiAssignmentStatement*) = 0;
 	virtual void visit(PrintStatement*) = 0;
 	virtual void visit(PutStatement*) = 0;
 	virtual void visit(ReturnStatement*) = 0;
 	virtual void visit(UseStatement*) = 0;
 	virtual void visit(WhileStatement*) = 0;
-
-	virtual void visit(Node*) = 0;
-	virtual void visit(Statement*) = 0;
-	virtual void visit(Expression*) = 0;
-
 };
 
 #endif /* visitors__visitor_h */

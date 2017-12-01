@@ -16,18 +16,20 @@
 
 class ReturnStatement : virtual public Statement{
 public:
-    Value *result;
-    Expression *expression;
-    
-    ReturnStatement(Expression *);
-    
-    Value *get_result();
-    
-    void execute();
-    
-    lets_str_t to_s();
-    
-    ~ReturnStatement();
+	Value *result;
+	Expression *expression;
+
+	ReturnStatement(Expression *);
+
+	Value *get_result();
+
+	void execute();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~ReturnStatement();
 };
 
 

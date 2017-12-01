@@ -16,15 +16,17 @@
 
 class PutStatement : virtual public Statement{
 public:
-    Expression *expression;
-    
-    PutStatement(Expression *);
-    
-    void execute();
-    
-    lets_str_t to_s();
-    
-    ~PutStatement();
+	Expression *expression;
+
+	PutStatement(Expression *);
+
+	void execute();
+
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
+	lets_str_t to_s();
+
+	~PutStatement();
 };
 
 

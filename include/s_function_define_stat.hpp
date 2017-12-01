@@ -24,6 +24,8 @@ public:
 
 	void execute();
 
+	LETS_VISITORS_FUCTION_ACCEPT_MACROS()
+
 	lets_str_t to_s();
 
 	~FunctionDefineStatement();
