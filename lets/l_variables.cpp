@@ -12,6 +12,10 @@
 #include "../include/l_bool_value.hpp"
 #include "../include/l_number_value.hpp"
 
+#define Lets__FIRST_CHAR_GLOB_VAR '@'
+#define Lets__FIRST_CHAR_CONST_VAR '_'
+#define Lets__FIRST_CHARS_CONST_GLOB_VAR "__"
+
 Variables::Scope *Variables::scope = new Variables::Scope();
 Variables::VARIABLE_MAP Variables::global_variables = {
 	{"false", new VariableContainer(BoolValue::FALSE, true)},
@@ -48,15 +52,15 @@ bool Variables::is_constexpr(lets_str_t key){
 }
 
 bool Variables::is_global_to_set(lets_str_t key){
-	return (key[0] == '$');
+	return (key[0] == Lets__FIRST_CHAR_GLOB_VAR);
 }
 
 bool Variables::is_const_to_set(lets_str_t key){
-	return (key[0] == '_');
+	return (key[0] == Lets__FIRST_CHAR_CONST_VAR);
 }
 
 bool Variables::is_global_const_to_set(lets_str_t key){
-	return (key[0] == '_' && key[1] == '_');
+	return (key[0] == Lets__FIRST_CHARS_CONST_GLOB_VAR[0] && key[1] == Lets__FIRST_CHARS_CONST_GLOB_VAR[1]);
 }
 
 Value* Variables::get(lets_str_t key){
