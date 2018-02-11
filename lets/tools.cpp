@@ -6,7 +6,6 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#include <sstream>
 #include <errno.h>
 #include <unistd.h>
 #include <sys/stat.h>
@@ -18,22 +17,22 @@
 namespace NS_Tools {
 
 	lets_str_t string_format(const lets_str_t fmt, ...) {
-		int size = ((int)fmt.size()) * 2 + 50;		// Use a rubric appropriate for your code
+		int size = ((int)fmt.size()) * 2 + 50;    // Use a rubric appropriate for your code
 		lets_str_t str;
 		va_list ap;
-		while (1) {		// Maximum two passes on a POSIX system...
+		while (1) {   // Maximum two passes on a POSIX system...
 			str.resize(size);
 			va_start(ap, fmt);
 			int n = vsnprintf((char *)str.data(), size, fmt.c_str(), ap);
 			va_end(ap);
-			if (n > -1 && n < size) {		// Everything worked
+			if (n > -1 && n < size) {   // Everything worked
 				str.resize(n);
 				return str;
 			}
-			if (n > -1)		// Needed size returned
-				size = n + 1;		// For null char
+			if (n > -1)   // Needed size returned
+				size = n + 1;   // For null char
 			else
-				size *= 2;		// Guess at a larger size (OS specific)
+				size *= 2;    // Guess at a larger size (OS specific)
 		}
 		return str;
 	}
@@ -91,32 +90,32 @@ namespace NS_Tools {
 	}
 
 	lets_str_t get_curr_dir(){
-    char temp [ PATH_MAX ];
+		char temp [ PATH_MAX ];
 
-    if ( getcwd(temp, PATH_MAX) != 0) 
-        return lets_str_t ( temp );
+		if ( getcwd(temp, PATH_MAX) != 0) 
+			return lets_str_t ( temp );
 
-    int error = errno;
+		int error = errno;
 
-    switch ( error ) {
-        // EINVAL can't happen - size argument > 0
+		switch ( error ) {
+				// EINVAL can't happen - size argument > 0
 
-        // PATH_MAX includes the terminating nul, 
-        // so ERANGE should not be returned
+				// PATH_MAX includes the terminating nul, 
+				// so ERANGE should not be returned
 
-        case EACCES:
-            throw std::runtime_error("Access denied");
+			case EACCES:
+			throw std::runtime_error("Access denied");
 
-        case ENOMEM:
-            // I'm not sure whether this can happen or not 
-            throw std::runtime_error("Insufficient storage");
+			case ENOMEM:
+						// I'm not sure whether this can happen or not 
+			throw std::runtime_error("Insufficient storage");
 
-        default: {
-            std::ostringstream str;
-            str << "Unrecognised error" << error;
-            throw std::runtime_error(str.str());
-        }
-    }
+			default: {
+				std::ostringstream str;
+				str << "Unrecognised error" << error;
+				throw std::runtime_error(str.str());
+			}
+		}
 	}
 
 	void ltrim(lets_str_t &s) {

@@ -7,6 +7,7 @@
 //
 
 #include "../../include/utils/time_measurement.hpp"
+#include "../../include/tools.hpp"
 
 void TimeMeasurement::clear() {
 	finished.clear();
@@ -49,11 +50,11 @@ lets_str_t TimeMeasurement::summary(lets_str_t unit_name, bool show_summary) {
 		double converted_time = convert(unit_name, it->second);
 		summary_time += converted_time;
 
-		result += (it->first + ": " + std::to_string(converted_time) + " " + unit_name + "\n");
+		result += (it->first + ": " + NS_Tools::convert_to_string(converted_time) + " " + unit_name + "\n");
 	}
 
 	if (show_summary) {
-		result += ("Summary: " + std::to_string(summary_time) + " " + unit_name + "\n");
+		result += ("Summary: " + NS_Tools::convert_to_string(summary_time) + " " + unit_name + "\n");
 	}
 
 	return result;

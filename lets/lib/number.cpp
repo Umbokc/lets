@@ -7,6 +7,7 @@
 //
 
 #include <iostream>
+#include <typeinfo>
 #include "../../include/lib/number.hpp"
 
 Number::Number(){}

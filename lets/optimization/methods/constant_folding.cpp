@@ -7,6 +7,7 @@
 //
 
 // #include <iostream> // for dbg
+#include <algorithm>
 #include "../../../include/optimization/methods/constant_folding.hpp"
 #include "../../../include/visitors/visitor_utils.hpp"
 #include "../../../include/exception/operation_is_not_supported.h"
@@ -101,8 +102,8 @@ Node *ConstantFolding::visit(FunctionDefineStatement *s, bool& t) {
 }
 
 bool ConstantFolding::operators_contains(lets_str_t val) {
-	return find(OPERATORS.begin(), OPERATORS.end(), val) != OPERATORS.end();
+	return std::find(OPERATORS.begin(), OPERATORS.end(), val) != OPERATORS.end();
 }
 bool ConstantFolding::overloaded_operators_contains(lets_str_t val) {
-	return find(overloaded_operators.begin(), overloaded_operators.end(), val) != overloaded_operators.end();
+	return std::find(overloaded_operators.begin(), overloaded_operators.end(), val) != overloaded_operators.end();
 }
