@@ -1,5 +1,8 @@
 /bin/*
 *.o
+*/*.o
+*/*/*.o
+*/*/*/*.o
 
 files-for-compile
 ucpp
