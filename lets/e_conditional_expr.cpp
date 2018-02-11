@@ -7,9 +7,9 @@
 //
 // #include <iostream> // for dbg
 #include "../include/e_conditional_expr.hpp"
-#include "../include/ex_execute.h"
+#include "../include/exception/execute.h"
 #include "../include/tools.hpp"
-#include "../include/l_bool_value.hpp"
+#include "../include/lib/bool_value.hpp"
 
 const lets_str_t ConditionalExpression::OperatorString[8] =  { "==", "!=", "<", "<=", ">", ">=", "&&", "||" };
 
@@ -35,6 +35,9 @@ Value* ConditionalExpression::eval(){
 	if(value1->type() == Types::T_STRING){
 		number1 = int(value1->as_string() != value2->as_string());
 		number2 = 0;
+	// } else if(value2->type() == Types::T_STRING){
+		// number1 = 0;
+		// number2 = int(value2->as_string() != value1->as_string());
 	} else {
 		number1 = value1->as_number();
 		number2 = value2->as_number();

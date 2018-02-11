@@ -1,13 +1,13 @@
 //
-//  main.h
+//  include/main.h
 //  lets
 //
 //  Created by Dragan Stepan on 29.10.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef main_h
-#define main_h
+#ifndef include/main_h
+#define include/main_h
 
 #define lets_vector_t std::vector
 #define lets_map_t std::map
@@ -26,4 +26,4 @@
 
 //#define dbg(s, b) std::cout << "debug: " << s << std::endl; if (b) exit(0);
 
-#endif /* main_h */
+#endif /* include/main_h */

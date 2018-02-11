@@ -1,13 +1,13 @@
 //
-//  tools.hpp
+//  include/tools.hpp
 //  lets
 //
 //  Created by Dragan Stepan on 30.10.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef tools_hpp
-#define tools_hpp
+#ifndef include__tools_hpp
+#define include__tools_hpp
 
 #include <string>
 #include <vector>
@@ -15,9 +15,9 @@
 
 namespace NS_Tools{
 	lets_str_t string_format(const lets_str_t fmt, ...);
-	
+
 	lets_str_t vector_s_to_s(const lets_vector_t<lets_str_t> elems, lets_str_t separator);
-	
+
 	template<typename T> lets_str_t vector_to_s(const lets_vector_t<T> elems, lets_str_t separator) {
 		lets_str_t result = "";
 		int size = (int)elems.size();
@@ -52,4 +52,4 @@ namespace NS_Tools{
 }
 
 
-#endif /* tools_hpp */
+#endif /* include__tools_hpp */

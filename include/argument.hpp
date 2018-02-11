@@ -1,13 +1,13 @@
 //
-//  argument.hpp
+//  include/argument.hpp
 //  lets
 //
 //  Created by Dragan Stepan on 30.10.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef ast__argument_hpp
-#define ast__argument_hpp
+#ifndef include__argument_hpp
+#define include__argument_hpp
 
 #include <string>
 #include "main.h"
@@ -32,4 +32,4 @@ public:
     
 };
 
-#endif /* ast__argument_hpp */
+#endif /* include__argument_hpp */

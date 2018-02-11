@@ -1,15 +1,15 @@
 use ['len'] in 'std'
 use ['to_i'] in 'type'
 
-$tokens = []
-$pos = 0
-$size = 0
-$EOF = {'type' : 'EOF'}
+@tokens = []
+@pos = 0
+@size = 0
+@EOF = {'type' : 'EOF'}
 
 def parse(ts):
-	$tokens = ts
-	$pos = 0
-	$size = len($tokens)
+	@tokens = ts
+	@pos = 0
+	@size = len(@tokens)
 	return expression()
 end
 
@@ -65,14 +65,14 @@ def match_t(type):
 	if type != current.type
 		return false
 	end
-	$pos++
+	@pos++
 	return true
 end
 
 def get(rel_pos):
-	position = $pos + rel_pos
-	if position >= $size
-		return $EOF
+	position = @pos + rel_pos
+	if position >= @size
+		return @EOF
 	end
-	return $tokens[position]
+	return @tokens[position]
 end

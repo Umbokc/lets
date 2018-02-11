@@ -1,7 +1,7 @@
 use 'std'
 # mode '0x666'
 
-$operations = {
+@operations = {
 	"+" : def(a b) <- a + b
 	"-" : def(a b) <- a - b
 	"*" : def(a b) <- a * b
@@ -16,11 +16,11 @@ $operations = {
 
 def call_operations(ops a b):
 	def print_op(a, b, op):
-		echo(a, ' ', op, ' ', b, ' = ', $operations[op](a b))
+		echo(a, ' ', op, ' ', b, ' = ', @operations[op](a b))
 	end
 
 	if '' in ops
-		for key, operation in $operations:
+		for key, operation in @operations:
 			print_op(a, b, key)
 		end
 	else
@@ -69,7 +69,7 @@ def map():
 		'k2': 2
 	}
 
-	print map + 2	
+	print map + 2
 end
 
 def bitwise():

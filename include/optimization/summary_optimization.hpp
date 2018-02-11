@@ -1,13 +1,13 @@
 //
-//  optimization/summary_optimization.hpp
+//  include/optimization/summary_optimization.hpp
 //  lets
 //
 //  Created by Dragan Stepan on 05.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef optimization__summary_optimization_hpp
-#define optimization__summary_optimization_hpp
+#ifndef include__optimization__summary_optimization_hpp
+#define include__optimization__summary_optimization_hpp
 
 #include <vector>
 #include <string>
@@ -30,5 +30,5 @@ public:
 	~SummaryOptimization();
 };
 
-#endif /* optimization__summary_optimization_hpp */
+#endif /* include__optimization__summary_optimization_hpp */
 

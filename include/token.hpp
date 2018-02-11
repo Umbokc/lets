@@ -1,13 +1,13 @@
 //
-//  token.hpp
+//  include/token.hpp
 //  lets
 //
 //  Created by Dragan Stepan on 30.10.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef token_hpp
-#define token_hpp
+#ifndef include__token_hpp
+#define include__token_hpp
 
 #include <string>
 #include "main.h"
@@ -41,4 +41,4 @@ public:
 	~Token();
 };
 
-#endif /* token_hpp */
+#endif /* include__token_hpp */

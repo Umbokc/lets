@@ -1,19 +1,19 @@
 //
-//  visitors/optimization_visitor.h
+//  include/visitors/optimization_visitor.h
 //  lets
 //
 //  Created by Dragan Stepan on 05.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef visitors__optimization_visitor_h
-#define visitors__optimization_visitor_h
+#ifndef include__visitors__optimization_visitor_h
+#define include__visitors__optimization_visitor_h
 
-#include <iostream> // for dbg
+// #include <iostream> // for dbg
 #include "result_visitor.h"
-#include "visitor_utils.h"
+#include "visitor_utils.hpp"
 #include "../include_ast.h"
-#include "../l_user_define_function.hpp"
+#include "../lib/user_define_function.hpp"
 
 #define LETS_CALL_VISIT_ACCEPT_IF_IT_IS_STAT_OR_EXPR(NAME, PARENT) \
 	if(NAME* it = dynamic_cast<NAME*>(s)) return this->visit(it, t);
@@ -108,7 +108,7 @@ public:
 	}
 
 	virtual Node *visit(FunctionalExpression *s, T& t) {
-		
+
 		Node *function_expr = s->function_expr->accept(this, t);
 		FunctionalExpression *result = new FunctionalExpression(dynamic_cast<Expression*>(function_expr));
 		bool changed = function_expr != s->function_expr;
@@ -432,7 +432,7 @@ public:
 	// }
 
 	UserDefineFunction *visit_f(UserDefineFunction *s, T& t){
-		
+
 		Arguments newArgs = Arguments();
 		bool changed = visit_t(s->args, newArgs, t);
 		Node *body = s->body->accept(this, t);
@@ -508,5 +508,5 @@ private:
 	}
 };
 
-#endif /* visitors__optimization_visitor_h */
+#endif /* include__visitors__optimization_visitor_h */
 

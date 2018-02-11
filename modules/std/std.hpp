@@ -12,8 +12,8 @@
 #include <string>
 #include <vector>
 #include "../../include/main.h"
-#include "../../include/l_function.h"
-#include "../../include/l_array_value.hpp"
+#include "../../include/lib/function.h"
+#include "../../include/lib/array_value.hpp"
 
 #include "../module.h"
 

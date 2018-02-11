@@ -1,13 +1,13 @@
 //
-//  parser.hpp
+//  include/parser.hpp
 //  lets
 //
 //  Created by Dragan Stepan on 30.10.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef parser_hpp
-#define parser_hpp
+#ifndef include__parser_hpp
+#define include__parser_hpp
 
 #include <string>
 #include <vector>
@@ -22,7 +22,7 @@
 #include "expression.h"
 #include "statement.h"
 
-#include "e_binary_expr.hpp"
+#include "expressions/binary_expr.hpp"
 
 class Parser {
 private:
@@ -49,7 +49,7 @@ private:
 	Statement* block(lets_vector_t<u_tt_t>);
 	Statement* statement_or_block();
 	Statement* statement_or_block(u_tt_t);
-	
+
 	Statement* statement();
 	Statement* assignment_statement();
 	Statement* multi_assignment_statement();
@@ -105,4 +105,4 @@ private:
 	void error_pars(lets_str_t, Token);
 };
 
-#endif /* parser_hpp */
+#endif /* include__parser_hpp */

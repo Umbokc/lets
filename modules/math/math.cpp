@@ -14,11 +14,11 @@
 #include <limits>
 
 #include "math.hpp"
-#include "../../include/l_number_value.hpp"
-#include "../../include/l_string_value.hpp"
-#include "../../include/l_functions.hpp"
-#include "../../include/l_variables.h"
-#include "../../include/ex_parse.h"
+#include "../../include/lib/number_value.hpp"
+#include "../../include/lib/string_value.hpp"
+#include "../../include/lib/functions.hpp"
+#include "../../include/lib/variables.hpp"
+#include "../../include/exception/parse.h"
 
 #define DEFENITION_CLASS_FUNC_MODULE_MATH(F_CLASS, M_FUNC, NUM_ARGS, TEXT_ERROR) \
 	Value* LetsModule__math::F_##F_CLASS::execute(FUNCS_ARGS args){ \

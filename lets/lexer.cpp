@@ -9,93 +9,99 @@
 #include "../include/lexer.hpp"
 #include "../include/lets.hpp"
 
-#include "../include/ex_error.h"
-#include "../include/ex_lexer.h"
+#include "../include/exception/error.h"
+#include "../include/exception/lexer.h"
+
+#define Lets_LEXER_SAVE_POS() \
+	int back_row = this->row; \
+	int back_col = this->col;
+#define Lets_LEXER_GET_POS() \
+	back_row, back_col
+
+#define Lets_PUSH_BUFFER(T) \
+	this->buffer.push_back(T);
 
 lets_str_t Lexer::OPERATORS_CHARS = "+-*/%()[]{}=<>!&|,^~?:.@";
 lets_map_t<lets_str_t, u_tt_t> Lexer::OPERATORS = {
-	{"+", TT_PLUS},
-	{"-", TT_MINUS},
-	{"*", TT_STAR},
-	{"/", TT_SLASH},
-	{"%", TT_PERCENT},
-	{"(", TT_LPAREN},
-	{")", TT_RPAREN},
-	{"[", TT_LBRACKET},
-	{"]", TT_RBRACKET},
-	{"{", TT_LBRACE},
-	{"}", TT_RBRACE},
-	{"=", TT_EQ},
-	{"<", TT_LT},
-	{">", TT_GT},
-	{",", TT_COMMA},
-	{".", TT_DOT},
-	{"^", TT_CARET},
-	{"~", TT_TILDE},
-	{"?", TT_QUESTION},
-	{":", TT_COLON},
+	{TT_PLUS_TEXT, TT_PLUS},
+	{TT_MINUS_TEXT, TT_MINUS},
+	{TT_STAR_TEXT, TT_STAR},
+	{TT_SLASH_TEXT, TT_SLASH},
+	{TT_PERCENT_TEXT, TT_PERCENT},
+	{TT_LPAREN_TEXT, TT_LPAREN},
+	{TT_RPAREN_TEXT, TT_RPAREN},
+	{TT_LBRACKET_TEXT, TT_LBRACKET},
+	{TT_RBRACKET_TEXT, TT_RBRACKET},
+	{TT_LBRACE_TEXT, TT_LBRACE},
+	{TT_RBRACE_TEXT, TT_RBRACE},
+	{TT_EQ_TEXT, TT_EQ},
+	{TT_LT_TEXT, TT_LT},
+	{TT_GT_TEXT, TT_GT},
+	{TT_COMMA_TEXT, TT_COMMA},
+	{TT_DOT_TEXT, TT_DOT},
+	{TT_CARET_TEXT, TT_CARET},
+	{TT_TILDE_TEXT, TT_TILDE},
+	{TT_QUESTION_TEXT, TT_QUESTION},
+	{TT_COLON_TEXT, TT_COLON},
 
-	{"!", TT_EXCL},
-	{"&", TT_AMP},
-	{"|", TT_BAR},
+	{TT_EXCL_TEXT, TT_EXCL},
+	{TT_AMP_TEXT, TT_AMP},
+	{TT_BAR_TEXT, TT_BAR},
 
-	{"==", TT_EQEQ},
-	{"!=", TT_EXCLEQ},
-	{"<=", TT_LTEQ},
-	{">=", TT_GTEQ},
+	{TT_EQEQ_TEXT, TT_EQEQ},
+	{TT_EXCLEQ_TEXT, TT_EXCLEQ},
+	{TT_LTEQ_TEXT, TT_LTEQ},
+	{TT_GTEQ_TEXT, TT_GTEQ},
 
-	{"+=", TT_PLUSEQ},
-	{"-=", TT_MINUSEQ},
-	{"*=", TT_STAREQ},
-	{"/=", TT_SLASHEQ},
-	{"%=", TT_PERCENTEQ},
-	{"&=", TT_AMPEQ},
-	{"^=", TT_CARETEQ},
-	{"|=", TT_BAREQ},
+	{TT_PLUSEQ_TEXT, TT_PLUSEQ},
+	{TT_MINUSEQ_TEXT, TT_MINUSEQ},
+	{TT_STAREQ_TEXT, TT_STAREQ},
+	{TT_SLASHEQ_TEXT, TT_SLASHEQ},
+	{TT_PERCENTEQ_TEXT, TT_PERCENTEQ},
+	{TT_AMPEQ_TEXT, TT_AMPEQ},
+	{TT_CARETEQ_TEXT, TT_CARETEQ},
+	{TT_BAREQ_TEXT, TT_BAREQ},
 
-	{"++", TT_PLUSPLUS},
-	{"--", TT_MINUSMINUS},
+	{TT_PLUSPLUS_TEXT, TT_PLUSPLUS},
+	{TT_MINUSMINUS_TEXT, TT_MINUSMINUS},
 
-	{"::", TT_COLONCOLON},
+	{TT_COLONCOLON_TEXT, TT_COLONCOLON},
 
-	{"&&", TT_AMPAMP},
-	{"||", TT_BARBAR},
+	{TT_AMPAMP_TEXT, TT_AMPAMP},
+	{TT_BARBAR_TEXT, TT_BARBAR},
 
-	{"<<", TT_LTLT},
-	{">>", TT_GTGT},
+	{TT_LTLT_TEXT, TT_LTLT},
+	{TT_GTGT_TEXT, TT_GTGT},
 
-	{"@", TT_AT},
-	{"..", TT_DOTDOT},
-	{"**", TT_STARSTAR},
-	{"<-", TT_LTMINUS},
-	{"=>", TT_EQGT},
+	{TT_DOTDOT_TEXT, TT_DOTDOT},
+	{TT_STARSTAR_TEXT, TT_STARSTAR},
+	{TT_LTMINUS_TEXT, TT_LTMINUS},
+	{TT_EQGT_TEXT, TT_EQGT},
 };
 lets_map_t<lets_str_t, u_tt_t> Lexer::KEYWORDS = {
-	{"print", TT_KW_PRINT},
-	{"put", TT_KW_PUT},
-	{"if", TT_KW_IF},
-	{"else", TT_KW_ELSE},
-	{"elif", TT_KW_ELIF},
-	{"while", TT_KW_WHILE},
-	{"for", TT_KW_FOR},
-	{"do", TT_KW_DO},
-	{"break", TT_KW_BREAK},
-	{"continue", TT_KW_CONTINUE},
-	{"def", TT_KW_DEF},
-	{"def_c", TT_KW_DEF_C},
-	{"return", TT_KW_RETURN},
-	{"use", TT_KW_USE},
-	{"end", TT_KW_END},
-	{"in", TT_KW_IN},
-	{"include", TT_KW_INCLUDE},
-	{"mode", TT_KW_MODE},
-	{"self", TT_KW_SELF},
-	{"match", TT_KW_MATCH},
-	{"case", TT_KW_CASE},
-	{"default", TT_KW_DEFAULT},
-	{"and", TT_KW_AND},
-	{"or", TT_KW_OR},
-	{"not", TT_KW_NOT},
+	{TT_KW_PRINT_TEXT, TT_KW_PRINT},
+	{TT_KW_PUT_TEXT, TT_KW_PUT},
+	{TT_KW_IF_TEXT, TT_KW_IF},
+	{TT_KW_ELSE_TEXT, TT_KW_ELSE},
+	{TT_KW_ELIF_TEXT, TT_KW_ELIF},
+	{TT_KW_WHILE_TEXT, TT_KW_WHILE},
+	{TT_KW_FOR_TEXT, TT_KW_FOR},
+	{TT_KW_DO_TEXT, TT_KW_DO},
+	{TT_KW_BREAK_TEXT, TT_KW_BREAK},
+	{TT_KW_CONTINUE_TEXT, TT_KW_CONTINUE},
+	{TT_KW_DEF_TEXT, TT_KW_DEF},
+	{TT_KW_RETURN_TEXT, TT_KW_RETURN},
+	{TT_KW_USE_TEXT, TT_KW_USE},
+	{TT_KW_END_TEXT, TT_KW_END},
+	{TT_KW_IN_TEXT, TT_KW_IN},
+	{TT_KW_INCLUDE_TEXT, TT_KW_INCLUDE},
+	{TT_KW_MODE_TEXT, TT_KW_MODE},
+	{TT_KW_MATCH_TEXT, TT_KW_MATCH},
+	{TT_KW_CASE_TEXT, TT_KW_CASE},
+	{TT_KW_DEFAULT_TEXT, TT_KW_DEFAULT},
+	{TT_KW_AND_TEXT, TT_KW_AND},
+	{TT_KW_OR_TEXT, TT_KW_OR},
+	{TT_KW_NOT_TEXT, TT_KW_NOT},
 };
 
 lets_vector_t<Token> Lexer::tokenize(){
@@ -105,7 +111,8 @@ lets_vector_t<Token> Lexer::tokenize(){
 		if(isdigit(current)) tokenize_number();
 		else if(is_word_var(current)) tokenize_word();
 		else if( current == '`') tokenize_extended_word();
-		else if( current == '"' && look_char(1, '"') && look_char(2, '"')) tokenize_multiline_comment();
+		else if( current == '"' && look_char(1, '"') && look_char(2, '"')) tokenize_multiln_comment_dq();
+		else if( current == '\'' && look_char(1, '\'') && look_char(2, '\'')) tokenize_multiln_comment_sq();
 		else if( current == '"') tokenize_text_double_quote();
 		else if( current == '\'') tokenize_text_single_quote();
 		else if( current == '#') tokenize_comment();
@@ -144,7 +151,7 @@ void Lexer::tokenize_number() {
 			break;
 		}
 
-		this->buffer.push_back(current);
+		Lets_PUSH_BUFFER(current)
 		current = next();
 	}
 
@@ -164,7 +171,7 @@ void Lexer::tokenize_hex_number() {
 	char current = peek(0);
 
 	while (is_hex_number(current) != -1) {
-		this->buffer.push_back(current);
+		Lets_PUSH_BUFFER(current)
 		current = next();
 	}
 
@@ -189,7 +196,7 @@ void Lexer::tokenize_binary_number() {
 		if(std::regex_match(cur_s, std::regex("^[01]+$")) == 0)
 			break;
 
-		this->buffer.push_back(current);
+		Lets_PUSH_BUFFER(current)
 		current = next();
 	}
 
@@ -210,7 +217,7 @@ void Lexer::tokenize_word() {
 			break;
 		}
 
-		this->buffer.push_back(current);
+		Lets_PUSH_BUFFER(current)
 		current = next();
 	}
 
@@ -222,20 +229,20 @@ void Lexer::tokenize_word() {
 }
 
 void Lexer::tokenize_extended_word() {
+
+	Lets_LEXER_SAVE_POS()
+
 	next(); // skip `
 	clear_buffer();
-
-	int back_row = this->row;
-	int back_col = this->col;
 
 	char current = peek(0);
 
 
 	while (true) {
 		if (current == '`') break;
-		if (current == '\0') throw LexerException(ExceptionsError::L_EOF_EXTEND_WORD, back_row, back_col);
-		if (current == '\n' || current == '\r') throw LexerException(ExceptionsError::L_EOL_EXTEND_WORD, this->row, this->col);
-		this->buffer.push_back(current);
+		if (current == '\0') throw LexerException(ExceptionsError::L_EOF_EXTEND_WORD, Lets_LEXER_GET_POS());
+		if (current == '\n' || current == '\r') throw LexerException(ExceptionsError::L_EOL_EXTEND_WORD, Lets_LEXER_GET_POS());
+		Lets_PUSH_BUFFER(current)
 		current = next();
 	}
 	next(); // skip closing `
@@ -244,13 +251,14 @@ void Lexer::tokenize_extended_word() {
 
 void Lexer::tokenize_text_double_quote() {
 
+	Lets_LEXER_SAVE_POS()
+
 	next();
 	clear_buffer();
 
 	char current = peek(0);
 
-	int back_row = this->row;
-	int back_col = this->col;
+
 	while (true) {
 
 		if(current == '\\'){
@@ -269,8 +277,8 @@ void Lexer::tokenize_text_double_quote() {
 		}
 
 		if(current == '"') break;
-		if (current == '\0') throw LexerException(ExceptionsError::L_REACHED_EOF, back_row, back_col);
-		this->buffer.push_back(current);
+		if (current == '\0') throw LexerException(ExceptionsError::L_REACHED_EOF, Lets_LEXER_GET_POS());
+		Lets_PUSH_BUFFER(current)
 		current = next();
 	}
 
@@ -281,13 +289,13 @@ void Lexer::tokenize_text_double_quote() {
 
 void Lexer::tokenize_text_single_quote() {
 
+	Lets_LEXER_SAVE_POS()
+
 	next();
 	clear_buffer();
 
 	char current = peek(0);
 
-	int back_row = this->row;
-	int back_col = this->col;
 
 	while (true) {
 		if(current == '\\'){
@@ -301,8 +309,8 @@ void Lexer::tokenize_text_single_quote() {
 		}
 
 		if(current == '\'') break;
-		if (current == '\0') throw LexerException(ExceptionsError::L_REACHED_EOF, back_row, back_col);
-		this->buffer.push_back(current);
+		if (current == '\0') throw LexerException(ExceptionsError::L_REACHED_EOF, Lets_LEXER_GET_POS());
+		Lets_PUSH_BUFFER(current)
 		current = next();
 	}
 
@@ -325,7 +333,7 @@ void Lexer::tokenize_operator() {
 			return;
 		}
 
-		this->buffer.push_back(current);
+		Lets_PUSH_BUFFER(current)
 		current = next();
 	}
 }
@@ -350,16 +358,32 @@ void Lexer::tokenize_comment(){
 	}
 }
 
-void Lexer::tokenize_multiline_comment(){
-	next(); next(); next();
+void Lexer::tokenize_multiln_comment_dq(){
 
-	int back_row = this->row;
-	int back_col = this->col - 1;
+	Lets_LEXER_SAVE_POS()
+
+	next(); next(); next();
 
 	char current = peek(0);
 	while (true) {
 		if(current == '"' && look_char(1, '"') && look_char(2, '"')) break;
-		if(current == '\0') throw LexerException(ExceptionsError::L_MISS_CLOSE_TAG, back_row, back_col);
+		if(current == '\0') throw LexerException(ExceptionsError::L_MISS_CLOSE_TAG, Lets_LEXER_GET_POS());
+		current = next();
+	}
+
+	next(); next(); next();
+}
+
+void Lexer::tokenize_multiln_comment_sq(){
+
+	Lets_LEXER_SAVE_POS()
+
+	next(); next(); next();
+
+	char current = peek(0);
+	while (true) {
+		if(current == '\'' && look_char(1, '\'') && look_char(2, '\'')) break;
+		if(current == '\0') throw LexerException(ExceptionsError::L_MISS_CLOSE_TAG, Lets_LEXER_GET_POS());
 		current = next();
 	}
 
@@ -395,7 +419,7 @@ void Lexer::clear_buffer(){
 }
 
 bool Lexer::is_word_var(char c){
-	return isalpha(c, std::locale()) || (c == '_') || (c == '$');
+	return isalpha(c, std::locale()) || (c == '_') || (c == '$') || (c == '@');
 }
 
 int Lexer::find_c(lets_str_t s, char c) {

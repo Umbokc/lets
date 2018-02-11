@@ -1,13 +1,13 @@
 //
-//  lets.hpp
+//  include/lets.hpp
 //  lets
 //
 //  Created by Dragan Stepan on 29.10.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef lets_hpp
-#define lets_hpp
+#ifndef include__lets_hpp
+#define include__lets_hpp
 
 #include <fstream>
 #include <iostream>
@@ -17,10 +17,11 @@
 #include "main.h"
 #include "lexer.hpp"
 #include "parser.hpp"
-#include "u_time_measurement.hpp"
-#include "ex_lexer.h"
-#include "ex_parse.h"
-#include "ex_execute.h"
+#include "utils/time_measurement.hpp"
+
+#include "exception/lexer.h"
+#include "exception/parse.h"
+#include "exception/execute.h"
 
 #define show_tokens(ts)  
 #define show_lets_error(HEAD, FILE_NAME, ROW, COL, MESS) \
@@ -60,4 +61,4 @@ public:
 	static void init_vars_file(lets_str_t);
 };
 
-#endif /* lets_hpp */
+#endif /* include__lets_hpp */

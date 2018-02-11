@@ -1,13 +1,13 @@
 //
-//  visitors/visitor.h
+//  include/visitors/visitor.h
 //  lets
 //
 //  Created by Dragan Stepan on 05.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef visitors__visitor_h
-#define visitors__visitor_h
+#ifndef include__visitors__visitor_h
+#define include__visitors__visitor_h
 
 #include "../declaration.h"
 
@@ -47,5 +47,5 @@ public:
 	virtual void visit(WhileStatement*) = 0;
 };
 
-#endif /* visitors__visitor_h */
+#endif /* include__visitors__visitor_h */
 

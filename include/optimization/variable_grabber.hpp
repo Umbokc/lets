@@ -1,13 +1,13 @@
 //
-//  optimization/variable_grabber.hpp
+//  include/optimization/variable_grabber.hpp
 //  lets
 //
 //  Created by Dragan Stepan on 06.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef optimization__variable_grabber_hpp
-#define optimization__variable_grabber_hpp
+#ifndef include__optimization__variable_grabber_hpp
+#define include__optimization__variable_grabber_hpp
 
 #include <string>
 #include <map>
@@ -40,5 +40,5 @@ private:
 	VariableInfo variable_info(THE_TYPE&, lets_str_t);
 };
 
-#endif /* optimization__variable_grabber_hpp */
+#endif /* include__optimization__variable_grabber_hpp */
 

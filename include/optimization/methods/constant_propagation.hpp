@@ -1,13 +1,13 @@
 //
-//  optimization/methods/constant_propagation.hpp
+//  include/optimization/methods/constant_propagation.hpp
 //  lets
 //
 //  Created by Dragan Stepan on 06.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef optimization__methods__constant_propagation_hpp
-#define optimization__methods__constant_propagation_hpp
+#ifndef include__optimization__methods__constant_propagation_hpp
+#define include__optimization__methods__constant_propagation_hpp
 
 #include "../optimizable.h"
 #include "../../visitors/optimization_visitor.h"
@@ -20,7 +20,7 @@ private:
 	lets_map_t<lets_str_t, int> propagated_variables;
 public:
 	typedef lets_map_t<lets_str_t, Value*> THE_TYPE;
-	
+
 	ConstantPropagation(){}
 	~ConstantPropagation(){}
 
@@ -29,9 +29,9 @@ public:
 	lets_str_t summary_info();
 
 	Node *visit(VariableExpression*, THE_TYPE&);
-	
+
 };
 
 
-#endif /* optimization__methods__constant_propagation_hpp */
+#endif /* include__optimization__methods__constant_propagation_hpp */
 

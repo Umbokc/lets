@@ -1,17 +1,17 @@
 //
-//  optimization/variable_info.h
+//  include/optimization/variable_info.h
 //  lets
 //
 //  Created by Dragan Stepan on 06.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef optimization__variable_info_h
-#define optimization__variable_info_h
+#ifndef include__optimization__variable_info_h
+#define include__optimization__variable_info_h
 
 #include <string>
 #include "../main.h"
-#include "../l_value.h"
+#include "../lib/value.h"
 
 class VariableInfo {
 public:
@@ -23,5 +23,5 @@ public:
 	}
 };
 
-#endif /* optimization__variable_info_h */
+#endif /* include__optimization__variable_info_h */
 

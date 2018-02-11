@@ -8,12 +8,12 @@
 
 #include <iostream>
 #include "../include/parser.hpp"
-#include "../include/ex_parse.h"
+#include "../include/exception/parse.h"
 
 #include "../include/arguments.hpp"
 
-#include "../include/l_user_define_function.hpp"
-#include "../include/l_string_value.hpp"
+#include "../include/lib/user_define_function.hpp"
+#include "../include/lib/string_value.hpp"
 #include "../include/include_ast.h"
 
 #define GET_ROW(i) get(i).get_row()
@@ -67,14 +67,13 @@ lets_map_t<u_tt_t, NS_Binary::Operator> Parser::ASSIGN_OPERATORS = {
 	{ TT_BAREQ, NS_Binary::Operator::OR },
 	{ TT_LTLT, NS_Binary::Operator::LSHIFT },
 	{ TT_GTGT, NS_Binary::Operator::RSHIFT },
-	// {TT_ATEQ, NS_Binary::Operator::AT}
 };
 
 Parser::Parser(){}
 
 Parser::Parser(lets_vector_t<Token> t) : tokens(std::move(t)), pos(0) {
 
-	size = this->tokens.size();
+	this->size = this->tokens.size();
 	if(this->tokens.size() > 0){
 		TT_EOF_T.set_row(this->tokens.back().get_row());
 		TT_EOF_T.set_col(this->tokens.back().get_col());
@@ -152,7 +151,6 @@ Statement* Parser::statement(){
 	if(match(TT_KW_CONTINUE))   NEW_STATEMENT_RETURN(Continue, GET_ROW(-1), GET_COL(-1))
 	if(match(TT_KW_RETURN))     NEW_STATEMENT_RETURN_ARG(Return, GET_ROW(-1), GET_COL(-1), (expression()))
 	if(match(TT_KW_USE))        return use_statement();
-	// if(match(TT_KW_INCLUDE))    NEW_STATEMENT_RETURN_ARG(Include, GET_ROW(-1), GET_COL(-1), (expression()))
 	if(match(TT_KW_FOR))        return for_statement();
 	if(match(TT_KW_DEF))        return function_define();
 	// if(match(TT_KW_MODE))         return new ModeProgrammStatement(expression()->eval()->as_string());
@@ -160,7 +158,7 @@ Statement* Parser::statement(){
 	if (look_match(0, TT_IDENTIFIER) && look_match(1,TT_LPAREN)) {
 		NEW_STATEMENT_RETURN_ARG(Expr, GET_ROW(0), GET_COL(0), (function_chain((qualified_name()))))
 	}
-	if (look_match(0, TT_IDENTIFIER) && look_match(1, TT_COMMA)) {
+	if (look_match(0, TT_LBRACKET)) {
 		return multi_assignment_statement();
 	}
 
@@ -180,26 +178,25 @@ Statement* Parser::assignment_statement(){
 
 Statement* Parser::multi_assignment_statement(){
 	size_t row = GET_ROW(0), col = GET_COL(0);
-	size_t position;
 	lets_vector_t<Accessible*> elements;
-	Expression* target_expr = qualified_name();
 
-	while(true){
-		elements.push_back(dynamic_cast<Accessible*>(target_expr));
+	consume(TT_LBRACKET);
 
-		if(match(TT_EQ)) break;
-
-		consume(TT_COMMA);
-
-		position = this->pos;
-		target_expr = qualified_name();
+	while(!match(TT_RBRACKET)){
+		Expression* target_expr = this->qualified_name();
 
 		if((target_expr == NULL) || !(dynamic_cast<Accessible*>(target_expr))){
-			this->pos = position;
-			break;
+			this->error_pars("Variable expected. Got: " + get(0).to_s(), get(0));
 		}
+
+		elements.push_back(dynamic_cast<Accessible*>(target_expr));
+
+		this->match(TT_COMMA);
 	}
-	NEW_STATEMENT_RETURN_ARG(MultiAssignment, row, col, (elements, expression()))
+
+	this->consume(TT_EQ);
+
+	NEW_STATEMENT_RETURN_ARG(MultiAssignment, row, col, (elements, this->expression()))
 }
 
 Statement* Parser::if_else(){
@@ -357,7 +354,7 @@ Expression* Parser::function_chain(Expression *qualified_name_expr){
 	if(look_match(0, TT_DOT)){
 		lets_vector_t<Expression* > indices = variable_suffix();
 		if(indices.empty()) return expr;
-		
+
 		if(look_match(0, TT_LPAREN)){
 			// next function call
 			return function_chain(new ContainerAccessExpression(expr, indices));
@@ -387,7 +384,7 @@ Expression* Parser::array(){
 	size_t row = GET_ROW(0), col = GET_COL(0);
 	consume(TT_LBRACKET);
 
-	lets_vector_t<Expression* > elements;
+	lets_vector_t<Expression*> elements;
 
 	while(!match(TT_RBRACKET)){
 		elements.push_back(expression());

@@ -1,17 +1,17 @@
 //
-//  expression.h
+//  include/expression.h
 //  lets
 //
 //  Created by Dragan Stepan on 30.10.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef ast__expression_h
-#define ast__expression_h
+#ifndef include__expression_h
+#define include__expression_h
 
 #include "main.h"
 #include "node.h"
-#include "l_value.h"
+#include "lib/value.h"
 
 class Expression : virtual public Node {
 public:
@@ -19,4 +19,4 @@ public:
 	virtual lets_str_t to_s() = 0;
 };
 
-#endif /* ast__expression_h */
+#endif /* include__expression_h */

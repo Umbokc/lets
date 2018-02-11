@@ -10,11 +10,11 @@
 #include <ctime>
 #include <random>
 #include "std.hpp"
-#include "../../include/l_string_value.hpp"
-#include "../../include/l_number_value.hpp"
-#include "../../include/l_functions.hpp"
-#include "../../include/l_variables.h"
-#include "../../include/ex_parse.h"
+#include "../../include/lib/string_value.hpp"
+#include "../../include/lib/number_value.hpp"
+#include "../../include/lib/functions.hpp"
+#include "../../include/lib/variables.hpp"
+#include "../../include/exception/parse.h"
 #include "../../include/tools.hpp"
 
 bool LetsModule__std::is_done = false;

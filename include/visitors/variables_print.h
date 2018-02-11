@@ -1,13 +1,13 @@
 //
-//  visitors/variables_print.h
+//  include/visitors/variables_print.h
 //  lets
 //
 //  Created by Dragan Stepan on 05.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef visitors__variables_print_h
-#define visitors__variables_print_h
+#ifndef include__visitors__variables_print_h
+#define include__visitors__variables_print_h
 
 #include "abstract_visitor.h"
 
@@ -20,5 +20,5 @@ public:
 
 };
 
-#endif /* visitors__variables_print_h */
+#endif /* include__visitors__variables_print_h */
 

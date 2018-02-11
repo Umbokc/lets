@@ -1,13 +1,13 @@
 //
-//  visitors/result_visitor.h
+//  include/visitors/result_visitor.h
 //  lets
 //
 //  Created by Dragan Stepan on 05.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef visitors__result_visitor_h
-#define visitors__result_visitor_h
+#ifndef include__visitors__result_visitor_h
+#define include__visitors__result_visitor_h
 
 #include "../declaration.h"
 
@@ -48,5 +48,5 @@ public:
 	virtual R visit(Node*, T&) = 0;
 };
 
-#endif /* visitors__result_visitor_h */
+#endif /* include__visitors__result_visitor_h */
 

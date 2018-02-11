@@ -1,13 +1,13 @@
 //
-//  optimization/methods/constant_folding.hpp
+//  include/optimization/methods/constant_folding.hpp
 //  lets
 //
 //  Created by Dragan Stepan on 05.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef optimization__methods__constant_folding_hpp
-#define optimization__methods__constant_folding_hpp
+#ifndef include__optimization__methods__constant_folding_hpp
+#define include__optimization__methods__constant_folding_hpp
 
 #include "../optimizable.h"
 #include "../../visitors/optimization_visitor.h"
@@ -39,5 +39,5 @@ private:
 
 };
 
-#endif /* optimization__methods__constant_folding_hpp */
+#endif /* include__optimization__methods__constant_folding_hpp */
 

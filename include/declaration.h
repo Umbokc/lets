@@ -1,13 +1,13 @@
 //
-//  declaration.h
+//  include/declaration.h
 //  lets
 //
 //  Created by Dragan Stepan on 29.10.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef declaration_h
-#define declaration_h
+#ifndef include__declaration_h
+#define include__declaration_h
 
 class Value;
 
@@ -54,4 +54,4 @@ class ReturnStatement;
 class UseStatement;
 class WhileStatement;
 
-#endif /* declaration_h */
+#endif /* include__declaration_h */

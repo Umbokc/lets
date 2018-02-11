@@ -1,13 +1,13 @@
 //
-//  optimization/optimizable.h
+//  include/optimization/optimizable.h
 //  lets
 //
 //  Created by Dragan Stepan on 05.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef optimization__optimizable_h
-#define optimization__optimizable_h
+#ifndef include__optimization__optimizable_h
+#define include__optimization__optimizable_h
 
 #include <string>
 #include "../main.h"
@@ -21,4 +21,4 @@ public:
 	// virtual ~Optimizable(){}
 };
 
-#endif /* optimization__optimizable_h */
+#endif /* include__optimization__optimizable_h */

@@ -1,13 +1,13 @@
 //
-//  visitors/abstract_visitor.h
+//  include/visitors/abstract_visitor.h
 //  lets
 //
 //  Created by Dragan Stepan on 05.11.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef visitors__abstract_visitor_h
-#define visitors__abstract_visitor_h
+#ifndef include__visitors__abstract_visitor_h
+#define include__visitors__abstract_visitor_h
 
 #include "visitor.h"
 #include "../include_ast.h"
@@ -161,7 +161,7 @@ public:
 	void visit(PrintStatement *s){
 		s->expression->accept(this);
 	}
-	
+
 	void visit(PutStatement *s){
 		s->expression->accept(this);
 	}
@@ -182,5 +182,5 @@ public:
 
 };
 
-#endif /* visitors__abstract_visitor_h */
+#endif /* include__visitors__abstract_visitor_h */
 

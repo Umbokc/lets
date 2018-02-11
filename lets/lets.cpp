@@ -7,14 +7,14 @@
 //
 
 #include "../include/lets.hpp"
-#include "../include/s_block_stat.hpp"
-#include "../include/s_break_stat.hpp"
-#include "../include/s_continue_stat.hpp"
-#include "../include/s_return_stat.hpp"
-#include "../include/l_variables.h"
-#include "../include/l_functions.hpp"
-#include "../include/l_string_value.hpp"
-#include "../include/l_number_value.hpp"
+#include "../include/statements/block_stat.hpp"
+#include "../include/statements/break_stat.hpp"
+#include "../include/statements/continue_stat.hpp"
+#include "../include/statements/return_stat.hpp"
+#include "../include/lib/variables.hpp"
+#include "../include/lib/functions.hpp"
+#include "../include/lib/string_value.hpp"
+#include "../include/lib/number_value.hpp"
 #include "../include/tools.hpp"
 #include "../include/utils/minifier.hpp"
 
@@ -22,8 +22,7 @@
 // #include "visitors/variables_print.h"
 // #include "visitors/assign_validator.h"
 
-#include "../include/optimization/optimizer.h"
-
+#include "../include/optimization/optimizer.hpp"
 
 #define LETS_SHOW_HELP_MENU \
 	lets_output("Lets version " + VERSION + "\n\n" + \
@@ -40,13 +39,15 @@
 
 #define SHOW_LETS_ERROR_EXCEPTIONS(VAR, MESS) \
 	show_lets_error("Error", Lets::current_file_name, to_str(VAR->get_position_row()), to_str(VAR->get_position_col()), MESS)
-#define LETS_BOOT_FUCS_PATTERN(STRING_NAME, NAME, BODY, TO_STRING) \
+#define LETS_BOOT_FUCS_PATTERN(STRING_NAME, TO_STRING, NAME, BODY) \
 	class NAME##LetsBootFuncs :  public Function{ \
 	public: \
 		NAME##LetsBootFuncs(){} \
 		~NAME##LetsBootFuncs(){} \
 		Value* execute(FUNCS_ARGS args) BODY \
-		lets_str_t to_s() TO_STRING \
+		lets_str_t to_s() { \
+			return strcat(STRING_NAME, TO_STRING);\
+		} \
 	}; \
 	Functions::set_lets_funcs(STRING_NAME, new NAME##LetsBootFuncs(), true);
 
@@ -197,27 +198,29 @@ Statement* Lets::parse(const lets_vector_t<Token>& tokens, bool stop = false){
 }
 
 void Lets::init_functions(){
-	LETS_BOOT_FUCS_PATTERN("input", input, {
+	LETS_BOOT_FUCS_PATTERN("input", "()", input, {
 		if(args.size() >= 1)
 			std::cout << args[0]->as_string();
 		lets_str_t i;
 		getline(std::cin, i);
 		return new StringValue(i);
-	}, { return "input()"; })
+	})
 
-	LETS_BOOT_FUCS_PATTERN("system", system, {
+	LETS_BOOT_FUCS_PATTERN("system", "(arg*)", system, {
 		if(args.size() != 1)
 			throw ExecuteException("Function system(arg*) one args expected");
-		system(args[0]->as_string().c_str());
-		return NumberValue::ONE;
-	}, { return "system(arg*)"; })
+		if(args[0] != NULL and Types::T_NULL != args[0]->type())
+			return new NumberValue(system(args[0]->as_string().c_str()));
+		else
+			return new NumberValue(system(NULL));
+	})
 
-	LETS_BOOT_FUCS_PATTERN("exit", exit, {
+	LETS_BOOT_FUCS_PATTERN("exit", "(arg*)", exit, {
 		if(args.size() > 1)
 			throw ExecuteException("Function exit(arg*) one args expected");
 		exit(args.size() == 1 ? args[0]->as_int() : 0);
 		return NumberValue::ONE;
-	}, { return "exit(arg*)"; })
+	})
 }
 
 void Lets::init_vars_file(lets_str_t path_file){

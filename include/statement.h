@@ -1,13 +1,13 @@
 //
-//  statement.h
+//  include/statement.h
 //  lets
 //
 //  Created by Dragan Stepan on 30.10.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef ast__statement_h
-#define ast__statement_h
+#ifndef include__statement_h
+#define include__statement_h
 
 #include <string>
 #include "main.h"
@@ -20,4 +20,4 @@ public:
 };
 
 
-#endif /* statement_h */
+#endif /* include__statement_h */

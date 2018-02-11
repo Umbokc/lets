@@ -49,7 +49,7 @@ lets_str_t Minifier::minify() {
 					while(true){
 						current = peek(++i);
 						if((current == '"' && peek(i+1) == '"' && peek(i+2) == '"') or current == '\0') break;
-					}	
+					}
 					i++; i++; i++;
 					break;
 				}
