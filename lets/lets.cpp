@@ -34,6 +34,7 @@
 		"      -e   'command'       One line of script\n" + \
 		"      -a,  --showast       Show AST of program\n" + \
 		"      -tn, --showtokens    Show lexical tokens\n" + \
+		"      -v, --version        Show current version of lets\n" + \
 		"      -t,  --showtime      Show elapsed time of parsing and execution"); \
 	exit(0);
 
@@ -77,6 +78,8 @@ void Lets::init(int argc, const char** argv){
 	for (int i = 1; i < argc; i++) {
 		if(lets_str_t(argv[i]) == "-h" || lets_str_t(argv[i]) == "--help"){
 			LETS_SHOW_HELP_MENU
+		} else if(lets_str_t(argv[i]) == "-v" || lets_str_t(argv[i]) == "--version"){
+				lets_output("Lets " + VERSION); exit(0);
 		} else if(lets_str_t(argv[i]) == "-a" || lets_str_t(argv[i]) == "--showast"){
 			Lets::options.show_ast = true;
 		} else if(lets_str_t(argv[i]) == "-m" || lets_str_t(argv[i]) == "--minify"){
