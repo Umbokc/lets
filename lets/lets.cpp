@@ -51,7 +51,7 @@
 	}; \
 	Functions::set_lets_funcs(STRING_NAME, new NAME##LetsBootFuncs(), true);
 
-const lets_str_t Lets::VERSION = "0.0.2";
+const lets_str_t Lets::VERSION = "0.0.3";
 lets_str_t Lets::current_file_name = "go.lets";
 Options Lets::options = Options();
 bool Lets::ModeFunctionAdder = false;
