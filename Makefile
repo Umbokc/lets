@@ -6,7 +6,7 @@ SRC=$(shell find . -type f -name '*.cpp')
 OBJ=$(patsubst %.cpp, %.o, $(SRC))
 
 all: $(OBJ)
-	@mkdir bin
+	@mkdir -p bin
 	$(CC) -o $(BIN) $(OBJ)
 
 %.o: %.cpp
