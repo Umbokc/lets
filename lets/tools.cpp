@@ -50,6 +50,29 @@ namespace NS_Tools {
 		return result;
 	}
 
+
+	Number* create_number(lets_str_t text){
+
+		Number* value;
+
+		if(text.find('.') != lets_str_t::npos){
+			value = new Number(atof(&text[0u]));
+		}else{
+			try{
+				value = new Number(std::stoi(text));
+			} catch (std::exception& e){
+				try{
+					text = text.substr(0, 19);
+					value = new Number(std::atol(&text[0u]));
+				} catch (std::exception& e){
+					throw std::runtime_error("Very big number: " + text);
+				}
+			}
+		}
+
+		return value;
+	}
+
 	inline bool fils_exists (const lets_str_t& name) {
 		struct stat buffer;   
 		return (stat (name.c_str(), &buffer) == 0); 

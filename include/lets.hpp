@@ -23,10 +23,10 @@
 #include "exception/parse.h"
 #include "exception/execute.h"
 
-#define show_tokens(ts)  
 #define show_lets_error(HEAD, FILE_NAME, ROW, COL, MESS) \
 	lets_output("" << (HEAD == "" ? "Error" : HEAD) << ":\n" << FILE_NAME << ":[" << ROW << ":" << COL << "]: " << MESS) \
 	exit(1);
+
 #define show_error(HEAD, MESS) \
 	lets_output(HEAD << ":\n"  << MESS) \
 	exit(1);

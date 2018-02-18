@@ -9,7 +9,7 @@
 #ifndef include__lib__bool_value_hpp
 #define include__lib__bool_value_hpp
 
-#include "value.h"
+#include "value.hpp"
 
 class BoolValue : public Value{
 private:
@@ -18,25 +18,14 @@ public:
 	static BoolValue* TRUE;
 	static BoolValue* FALSE;
 
+	BoolValue();
 	BoolValue(bool);
 	BoolValue(NumberValue*);
 	BoolValue(StringValue*);
 	BoolValue(ArrayValue*);
 	BoolValue(MapValue*);
 
-	bool as_bool();
-	int as_int();
-	double as_number();
-	long as_long();
-
-	int len();
-	Types type();
-
-	lets_str_t as_string();
-	lets_str_t to_s();
-
-	bool equals(Value*);
-	int compareTo(Value*);
+	LETS_REQUIRED_METHODS_VALUE_DECL()
 
 	~BoolValue();
 };

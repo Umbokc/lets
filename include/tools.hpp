@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 #include "main.h"
+#include "lib/number.hpp"
 
 namespace NS_Tools{
 
@@ -38,6 +39,8 @@ namespace NS_Tools{
 
 		return result;
 	}
+
+	Number* create_number(lets_str_t);
 
 	inline bool fils_exists (const lets_str_t&);
 	lets_str_t get_path( const lets_str_t&);

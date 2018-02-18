@@ -14,42 +14,42 @@
 lets_map_t<lets_str_t, FunctionContainer*> Functions::functions;
 
 bool Functions::is_exists(lets_str_t key){
-    return functions.find(key) != functions.end();
+	return functions.find(key) != functions.end();
 }
 
 bool Functions::is_constexpr(lets_str_t key){
-    return functions[key]->is_constant;
+	return functions[key]->is_constant;
 }
 
-Function*Functions:: get(lets_str_t key){
-    if(!is_exists(key)){
-        throw ExecuteException(
-                             NS_Tools::string_format(ExceptionsError::E_UNKNOWN_FUNC, key.c_str())
-                             );
-    }
-    return functions[key]->body;
+Function* Functions::get(lets_str_t key){
+	if(!is_exists(key)){
+		throw ExecuteException(
+			NS_Tools::string_format(ExceptionsError::E_UNKNOWN_FUNC, key.c_str())
+		);
+	}
+	return functions[key]->body;
 }
 
 void Functions::set(lets_str_t key, Function* function){
-    if(is_exists(key) && is_constexpr(key)){
-        throw ExecuteException(
-                             NS_Tools::string_format(ExceptionsError::E_CNN_REWRITE_FUNC, key.c_str())
-                             );
-    }
-    functions[key] = new FunctionContainer(function);
+	if(is_exists(key) && is_constexpr(key)){
+		throw ExecuteException(
+			NS_Tools::string_format(ExceptionsError::E_CNN_REWRITE_FUNC, key.c_str())
+		);
+	}
+	functions[key] = new FunctionContainer(function);
 }
 
 void Functions::set_constexpr(lets_str_t key, Function* function){
-    if(is_exists(key) && is_constexpr(key)){
-        throw ExecuteException(
-                             NS_Tools::string_format(ExceptionsError::E_CNN_REWRITE_FUNC, key.c_str())
-                             );
-    }
-    functions[key] =  new FunctionContainer(function, true);
+	if(is_exists(key) && is_constexpr(key)){
+		throw ExecuteException(
+			NS_Tools::string_format(ExceptionsError::E_CNN_REWRITE_FUNC, key.c_str())
+		);
+	}
+	functions[key] =  new FunctionContainer(function, true);
 }
 
 void Functions::set_lets_funcs(lets_str_t key, Function* function, bool is_constexpr){
-    functions[key] =  new FunctionContainer(function, is_constexpr);
+	functions[key] =  new FunctionContainer(function, is_constexpr);
 }
 
 // Functions::static void show(){

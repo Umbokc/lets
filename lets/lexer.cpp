@@ -102,6 +102,8 @@ lets_map_t<lets_str_t, u_tt_t> Lexer::KEYWORDS = {
 	{TT_KW_AND_TEXT, TT_KW_AND},
 	{TT_KW_OR_TEXT, TT_KW_OR},
 	{TT_KW_NOT_TEXT, TT_KW_NOT},
+	{TT_KW_NEW_TEXT, TT_KW_NEW},
+	{TT_KW_CLASS_TEXT, TT_KW_CLASS},
 };
 
 lets_vector_t<Token> Lexer::tokenize(){

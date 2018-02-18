@@ -39,7 +39,6 @@ public:
 
 	Value* get_container();
 	Value* last_index();
-	MapValue* consume_map(Value* value);
 
 	lets_str_t to_s();
 

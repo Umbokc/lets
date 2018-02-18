@@ -1,0 +1,7 @@
+n = new Null() # null
+n = new Null(1) # null
+n = new Null('this is string') # null
+n2 = null
+
+print n
+print 'type() => ' + n.type()

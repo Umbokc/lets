@@ -17,12 +17,6 @@ public:
 
 // Expressions
 
-	void visit(ArrayAccessExpression *s){
-		for(Expression* index: s->indices){
-			index->accept(this);
-		}
-	}
-
 	void visit(ArrayExpression *s){
 		for(Expression* index: s->elements){
 			index->accept(this);
@@ -37,6 +31,10 @@ public:
 	void visit(BinaryExpression *s){
 		s->expr1->accept(this);
 		s->expr2->accept(this);
+	}
+
+	void visit(ClassExpression *s){
+		s->class_expr->accept(this);
 	}
 
 	void visit(ConditionalExpression *s){
@@ -95,11 +93,6 @@ public:
 	}
 
 // Statements
-
-	void visit(ArrayAssignmentStatement *s){
-		s->array->accept(this);
-		s->expression->accept(this);
-	}
 
 	void visit(BlockStatement *s){
 		for(Statement* statement: s->statements){
@@ -183,4 +176,3 @@ public:
 };
 
 #endif /* include__visitors__abstract_visitor_h */
-

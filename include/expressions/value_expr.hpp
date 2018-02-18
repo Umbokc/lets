@@ -24,7 +24,7 @@ public:
 	ValueExpression(int);
 	ValueExpression(double);
 	ValueExpression(long);
-	ValueExpression(Number);
+	ValueExpression(Number*);
 
 	ValueExpression(lets_str_t);
 	ValueExpression(Function*);

@@ -14,7 +14,6 @@
 template<class R, class T>
 class ResultVisitor {
 public:
-	virtual R visit(ArrayAccessExpression*, T&) = 0;
 	virtual R visit(ArrayExpression*, T&) = 0;
 	virtual R visit(AssignmentExpression*, T&) = 0;
 	virtual R visit(BinaryExpression*, T&) = 0;
@@ -28,7 +27,6 @@ public:
 	virtual R visit(ValueExpression*, T&) = 0;
 	virtual R visit(VariableExpression*, T&) = 0;
 
-	virtual R visit(ArrayAssignmentStatement*, T&) = 0;
 	virtual R visit(BlockStatement*, T&) = 0;
 	virtual R visit(BreakStatement*, T&) = 0;
 	virtual R visit(ContinueStatement*, T&) = 0;

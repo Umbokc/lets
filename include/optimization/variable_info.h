@@ -11,7 +11,7 @@
 
 #include <string>
 #include "../main.h"
-#include "../lib/value.h"
+#include "../lib/value.hpp"
 
 class VariableInfo {
 public:

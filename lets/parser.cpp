@@ -14,7 +14,9 @@
 
 #include "../include/lib/user_define_function.hpp"
 #include "../include/lib/string_value.hpp"
+#include "../include/lib/number.hpp"
 #include "../include/include_ast.h"
+#include "../include/tools.hpp"
 
 #define GET_ROW(i) get(i).get_row()
 #define GET_COL(i) get(i).get_col()
@@ -34,9 +36,9 @@
 };
 
 #define NEW_EXPRESSION_RETURN(NAME, ROW, COL) { \
-	NAME##Expression* NAME##__s = new NAME##Expression(); \
-	NAME##__s->set_position(ROW, COL); \
-	return NAME##__s; \
+	NAME##Expression* NAME##__expr_temp = new NAME##Expression(); \
+	NAME##__expr_temp->set_position(ROW, COL); \
+	return NAME##__expr_temp; \
 };
 
 #define NEW_EXPRESSION_RETURN_ARG(NAME, ROW, COL, ARG) { \
@@ -72,7 +74,6 @@ lets_map_t<u_tt_t, NS_Binary::Operator> Parser::ASSIGN_OPERATORS = {
 Parser::Parser(){}
 
 Parser::Parser(lets_vector_t<Token> t) : tokens(std::move(t)), pos(0) {
-
 	this->size = this->tokens.size();
 	if(this->tokens.size() > 0){
 		TT_EOF_T.set_row(this->tokens.back().get_row());
@@ -153,7 +154,7 @@ Statement* Parser::statement(){
 	if(match(TT_KW_USE))        return use_statement();
 	if(match(TT_KW_FOR))        return for_statement();
 	if(match(TT_KW_DEF))        return function_define();
-	// if(match(TT_KW_MODE))         return new ModeProgrammStatement(expression()->eval()->as_string());
+	// if(match(TT_KW_CLASS))      return class_define();
 	if(match(TT_KW_MATCH))      return match();
 	if (look_match(0, TT_IDENTIFIER) && look_match(1,TT_LPAREN)) {
 		NEW_STATEMENT_RETURN_ARG(Expr, GET_ROW(0), GET_COL(0), (function_chain((qualified_name()))))
@@ -307,7 +308,7 @@ ForeachStatement* Parser::foreach_arr_statement(size_t& row, size_t&col ,bool tw
 }
 
 FunctionDefineStatement* Parser::function_define(){
-	// def name(arg1, arg2 = val): ... end || def name(args) = expr
+	// def name(arg1, arg2 = val): ... end || def name(args) <- expr
 	size_t row = GET_ROW(-1), col = GET_COL(-1);
 	lets_str_t name = consume(TT_IDENTIFIER).get_text();
 	Arguments args = arguments();
@@ -380,6 +381,21 @@ FunctionalExpression* Parser::function(Expression *qualified_name_expr){
 	return function;
 }
 
+ClassExpression* Parser::class_expr(){
+	// new Class(arg1, arg2, ...)
+	size_t row = GET_ROW(-1), col = GET_COL(-1);
+	ClassExpression* class_ = new ClassExpression(qualified_name());
+	class_->set_position(row, col);
+	consume(TT_LPAREN);
+
+	while(!match(TT_RPAREN)){
+		class_->add_arguments(expression());
+		match(TT_COMMA);
+	}
+
+	return class_;
+}
+
 Expression* Parser::array(){
 	size_t row = GET_ROW(0), col = GET_COL(0);
 	consume(TT_LBRACKET);
@@ -441,7 +457,7 @@ MatchExpression* Parser::match(){
 			if (match(TT_NUMBER)) {
 				// case 0.5: 
 				pattern = new MatchExpression::ConstantPattern(
-					new NumberValue(create_number(current))
+					new NumberValue(NS_Tools::create_number(current.get_text()))
 				);
 			} else if (match(TT_HEX_NUMBER)) {
 				// case 0xABC123: 
@@ -809,6 +825,10 @@ Expression* Parser::primary(bool incr = false) {
 		NEW_EXPRESSION_RETURN_ARG(Value, row, col, (new UserDefineFunction(args, statement)))
 	}
 
+	if(match(TT_KW_NEW)){
+		return class_expr();
+	}
+
 	return variable(incr);
 }
 
@@ -887,7 +907,7 @@ Expression* Parser::value() {
 	Token current = this->get(0);
 
 	if(match(TT_NUMBER)){
-		NEW_EXPRESSION_RETURN_ARG(Value, current.get_row(), current.get_col(), (create_number(current)))
+		NEW_EXPRESSION_RETURN_ARG(Value, current.get_row(), current.get_col(), (NS_Tools::create_number(current.get_text())))
 	}
 
 	if(match(TT_HEX_NUMBER)){
@@ -904,30 +924,6 @@ Expression* Parser::value() {
 	}
 
 	throw ParseException("Unknown expression: " + current.get_text(), "Parser error", current.get_row(), current.get_col());
-}
-
-Number Parser::create_number(Token current){
-
-	lets_str_t text = current.get_text();
-
-	Number value;
-
-	if(text.find('.') != lets_str_t::npos){
-		value = atof(&text[0u]);
-	}else{
-		try{
-			value = std::stoi(text);
-		} catch (std::exception& e){
-			try{
-				text = text.substr(0, 19);
-				value = std::atol(&text[0u]);
-			} catch (std::exception& e){
-				error_pars("Very big number", current);
-			}
-		}
-	}
-
-	return value;
 }
 
 Token Parser::consume(u_tt_t type){

@@ -6,14 +6,18 @@
 //  Copyright © 2018 umbokc. All rights reserved.
 //
 
-#include "../../include/lib/null_value.hpp"
-#include "../../include/lib/bool_value.hpp"
-#include "../../include/lib/number_value.hpp"
-#include "../../include/lib/string_value.hpp"
-#include "../../include/lib/array_value.hpp"
-#include "../../include/lib/map_value.hpp"
+#include "../../include/lib/include_values.h"
 
-NullValue::NullValue(){}
+NullValue::NullValue(){this->construct();}
+
+Value* NullValue::construct(){
+	this->set_class_name("Null");
+	DEFAULT_METHODS_OF_CLASS()
+}
+
+Value* NullValue::construct(FUNCS_ARGS args){
+	return this;
+}
 
 bool NullValue::as_bool(){
 	return false;
@@ -57,6 +61,14 @@ int NullValue::compareTo(Value *obj) {
 	if (obj->type() == this->type())
 		return true;
 	return false;
+}
+
+Value* NullValue::get(Value* key){
+	return this->get_prop(key);
+}
+
+void NullValue::set(Value* key, Value* value){
+	this->set_prop(key, value);
 }
 
 NullValue::~NullValue(){}

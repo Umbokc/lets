@@ -65,6 +65,7 @@ private:
 
 	Expression* function_chain(Expression*);
 	FunctionalExpression* function(Expression*);
+	ClassExpression* class_expr();
 	Expression* array();
 	Expression* map_vals();
 	MatchExpression* match();
@@ -90,7 +91,6 @@ private:
 	Expression* qualified_name();
 	lets_vector_t<Expression*> variable_suffix();
 	Expression* value();
-	Number create_number(Token);
 
 	Token consume(u_tt_t);
 

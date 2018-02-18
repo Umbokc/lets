@@ -22,23 +22,6 @@ template<class T>
 class OptimizationVisitor : virtual public ResultVisitor<Node*, T>{
 public:
 
-	virtual Node *visit(ArrayAccessExpression *s, T& t) {
-		lets_vector_t<Expression*> indices;
-		indices.reserve(s->indices.size());
-		bool changed = false;
-		for (Expression* expression : s->indices) {
-			Node *node = expression->accept(this, t);
-			if (node != expression) {
-				changed = true;
-			}
-			indices.push_back(dynamic_cast<Expression*>(node));
-		}
-		if (changed) {
-			return new ArrayExpression(indices);
-		}
-		return s;
-	}
-
 	virtual Node *visit(ArrayExpression *s, T& t) {
 		lets_vector_t<Expression*> elements;
 		elements.reserve(s->elements.size());
@@ -244,17 +227,6 @@ public:
 
 // Statements 
 
-	virtual Node *visit(ArrayAssignmentStatement *s, T& t) {
-		Node *expression = s->expression->accept(this, t);
-		Node *array = s->array->accept(this, t);
-		if (expression != s->expression || array != s->array) {
-			return new ArrayAssignmentStatement(
-				dynamic_cast<ArrayAccessExpression*>(array), dynamic_cast<Expression*>(expression)
-			);
-		}
-		return s;
-	}
-
 	virtual Node *visit(BlockStatement *s, T& t) {
 		bool changed = false;
 		BlockStatement *result = new BlockStatement();
@@ -445,7 +417,6 @@ public:
 
 	virtual Node *visit(Node *s, T& t) {
 
-		LETS_CALL_VISIT_ACCEPT_IF_IT_IS_STAT_OR_EXPR(ArrayAssignmentStatement, Statement)
 		LETS_CALL_VISIT_ACCEPT_IF_IT_IS_STAT_OR_EXPR(BlockStatement, Statement)
 		LETS_CALL_VISIT_ACCEPT_IF_IT_IS_STAT_OR_EXPR(BreakStatement, Statement)
 		LETS_CALL_VISIT_ACCEPT_IF_IT_IS_STAT_OR_EXPR(ContinueStatement, Statement)
@@ -462,7 +433,6 @@ public:
 		LETS_CALL_VISIT_ACCEPT_IF_IT_IS_STAT_OR_EXPR(UseStatement, Statement)
 		LETS_CALL_VISIT_ACCEPT_IF_IT_IS_STAT_OR_EXPR(WhileStatement, Statement)
 
-		LETS_CALL_VISIT_ACCEPT_IF_IT_IS_STAT_OR_EXPR(ArrayAccessExpression, Expression)
 		LETS_CALL_VISIT_ACCEPT_IF_IT_IS_STAT_OR_EXPR(ArrayExpression, Expression)
 		LETS_CALL_VISIT_ACCEPT_IF_IT_IS_STAT_OR_EXPR(AssignmentExpression, Expression)
 		LETS_CALL_VISIT_ACCEPT_IF_IT_IS_STAT_OR_EXPR(BinaryExpression, Expression)

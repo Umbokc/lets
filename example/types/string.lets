@@ -1,0 +1,6 @@
+str = new String() # ''
+str = new String(1) # '1'
+str = new String('this is string')
+
+print str
+print 'type() => ' + str.type()

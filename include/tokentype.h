@@ -288,6 +288,12 @@
 #define TT_KW_INCLUDE 75
 #define TT_KW_INCLUDE_TEXT "include"
 
+#define TT_KW_NEW 76
+#define TT_KW_NEW_TEXT "new"
+
+#define TT_KW_CLASS 77
+#define TT_KW_CLASS_TEXT "class"
+
 static const lets_str_t TokenTypeString[] = {
 	TT_EOF_TEXT,
 
@@ -370,6 +376,8 @@ static const lets_str_t TokenTypeString[] = {
 	TT_KW_OR_TEXT,
 	TT_KW_NOT_TEXT,
 	TT_KW_INCLUDE_TEXT,
+	TT_KW_NEW_TEXT,
+	TT_KW_CLASS_TEXT,
 };
 
 #endif /* include__tokentype_h */

@@ -10,11 +10,9 @@
 #define include__lib__function_h
 
 #include <string>
-#include <map>
 #include <vector>
 #include "../main.h"
-#include "value.h"
-#include "../expression.h"
+#include "value.hpp"
 
 class Function {
 public:

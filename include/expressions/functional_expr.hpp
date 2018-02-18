@@ -18,7 +18,6 @@
 
 class FunctionalExpression : virtual public Expression, virtual public Statement{
 public:
-	lets_str_t function_name;
 	Expression* function_expr;
 	lets_vector_t<Expression *> arguments;
 

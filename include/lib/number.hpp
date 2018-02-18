@@ -33,14 +33,9 @@ public:
 
 	Number();
 
-	Number(int&);
-	Number(double&);
-	Number(long&);
-
-	Number& operator=(const Number&);
-	void operator=(int);
-	void operator=(double);
-	void operator=(long);
+	Number(int);
+	Number(double);
+	Number(long);
 
 	int as_int();
 	double as_double();

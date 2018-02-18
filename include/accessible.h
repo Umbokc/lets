@@ -11,7 +11,7 @@
 
 #include "main.h"
 #include "node.h"
-#include "lib/value.h"
+#include "lib/value.hpp"
 
 class Accessible : virtual public Node {
 public:

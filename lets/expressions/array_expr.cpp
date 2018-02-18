@@ -10,11 +10,10 @@
 #include "../../include/lib/array_value.hpp"
 #include "../../include/tools.hpp"
 
-ArrayExpression::ArrayExpression(lets_vector_t<Expression *> elements)
-	:elements(std::move(elements)){}
+ArrayExpression::ArrayExpression(lets_vector_t<Expression *> elems)
+	:elements(std::move(elems)){}
 
 Value *ArrayExpression::eval(){
-	// ArrayValue *array = new ArrayValue(elements);
 
 	int size = (int)elements.size();
 	ArrayValue *array = new ArrayValue(size);

@@ -17,6 +17,8 @@
 #define to_str(x) std::to_string(x)
 
 #define dbg(s) std::cout << "debug:" << (#s) << ": " << (s) << std::endl;
+#define dbge(s) std::cout << "debug:" << (#s) << ": " << (s) << std::endl; exit(0);
+#define lets_simple_output(s) std::cout << s;
 #define lets_output(s) std::cout << s << std::endl;
 #define lets_error(s) std::cout << s << std::endl; exit(1);
 #define lets_ctos(c) lets_str_t(1, c);

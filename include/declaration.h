@@ -19,10 +19,10 @@ class Arguments;
 
 class Expression;
 
-class ArrayAccessExpression;
 class ArrayExpression;
 class AssignmentExpression;
 class BinaryExpression;
+class ClassExpression;
 class ConditionalExpression;
 class ContainerAccessExpression;
 class FunctionalExpression;
@@ -36,7 +36,6 @@ class VariableExpression;
 
 class Statement;
 
-class ArrayAssignmentStatement;
 class BlockStatement;
 class BreakStatement;
 class ContinueStatement;

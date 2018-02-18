@@ -10,6 +10,7 @@
 #include "../../include/expressions/variable_expr.hpp"
 #include "../../include/lib/array_value.hpp"
 #include "../../include/lib/string_value.hpp"
+#include "../../include/lib/class_value.hpp"
 #include "../../include/exception/execute.h"
 #include "../../include/tools.hpp"
 
@@ -40,37 +41,14 @@ Value *ContainerAccessExpression::eval(){
 Value *ContainerAccessExpression::get(){
 	Value* container = get_container();
 	Value* last = last_index();
-	switch(container->type()){
-		case Types::T_ARRAY:
-		return dynamic_cast<ArrayValue*>(container)->get(last->as_int());
-		case Types::T_STRING:
-		return new StringValue(
-			dynamic_cast<StringValue*>(container)->get_c(last->as_int())
-			);
-		case Types::T_MAP:
-		return dynamic_cast<MapValue*>(container)->get(last);
-		default:
-		throw ExecuteException(
-			"Array or map expected. Got " + TypesString[container->type()]
-			);
-	}
+	return container->get(last);
 }
 
 Value *ContainerAccessExpression::set(Value* value){
 	Value* container = get_container();
 	Value* last = last_index();
-	switch(container->type()){
-		case Types::T_ARRAY:
-		dynamic_cast<ArrayValue*>(container)->set(last->as_int(), value);
-		return value;
-		case Types::T_MAP:
-		dynamic_cast<MapValue*>(container)->set(last, value);
-		return value;
-		default:
-		throw ExecuteException(
-			"Array or map expected. Got " + TypesString[container->type()]
-			);
-	}
+	container->set(last, value);
+	return value;
 }
 
 Value* ContainerAccessExpression::get_container(){
@@ -78,32 +56,13 @@ Value* ContainerAccessExpression::get_container(){
 	int last_i = (int)indices.size() - 1;
 	for(int i = 0; i < last_i; ++i){
 		Value* the_i = index(i);
-		switch(container->type()){
-			case Types::T_ARRAY :{
-				int array_index = the_i->as_int();
-				container = dynamic_cast<ArrayValue*> (container)->get(array_index);
-				break;
-			}
-			case Types::T_MAP :{
-				container = dynamic_cast<MapValue*> (container)->get(the_i);
-				break;
-			}
-			default:
-			throw ExecuteException("Array or map expected");
-		}
+		container = container->get(the_i);
 	}
 	return container;
 }
 
 Value* ContainerAccessExpression::last_index() {
 	return index((int)indices.size() - 1);
-}
-
-MapValue* ContainerAccessExpression::consume_map(Value* value){
-	if(value->type() != Types::T_MAP){
-		throw ExecuteException("Map expected");
-	}
-	return dynamic_cast<MapValue*>(value);
 }
 
 lets_str_t ContainerAccessExpression::to_s(){

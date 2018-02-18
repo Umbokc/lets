@@ -1,0 +1,7 @@
+b = new Bool() # false
+b = new Bool(1) # true
+b = new Bool('this is string') # true
+b2 = false
+
+print b
+print 'type() => ' + b.type()

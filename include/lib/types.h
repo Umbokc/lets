@@ -30,20 +30,20 @@ enum Types {
 };
 
 const lets_str_t TypesString[] = {
-	"null",
-	"bool",
-	"number",
-	"string",
-	"array",
-	"map",
-	"function",
+	"T_NULL",
+	"T_BOOL",
+	"T_NUMBER",
+	"T_STRING",
+	"T_ARRAY",
+	"T_MAP",
+	"T_FUNCTION",
 
-	"regexp",
-	"module",
-	"class",
-	"interface",
-	"object",
-	"file",
+	"T_REGEXP",
+	"T_MODULE",
+	"T_CLASS",
+	"T_INTERFACE",
+	"T_OBJECT",
+	"T_FILE",
 };
 
 #endif /* include__lib__types_h */

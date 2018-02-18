@@ -14,7 +14,7 @@
 #include "../main.h"
 #include "../expression.h"
 
-class ArrayExpression : public Expression{
+class ArrayExpression : virtual public Expression{
 public:
 	lets_vector_t<Expression *> elements;
 

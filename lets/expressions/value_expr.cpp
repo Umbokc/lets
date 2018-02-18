@@ -25,7 +25,7 @@ ValueExpression::ValueExpression(long value){
     this->value = new NumberValue(value);
 }
 
-ValueExpression::ValueExpression(Number value){
+ValueExpression::ValueExpression(Number* value){
     this->value = new NumberValue(value);
 }
 

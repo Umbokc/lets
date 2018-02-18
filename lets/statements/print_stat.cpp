@@ -12,7 +12,7 @@
 PrintStatement::PrintStatement(Expression *expression):expression(std::move(expression)){}
 
 void PrintStatement::execute(){
-	std::cout << expression->eval()->to_s() << std::endl;
+	lets_output(expression->eval()->to_s());
 }
 
 lets_str_t PrintStatement::to_s(){

@@ -13,25 +13,17 @@
 #include "function.h"
 
 class FunctionValue : public Value{
-    Function* value;
+	Function* value;
 public:
-    
-    FunctionValue(Function*);
-    
-    bool as_bool();
-    int as_int();
-    double as_number();
-    long as_long();
-    Function* get_value();
-    int len();
-    lets_str_t as_string();
-    lets_str_t to_s();
-    Types type();
 
-    bool equals(Value*);
-    int compareTo(Value*);
-    
-    ~FunctionValue();
+  FunctionValue();
+	FunctionValue(Function*);
+
+	Function* get_value();
+
+	LETS_REQUIRED_METHODS_VALUE_DECL()
+
+	~FunctionValue();
 };
 
 #endif /* include__lib__function_value_hpp */

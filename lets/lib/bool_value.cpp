@@ -6,20 +6,29 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#include "../../include/lib/bool_value.hpp"
-#include "../../include/lib/number_value.hpp"
-#include "../../include/lib/string_value.hpp"
-#include "../../include/lib/array_value.hpp"
-#include "../../include/lib/map_value.hpp"
+#include "../../include/lib/include_values.h"
 
-BoolValue::BoolValue(bool value){
-	this->value = value;
+BoolValue::BoolValue(){ this->value = false; this->construct(); }
+BoolValue::BoolValue(bool value){ this->value = value; this->construct(); }
+BoolValue::BoolValue(NumberValue* val){ this->value = val->as_bool(); this->construct(); }
+BoolValue::BoolValue(StringValue* val){ this->value = val->as_bool(); this->construct(); }
+BoolValue::BoolValue(ArrayValue* val){ this->value = val->as_bool(); this->construct(); }
+BoolValue::BoolValue(MapValue* val){ this->value = val->as_bool(); this->construct(); }
+
+Value* BoolValue::construct(){
+	this->set_class_name("Bool");
+	DEFAULT_METHODS_OF_CLASS()
 }
 
-BoolValue::BoolValue(NumberValue* val){ this->value = val->as_bool(); }
-BoolValue::BoolValue(StringValue* val){ this->value = val->as_bool(); }
-BoolValue::BoolValue(ArrayValue* val){ this->value = val->as_bool(); }
-BoolValue::BoolValue(MapValue* val){ this->value = val->as_bool(); }
+Value* BoolValue::construct(FUNCS_ARGS args){
+	if(args.size() == 0){
+		value = false;
+	} else {
+		value = args.at(0)->as_bool();
+	}
+
+	return this;
+}
 
 bool BoolValue::as_bool(){
 	return this->value;
@@ -68,6 +77,14 @@ int BoolValue::compareTo(Value *obj) {
 	}
 
 	return lets_compare(as_string(), obj->as_string());
+}
+
+Value* BoolValue::get(Value* key){
+	return this->get_prop(key);
+}
+
+void BoolValue::set(Value* key, Value* value){
+	this->set_prop(key, value);
 }
 
 BoolValue::~BoolValue(){}

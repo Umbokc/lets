@@ -13,10 +13,10 @@
 
 class Visitor {
 public:
-	virtual void visit(ArrayAccessExpression*) = 0;
 	virtual void visit(ArrayExpression*) = 0;
 	virtual void visit(AssignmentExpression*) = 0;
 	virtual void visit(BinaryExpression*) = 0;
+	virtual void visit(ClassExpression*) = 0;
 	virtual void visit(ConditionalExpression*) = 0;
 	virtual void visit(ContainerAccessExpression*) = 0;
 	virtual void visit(FunctionalExpression*) = 0;
@@ -28,7 +28,6 @@ public:
 	virtual void visit(ValueExpression*) = 0;
 	virtual void visit(VariableExpression*) = 0;
 
-	virtual void visit(ArrayAssignmentStatement*) = 0;
 	virtual void visit(BlockStatement*) = 0;
 	virtual void visit(BreakStatement*) = 0;
 	virtual void visit(ContinueStatement*) = 0;

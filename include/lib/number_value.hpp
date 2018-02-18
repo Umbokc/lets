@@ -9,35 +9,26 @@
 #ifndef include__number_value_hpp
 #define include__number_value_hpp
 
-#include "value.h"
+#include "value.hpp"
 #include "number.hpp"
 
 class NumberValue : public Value{
 private:
 public:
-	Number value;
+	Number* value;
 	static NumberValue* ZERO;
 	static NumberValue* ONE;
 	static NumberValue* NEGATE_ONE;
 
+	NumberValue();
 	NumberValue(int);
 	NumberValue(double);
 	NumberValue(long);
-	NumberValue(Number);
+	NumberValue(Number*);
 
-	bool as_bool();
-	int as_int();
-	double as_number();
-	long as_long();
+	Number* get_value();
 
-	int len();
-	Types type();
-
-	lets_str_t as_string();
-	lets_str_t to_s();
-
-	bool equals(Value*);
-	int compareTo(Value*);
+	LETS_REQUIRED_METHODS_VALUE_DECL()
 
 	~NumberValue();
 };

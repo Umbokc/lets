@@ -20,7 +20,7 @@ Value *MapExpression::eval(){
 }
 
 lets_str_t MapExpression::to_s(){
-	lets_str_t result = "{ ";
+	lets_str_t result = "{";
 
 	int i = 0;
 	int size = (int)elements.size();
@@ -31,7 +31,7 @@ lets_str_t MapExpression::to_s(){
 		if(i != size) result +=  ", ";
 		i++;
 	}
-	result +=  " }";
+	result +=  "}";
 
 	return result;
 }

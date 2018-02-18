@@ -8,18 +8,37 @@
 
 // #include <iostream> // for dbg
 #include <cstdlib>
-#include "../../include/lib/string_value.hpp"
+#include "../../include/lib/include_values.h"
 
 StringValue::StringValue(){
 	this->value = "";
+	this->construct();
 }
 
 StringValue::StringValue(char value){
 	this->value = lets_ctos(value);
+	this->construct();
 }
 
 StringValue::StringValue(lets_str_t value){
 	this->value = value;
+	this->construct();
+}
+
+Value* StringValue::construct(){
+	this->set_class_name("String");
+	DEFAULT_METHODS_OF_CLASS()
+}
+
+Value* StringValue::construct(FUNCS_ARGS args){
+
+	if(args.size() == 0){
+		value = "";
+	} else {
+		value = args.at(0)->as_string();
+	}
+
+	return this;
 }
 
 bool StringValue::as_bool(){
@@ -71,6 +90,7 @@ lets_str_t StringValue::as_string(){
 }
 
 lets_str_t StringValue::to_s(){
+	// return "'" + as_string() + "'";
 	return as_string();
 }
 
@@ -90,6 +110,14 @@ int StringValue::compareTo(Value *obj) {
 		return this->value.compare(dynamic_cast<StringValue*>(obj)->value);
 	}
 	return this->value.compare(obj->as_string());
+}
+
+Value* StringValue::get(Value* key){
+	return this->get_prop(key);
+}
+
+void StringValue::set(Value* key, Value* value){
+	this->set_prop(key, value);
 }
 
 StringValue::~StringValue(){}

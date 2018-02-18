@@ -1,0 +1,8 @@
+num = new Number() # 0
+num = new Number(1) # 1
+num = new Number('112.13') # 112.13
+
+num2 = 0123 # 83
+
+print num
+print 'type() => ' + num.type()

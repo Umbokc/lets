@@ -12,7 +12,7 @@
 PutStatement::PutStatement(Expression *expression):expression(std::move(expression)){}
 
 void PutStatement::execute(){
-	std::cout << expression->eval()->to_s();
+	lets_simple_output(expression->eval()->to_s());
 }
 
 lets_str_t PutStatement::to_s(){

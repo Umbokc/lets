@@ -6,37 +6,109 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-// #include <iostream> // for dbg
+#include <iostream> // for dbg
 
-#include "../../include/lib/array_value.hpp"
-#include "../../include/lib/number_value.hpp"
-#include "../../include/lib/null_value.hpp"
+#include "../../include/lib/include_values.h"
 #include "../../include/exception/execute.h"
 #include "../../include/tools.hpp"
 
+#define UPDATE_SIZE() this->define_prop("size", Variable(new NumberValue(this->size()), false, true));
+
+ArrayValue::ArrayValue(){
+	this->construct();
+}
 
 ArrayValue::ArrayValue(int size){
 	elements.resize(size);
+	this->construct();
 }
 
 ArrayValue::ArrayValue(Value *val){
 	this->elements.push_back(val);
+	this->construct();
 }
 
 ArrayValue::ArrayValue(lets_vector_t<Value *> elements){
 	this->elements.swap(elements);
+	this->construct();
 }
 
 ArrayValue::ArrayValue(ArrayValue *array){
-	new ArrayValue(array->elements);
+	this->elements = array->elements;
+	this->construct();
+}
+
+Value* ArrayValue::construct(){
+	this->set_class_name("Array");
+	UPDATE_SIZE();
+
+	DEFAULT_METHODS_OF_CLASS()
+
+	ADD_METHOD_TO_CLASS(Array, "reverse", Reverse, {
+		std::reverse(std::begin(self->elements), std::end(self->elements));
+		return NullValue::THE_NULL;
+	}, "")
+
+	ADD_METHOD_TO_CLASS(Array, "is_empty", Is_empty, {
+		return self->elements.empty() ? BoolValue::TRUE : BoolValue::FALSE;
+	}, "")
+
+	ADD_METHOD_TO_CLASS(Array, "has", Has, {
+		if(args.size() == 0) throw ExecuteException("Method "+self->get_class_name()+".has(arg*) one args expected");
+		return self->has(args.at(0)) ? BoolValue::TRUE : BoolValue::FALSE;
+	}, "arg*")
+
+	ADD_METHOD_TO_CLASS(Array, "push", Push, {
+		if(args.size() == 0) throw ExecuteException("Method "+self->get_class_name()+".push(arg*) one args expected");
+		self->add(args.at(0));
+		return NullValue::THE_NULL;
+	}, "arg*")
+
+	return this;
+}
+
+Value* ArrayValue::construct(FUNCS_ARGS args){
+	if(args.size() == 0){
+		elements.resize(0);
+	} else if(args.size() == 1){
+		this->elements = create_array(NullValue::THE_NULL, args, 0)->elements;
+	} else {
+		this->elements = create_array(args.at(0), args, 1)->elements;
+	}
+
+	UPDATE_SIZE();
+
+	return this;
+}
+
+ArrayValue* ArrayValue::create_array(Value* def, FUNCS_ARGS args, int index){
+
+	int size = args[index]->as_int();
+	int last = (int)args.size() -1;
+
+	ArrayValue *array = new ArrayValue(size);
+
+	if(index == last){
+		for (int i = 0; i < size; ++i){
+			array->set(i, def);
+		}
+	} else if(index < last) {
+		for (int i = 0; i < size; ++i){
+			array->set(i, create_array(def, args, index+1));
+		}
+	}
+
+	return array;
 }
 
 void ArrayValue::add(Value *val){
 	this->elements.push_back(val);
+	UPDATE_SIZE();
 }
 
 void ArrayValue::add_forward(Value *val){
 	this->elements.insert(this->elements.begin(), val);
+	UPDATE_SIZE();
 }
 
 Value *ArrayValue::get(int index){
@@ -44,7 +116,7 @@ Value *ArrayValue::get(int index){
 	if(index >= 0 && index < this->len())
 		return this->elements[index];
 
-	throw ExecuteException("Undefined index of array");
+	throw ExecuteException("Undefined index "+ to_str(index) +" of array");
 }
 
 Value *ArrayValue::get_always(int index){
@@ -65,12 +137,12 @@ bool ArrayValue::has(Value *value){
 	uint size = this->elements.size();
 
 	for (uint i = 0; i < size; ++i){
-		if(this->elements.at(i)->equals(value)){
-			return true;
+		if(!this->get(i)->equals(value)){
+			return false;
 		}
 	}
 
-	return false;
+	return true;
 }
 
 bool ArrayValue::has(Value *value, int index){
@@ -99,7 +171,7 @@ void ArrayValue::set(int index, Value *value){
 }
 
 bool ArrayValue::as_bool(){
-	return this->elements.size() != 0;
+	return this->elements.size() != 20;
 }
 
 int ArrayValue::as_int(){
@@ -115,15 +187,29 @@ long ArrayValue::as_long(){
 }
 
 int ArrayValue::len(){
-	return size();
+	return this->size();
 }
 
 int ArrayValue::size(){
 	return (int)this->elements.size();
 }
 
+Value* ArrayValue::get(Value* key){
+	if(key->type() == Types::T_NUMBER)
+		return this->get(key->as_int());
+	else
+		return this->get_prop(key);
+}
+
+void ArrayValue::set(Value* key, Value* value){
+	if(key->type() == Types::T_NUMBER)
+		return this->set(key->as_int(), value);
+	else
+		return this->set_prop(key, value);
+}
+
 lets_str_t ArrayValue::as_string(){
-	return "[ " + NS_Tools::vector_to_s<Value *>(elements, ", ") + " ]";
+	return "[" + NS_Tools::vector_to_s<Value *>(elements, ", ") + "]";
 }
 
 lets_str_t ArrayValue::to_s(){
@@ -137,12 +223,20 @@ Types ArrayValue::type(){
 bool ArrayValue::equals(Value* obj) {
 	if (this == obj) return true;
 	if (obj == NULL) return false;
-	if (!dynamic_cast<ArrayValue*>(obj)) return false;
-	return std::equal(
-		this->elements.begin(),
-		this->elements.end(),
-		dynamic_cast<ArrayValue*>(obj)->elements.begin()
-	);
+	ArrayValue* the_obj;
+	if ((the_obj = dynamic_cast<ArrayValue*>(obj)) == NULL) return false;
+	if (the_obj->size() != this->size()) return false;
+
+
+	uint size = this->elements.size();
+
+	for (uint i = 0; i < size; ++i){
+		if(!this->elements.at(i)->equals(the_obj->elements.at(i))){
+			return false;
+		}
+	}
+
+	return true;
 }
 
 int ArrayValue::compareTo(Value *obj){

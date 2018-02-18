@@ -9,29 +9,15 @@
 #ifndef include__lib__null_value_hpp
 #define include__lib__null_value_hpp
 
-#include "value.h"
+#include "value.hpp"
 
 class NullValue : public Value{
-private:
 public:
-
 	static NullValue *THE_NULL;
 
 	NullValue();
 
-	bool as_bool();
-	int as_int();
-	double as_number();
-	long as_long();
-
-	int len();
-	Types type();
-
-	lets_str_t as_string();
-	lets_str_t to_s();
-
-	bool equals(Value*);
-	int compareTo(Value*);
+	LETS_REQUIRED_METHODS_VALUE_DECL()
 
 	~NullValue();
 };

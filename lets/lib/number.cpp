@@ -12,15 +12,9 @@
 
 Number::Number(){}
 
-Number::Number(int& value){ add(value); }
-Number::Number(double& value){ add(value); }
-Number::Number(long& value){ add(value); }
-
-Number& Number::operator=(const Number& n){ return *this; }
-
-void Number::operator=(int value){ add(value); }
-void Number::operator=(double value){ add(value); }
-void Number::operator=(long value){ add(value);}
+Number::Number(int value){ add(value); }
+Number::Number(double value){ add(value); }
+Number::Number(long value){ add(value); }
 
 int Number::as_int(){
 	return as_number<int>();

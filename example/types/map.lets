@@ -1,0 +1,10 @@
+map = new Map(['key' 'val1'] ['key2' 'val2'])
+
+map2 = {
+	1 : 'val'
+	'key' : ['the best lang', 2],
+	'key2' : { 'key': 1 'key2': 0 }
+}
+
+print map.key
+print 'type() => ' + map.type()

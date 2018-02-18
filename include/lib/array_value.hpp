@@ -12,16 +12,21 @@
 #include <vector>
 #include <string>
 #include "../main.h"
-#include "value.h"
+#include "value.hpp"
 
 class ArrayValue : public Value{
 	lets_vector_t<Value *> elements;
 public:
 
+	ArrayValue();
 	ArrayValue(int);
 	ArrayValue(Value*);
-	ArrayValue(lets_vector_t<Value *> );
+	ArrayValue(lets_vector_t<Value *>);
 	ArrayValue(ArrayValue *);
+
+	LETS_REQUIRED_METHODS_VALUE_DECL()
+
+	ArrayValue* create_array(Value*,FUNCS_ARGS,int);
 
 	void add(Value *);
 	void add_forward(Value *);
@@ -35,19 +40,7 @@ public:
 
 	void set(int , Value *);
 
-	bool as_bool();
-	int as_int();
-	double as_number();
-	long as_long();
-	int len();
 	int size();
-
-	lets_str_t as_string();
-	lets_str_t to_s();
-	Types type();
-
-	bool equals(Value* );
-	int compareTo(Value *);
 
 	~ArrayValue();
 };

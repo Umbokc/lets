@@ -9,6 +9,7 @@
 #ifndef include__exception__error_h
 #define include__exception__error_h
 
+#include <string>
 #include "../main.h"
 
 namespace ExceptionsError {
@@ -20,6 +21,10 @@ namespace ExceptionsError {
 
 	const lets_str_t E_UNKNOWN_FUNC = "Unknown function '%s' ";
 	const lets_str_t E_CNN_REWRITE_FUNC = "Cannot rewrite constant function '%s' ";
+	const lets_str_t E_CNN_FUNC_TO_NUM = "Cannot cast function to number";
+	const lets_str_t E_CNN_CLASS_TO_NUM = "Cannot cast class to number";
+	const lets_str_t E_UNKNOWN_CLASS = "Unknown class '%s' ";
+	const lets_str_t E_CNN_REWRITE_CLASS = "Class '%s' already exists";
 	const lets_str_t E_CNN_REWRITE_CONSTANT = "Cannot assign value to constant '%s' ";
 
 	const lets_str_t P_NULL_INDEX_ARR = "Undefined index of array";

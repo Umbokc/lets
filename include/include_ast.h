@@ -9,13 +9,13 @@
 #ifndef include__include_ast_h
 #define include__include_ast_h
 
-#include "expressions/array_access_expr.hpp"
 #include "expressions/array_expr.hpp"
 #include "expressions/assignment_expr.hpp"
 #include "expressions/binary_expr.hpp"
 #include "expressions/conditional_expr.hpp"
 #include "expressions/container_access_expr.hpp"
 #include "expressions/functional_expr.hpp"
+#include "expressions/class_expr.hpp"
 #include "expressions/in_expr.hpp"
 #include "expressions/map_expr.hpp"
 #include "expressions/match_expr.hpp"
@@ -24,7 +24,6 @@
 #include "expressions/value_expr.hpp"
 #include "expressions/variable_expr.hpp"
 
-#include "statements/array_assignment_stat.hpp"
 #include "statements/block_stat.hpp"
 #include "statements/break_stat.hpp"
 #include "statements/continue_stat.hpp"

@@ -6,22 +6,43 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#include "../../include/lib/map_value.hpp"
-#include "../../include/lib/string_value.hpp"
-#include "../../include/lib/number_value.hpp"
-#include "../../include/lib/null_value.hpp"
-#include "../../include/lib/array_value.hpp"
-#include "../../include/exception/execute.h"
-#include "../../include/lib/function_value.hpp"
+#include <iostream> // for dbg
 
-MapValue::MapValue(){}
+#include "../../include/lib/include_values.h"
+#include "../../include/exception/execute.h"
+
+MapValue::MapValue(){this->construct();}
 
 MapValue::MapValue(lets_map_t<lets_str_t, Value *>& elems){
 		this->elems.swap(elems);
+		this->construct();
 }
 
 MapValue::MapValue(MapValue *map_val){
 		new MapValue(map_val->elems);
+		this->construct();
+}
+
+Value* MapValue::construct(){
+	this->set_class_name("Map");
+	DEFAULT_METHODS_OF_CLASS()
+}
+
+Value* MapValue::construct(FUNCS_ARGS args){
+
+	if(args.size() != 0){
+		uint size = args.size();
+		for (int i = 0; i < size; ++i){
+			if(args.at(i)->type() == T_ARRAY){
+				ArrayValue* arr = dynamic_cast<ArrayValue*>(args.at(i));
+				if(arr->size() == 2){
+					this->set(arr->get(0), arr->get(1));
+				}
+			}
+		}
+	}
+
+	return this;
 }
 
 ArrayValue* MapValue::to_pairs(){
@@ -38,9 +59,11 @@ bool MapValue::is_exists(Value *key){
 }
 
 Value *MapValue::get(Value *key){
-	if(is_exists(key))
+	if(this->is_exists(key))
 		return this->elems[key->to_s()];
-	throw ExecuteException("Undefined key of map");
+
+	return this->get_prop(key);
+
 }
 
 Value *MapValue::get_by_index(size_t index){
@@ -67,11 +90,11 @@ bool MapValue::has(lets_str_t key, Value *value){
 }
 
 void MapValue::set(Value *key, Value *value){
-	this->elems[key->to_s()] = value;
+	this->elems[key->as_string()] = value;
 }
 
 void MapValue::set(Value *key, Function *function){
-	this->elems[key->to_s()] = new FunctionValue(function);
+	this->elems[key->as_string()] = new FunctionValue(function);
 }
 
 bool MapValue::as_bool(){
@@ -95,7 +118,7 @@ int MapValue::len(){
 }
 
 lets_str_t MapValue::as_string(){
-	lets_str_t result = "{ ";
+	lets_str_t result = "{";
 
 	int i = 0;
 	int size = this->len();
@@ -106,7 +129,7 @@ lets_str_t MapValue::as_string(){
 		if(i != size-1) result +=  ", ";
 		i++;
 	}
-	result +=  " }";
+	result +=  "}";
 
 	return result;
 }
@@ -122,12 +145,17 @@ Types MapValue::type(){
 bool MapValue::equals(Value* obj) {
 	if (this == obj) return true;
 	if (obj == NULL) return false;
-	if (!dynamic_cast<MapValue*>(obj)) return false;
-	return std::equal(
-		this->elems.begin(),
-		this->elems.end(),
-		dynamic_cast<MapValue*>(obj)->elems.begin()
-	);
+	MapValue* the_obj;
+	if ((the_obj = dynamic_cast<MapValue*>(obj)) == NULL) return false;
+	if (the_obj->len() != this->len()) return false;
+
+	for (auto& elem : the_obj->elems){
+		if(!this->has(elem.first, elem.second)){
+			return false;
+		}
+	}	
+
+	return true;
 }
 
 int MapValue::compareTo(Value *obj){
