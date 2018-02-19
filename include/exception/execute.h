@@ -36,6 +36,9 @@ public:
 		:message(std::move(message)),
 		row(std::move(row)), col(std::move(col)){}
 
+	ExecuteException(size_t row, size_t col):
+		row(std::move(row)), col(std::move(col)){}
+
 	ExecuteException(lets_str_t message, size_t row, size_t col, lets_str_t file)
 		:message(std::move(message)),
 		row(std::move(row)), col(std::move(col)),

@@ -46,7 +46,7 @@ Value* ArrayValue::construct(){
 
 	ADD_METHOD_TO_CLASS(Array, "reverse", Reverse, {
 		std::reverse(std::begin(self->elements), std::end(self->elements));
-		return NullValue::THE_NULL;
+		return self;
 	}, "")
 
 	ADD_METHOD_TO_CLASS(Array, "is_empty", Is_empty, {
@@ -54,14 +54,17 @@ Value* ArrayValue::construct(){
 	}, "")
 
 	ADD_METHOD_TO_CLASS(Array, "has", Has, {
-		if(args.size() == 0) throw ExecuteException("Method "+self->get_class_name()+".has(arg*) one args expected");
+		if(args.size() == 0) throw ExecuteException("Method "+self->get_class_name()+".has(arg*, pos = null) one args expected");
+		if(args.size() == 2){
+			return self->has(args.at(0), args.at(1)->as_int()) ? BoolValue::TRUE : BoolValue::FALSE;
+		}
 		return self->has(args.at(0)) ? BoolValue::TRUE : BoolValue::FALSE;
-	}, "arg*")
+	}, "arg*, pos = null")
 
 	ADD_METHOD_TO_CLASS(Array, "push", Push, {
 		if(args.size() == 0) throw ExecuteException("Method "+self->get_class_name()+".push(arg*) one args expected");
 		self->add(args.at(0));
-		return NullValue::THE_NULL;
+		return args.at(0);
 	}, "arg*")
 
 	return this;
@@ -203,9 +206,9 @@ Value* ArrayValue::get(Value* key){
 
 void ArrayValue::set(Value* key, Value* value){
 	if(key->type() == Types::T_NUMBER)
-		return this->set(key->as_int(), value);
+		this->set(key->as_int(), value);
 	else
-		return this->set_prop(key, value);
+		this->set_prop(key, value);
 }
 
 lets_str_t ArrayValue::as_string(){

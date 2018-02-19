@@ -71,6 +71,8 @@ private:
 	MatchExpression* match();
 	Expression* expression();
 	Expression* assignment();
+	Expression* get_properties(Expression*);
+	Expression* get_properties_container(Expression*);
 	Expression* assignment_strict();
 	Expression* include_expression();
 	Expression* in_expression();
@@ -103,6 +105,7 @@ private:
 
 	int find_c(lets_str_t, char);
 	void error_pars(lets_str_t, Token);
+	void error_pars(lets_str_t, Node*);
 };
 
 #endif /* include__parser_hpp */

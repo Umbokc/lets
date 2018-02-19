@@ -16,7 +16,11 @@ private:
 	lets_str_t variable;
 public:
 
-	VariableDoesNotExistsException(lets_str_t& variable):variable(std::move(variable)){
+  VariableDoesNotExistsException(lets_str_t& variable):variable(std::move(variable)){
+    this->message = "Variable " + this->variable + " does not exists";
+  }
+
+	VariableDoesNotExistsException(lets_str_t& variable, size_t row, size_t col):ExecuteException(row, col), variable(std::move(variable)){
 		this->message = "Variable " + this->variable + " does not exists";
 	}
 

@@ -35,7 +35,13 @@ Expression *ContainerAccessExpression::get_root(){
 }
 
 Value *ContainerAccessExpression::eval(){
-	return get();
+	try{
+		return get();
+	} catch(ExecuteException& e){
+		e.row = indices.back()->get_position_row();
+		e.col = indices.back()->get_position_col();
+		throw e;
+	}
 }
 
 Value *ContainerAccessExpression::get(){

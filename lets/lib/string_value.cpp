@@ -10,6 +10,8 @@
 #include <cstdlib>
 #include "../../include/lib/include_values.h"
 
+#define UPDATE_LEN() this->define_prop("len", Variable(new NumberValue(this->len()), false, true));
+
 StringValue::StringValue(){
 	this->value = "";
 	this->construct();
@@ -28,6 +30,31 @@ StringValue::StringValue(lets_str_t value){
 Value* StringValue::construct(){
 	this->set_class_name("String");
 	DEFAULT_METHODS_OF_CLASS()
+
+	ADD_METHOD_TO_CLASS(String, "reverse", Reverse, {
+		std::reverse(std::begin(self->value), std::end(self->value));
+		return self;
+	}, "")
+
+		ADD_METHOD_TO_CLASS(String, "is_empty", Is_empty, {
+		return self->value.empty() ? BoolValue::TRUE : BoolValue::FALSE;
+	}, "")
+
+	ADD_METHOD_TO_CLASS(String, "has", Has, {
+		if(args.size() == 0) throw ExecuteException("Method "+self->get_class_name()+".has(arg*, pos = null) one args expected");
+		if(args.size() == 2){
+			return self->has(args.at(0), args.at(1)->as_int()) ? BoolValue::TRUE : BoolValue::FALSE;
+		}
+		return self->has(args.at(0)) ? BoolValue::TRUE : BoolValue::FALSE;
+	}, "arg*, pos = null")
+
+	ADD_METHOD_TO_CLASS(String, "push", Push, {
+		if(args.size() == 0) throw ExecuteException("Method "+self->get_class_name()+".push(arg*) one args expected");
+		return new StringValue(self->value.append(args.at(0)->as_string()));
+	}, "arg*")
+
+
+	UPDATE_LEN();
 }
 
 Value* StringValue::construct(FUNCS_ARGS args){
@@ -37,6 +64,8 @@ Value* StringValue::construct(FUNCS_ARGS args){
 	} else {
 		value = args.at(0)->as_string();
 	}
+
+	UPDATE_LEN();
 
 	return this;
 }
@@ -113,16 +142,19 @@ int StringValue::compareTo(Value *obj) {
 }
 
 Value* StringValue::get(Value* key){
-	return this->get_prop(key);
+	if(key->type() == Types::T_NUMBER)
+		return new StringValue(this->get_c(key->as_int()));
+	else
+		return this->get_prop(key);
 }
 
 void StringValue::set(Value* key, Value* value){
-	this->set_prop(key, value);
+	if(key->type() == Types::T_NUMBER){
+		this->value.replace(key->as_int(), 1, value->as_string());
+	} else {
+		this->set_prop(key, value);
+	}
+	UPDATE_LEN();
 }
 
 StringValue::~StringValue(){}
-
-// lets_str_t StringValue::lets_ctos(char a) {
-// 	lets_str_t s = "";
-// 	return s + a;
-// }

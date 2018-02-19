@@ -21,11 +21,12 @@
 #define Lets_PUSH_BUFFER(T) \
 	this->buffer.push_back(T);
 
-lets_str_t Lexer::OPERATORS_CHARS = "+-*/%()[]{}=<>!&|,^~?:.@";
+lets_str_t Lexer::OPERATORS_CHARS = "+-*\\/%()[]{}=<>!&|,^~?:.@";
 lets_map_t<lets_str_t, u_tt_t> Lexer::OPERATORS = {
 	{TT_PLUS_TEXT, TT_PLUS},
 	{TT_MINUS_TEXT, TT_MINUS},
 	{TT_STAR_TEXT, TT_STAR},
+	{TT_BACKSLASH_TEXT, TT_BACKSLASH},
 	{TT_SLASH_TEXT, TT_SLASH},
 	{TT_PERCENT_TEXT, TT_PERCENT},
 	{TT_LPAREN_TEXT, TT_LPAREN},
@@ -145,7 +146,10 @@ void Lexer::tokenize_number() {
 	while (true) {
 
 		if(current == '.') {
-			if(find_c(this->buffer, '.') != -1 || is_octal) throw LexerException(ExceptionsError::L_INVALID_FLOAT, this->row, this->col);
+			if(find_c(this->buffer, '.') != -1 || is_octal)
+				throw LexerException(ExceptionsError::L_INVALID_FLOAT, this->row, this->col);
+			else if(!isdigit(peek(1)))
+				break;
 		} else if(current == '_') {
 			current = next();
 			continue;

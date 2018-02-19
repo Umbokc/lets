@@ -39,8 +39,9 @@ public:
 	Lexer() {}
 	Lexer& operator=(const Lexer& r) { return *this; }
 
-	Lexer(const lets_str_t& i) :input(std::move(i)) {
-		length = i.length();
+	Lexer(const lets_str_t& i){
+		input = (" " + std::move(i));
+		length = input.length();
 	}
 
 	lets_vector_t<Token> tokenize();

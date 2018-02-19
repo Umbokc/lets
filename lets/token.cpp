@@ -22,7 +22,7 @@ lets_str_t Token::get_text(){ return text; }
 void Token::set_text(const lets_str_t& text){ this->text = text; }
 
 lets_str_t Token::to_s(){ 
-	return ("< " + TokenTypeString[this->type] + " : " + text + " >");
+	return TOKEN_TO_STRING(this->type, this->text);
 }
 
 size_t Token::get_row() { return this->row; }

@@ -30,10 +30,6 @@ private:
 	class F_Len : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS);};
 	class F_Echo : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS);};
 	class F_Echos : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS);};
-	class F_NewArray : public ModuleParentClassFunctions{
-		public: Value* execute(FUNCS_ARGS);
-		private:ArrayValue* create_array(FUNCS_ARGS, int);
-	};
 	class F_IsExist : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS);};
 	class F_Rand : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS);};
 

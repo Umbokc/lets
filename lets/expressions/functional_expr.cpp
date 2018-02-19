@@ -84,5 +84,8 @@ Function* FunctionalExpression::get_function(lets_str_t key){
 	}
 
 
-	throw ExecuteException(NS_Tools::string_format(ExceptionsError::E_UNKNOWN_FUNC, key.c_str()));
+	throw ExecuteException(
+		NS_Tools::string_format(ExceptionsError::E_UNKNOWN_FUNC, key.c_str()),
+		get_position_row(), get_position_col()
+	);
 }

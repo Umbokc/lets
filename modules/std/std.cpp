@@ -42,7 +42,6 @@ void LetsModule__std::set(lets_str_t name){
 	CHECK_AND_DEFINE_FUNC_MODULE("len", Len)
 	CHECK_AND_DEFINE_FUNC_MODULE("echo", Echo)
 	CHECK_AND_DEFINE_FUNC_MODULE("echos", Echos)
-	CHECK_AND_DEFINE_FUNC_MODULE("newArray", NewArray)
 	CHECK_AND_DEFINE_FUNC_MODULE("is_exist", IsExist)
 	CHECK_AND_DEFINE_FUNC_MODULE("rand", Rand)
 
@@ -71,30 +70,6 @@ Value* LetsModule__std::F_Echos::execute(FUNCS_ARGS args){
 	}
 	return NumberValue::ZERO;
 }
-
-Value* LetsModule__std::F_NewArray::execute(FUNCS_ARGS args){
-	return create_array(args, 0);
-}
-ArrayValue* LetsModule__std::F_NewArray::create_array(FUNCS_ARGS args, int index){
-
-	int size = args[index]->as_int();
-	int last = (int)args.size() -1;
-
-	ArrayValue *array = new ArrayValue(size);
-
-	if(index == last){
-		for (int i = 0; i < size; ++i){
-			array->set(i, NumberValue::ZERO);
-		}
-	} else if(index < last) {
-		for (int i = 0; i < size; ++i){
-			array->set(i, create_array(args, index+1));
-		}
-	}
-
-	return array;
-}
-
 
 Value* LetsModule__std::F_IsExist::execute(FUNCS_ARGS args){
 	for(auto a : args){

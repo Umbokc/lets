@@ -17,7 +17,8 @@ Value* VariableExpression::eval(){
 }
 
 Value* VariableExpression::get(){
-	if(!Variables::is_exists_all(name)) throw VariableDoesNotExistsException(name);
+	if(!Variables::is_exists_all(name))
+		throw VariableDoesNotExistsException(name, get_position_row(), get_position_col());
 	return Variables::get(name);
 }
 

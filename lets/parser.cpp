@@ -159,7 +159,7 @@ Statement* Parser::statement(){
 	if (look_match(0, TT_IDENTIFIER) && look_match(1,TT_LPAREN)) {
 		NEW_STATEMENT_RETURN_ARG(Expr, GET_ROW(0), GET_COL(0), (function_chain((qualified_name()))))
 	}
-	if (look_match(0, TT_LBRACKET)) {
+	if (look_match(0, TT_BACKSLASH)) {
 		return multi_assignment_statement();
 	}
 
@@ -181,13 +181,16 @@ Statement* Parser::multi_assignment_statement(){
 	size_t row = GET_ROW(0), col = GET_COL(0);
 	lets_vector_t<Accessible*> elements;
 
-	consume(TT_LBRACKET);
+	this->consume(TT_BACKSLASH);
 
-	while(!match(TT_RBRACKET)){
+	while(!match(TT_BACKSLASH)){
 		Expression* target_expr = this->qualified_name();
 
-		if((target_expr == NULL) || !(dynamic_cast<Accessible*>(target_expr))){
+		if(target_expr == NULL){
 			this->error_pars("Variable expected. Got: " + get(0).to_s(), get(0));
+		}
+		if(!(dynamic_cast<Accessible*>(target_expr))){
+			this->error_pars("Variable expected. Got: " + target_expr->to_s(), target_expr);
 		}
 
 		elements.push_back(dynamic_cast<Accessible*>(target_expr));
@@ -537,7 +540,34 @@ Expression* Parser::assignment(){
 		return assignment;
 	}
 
-	return include_expression();
+	Expression* expr = include_expression();
+
+	// if(look_match(0, TT_DOT) || look_match(0, TT_LBRACKET)){
+	if(look_match(0, TT_DOT)){
+		return get_properties(expr);
+	}
+
+	return expr;
+}
+
+Expression* Parser::get_properties(Expression* expr){
+	Expression* container = get_properties_container(expr);
+
+	if(look_match(0, TT_LPAREN)){
+		return function_chain(container);
+	}
+
+	return container;
+}
+
+Expression* Parser::get_properties_container(Expression* expr){
+	lets_vector_t<Expression*> indices = variable_suffix();
+	if(indices.empty()){
+		dbg("empty")
+		exit(1);
+	} else {
+		NEW_EXPRESSION_RETURN_ARG(ContainerAccess, expr->get_position_row(), expr->get_position_col(), (expr, indices))
+	}
 }
 
 Expression* Parser::assignment_strict(){
@@ -931,7 +961,7 @@ Token Parser::consume(u_tt_t type){
 	Token current = get(0);
 
 	if(type != current.get_type()){
-		error_pars("Token " + TokenTypeString[current.get_type()] + " dosn't match " + TokenTypeString[type], current);
+		error_pars("Token " + current.to_s() + " dosn't match " + TOKEN_TO_STRING(type, ""), current);
 	}
 
 	pos++;
@@ -986,4 +1016,8 @@ int Parser::find_c(lets_str_t s, char c) {
 
 void Parser::error_pars(lets_str_t text, Token t){
 	throw ParseException(text, "Parsing error", t.get_row(), t.get_col());
+}
+
+void Parser::error_pars(lets_str_t text, Node* n){
+	throw ParseException(text, "Parsing error", n->get_position_row(), n->get_position_col());
 }
