@@ -3,7 +3,7 @@ use ['echo'] in 'std'
 two_vars = def():
 	a = 11 b = 33
 	echo ('a = ' + a, 'b = ' + b)
-	[a,b] = [b, a]
+	\ a, b \ = [b, a]
 	echo ('a = ' + a, 'b = ' + b)
 end
 
@@ -15,7 +15,7 @@ second = def():
 		'key_2' : 'val_2'
 	}
 
-	[a,b,c,arr[0],map.key_2] = [1 2 3 4 ['the' 'arr']]
+	\ a, b, c, arr[0],map.key_2 \ = [1 2 3 4 ['the' 'arr']]
 
 	print a
 	print b
@@ -31,7 +31,7 @@ third = def():
 		'a' : 1,
 	}
 
-	[a,b] = map
+	\ a, b \ = map
 
 	print a # [ a, 1 ]
 	print b # [ c, 3 ]

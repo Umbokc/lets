@@ -10,12 +10,12 @@ include 'sort-function.lets'
 arr = [3 2 1]
 
 print insertion_sort(arr)
-# print __here_var	
+# print __here_var
 
 a = include 'return-file.lets'
 print a
 
-a,b,c = [1 2 3]
+\ a,b,c \ = [1 2 3]
 
 print [a b c]
 
@@ -24,19 +24,19 @@ c = ''
 print c == '2'
 
 if c == '2'
-	print 'if'
+  print 'if'
 elif c == '+'
-	print 'else if'
+  print 'else if'
 else
-	print 'else'
+  print 'else'
 end
 
 a = 1
 
 if 1 == 12 or 3 == 3
-	++a print a
+  ++a print a
 end
 
-# print input('Enter: ')
+inp = input('Enter: ')
 
-
+print new Number(inp) * 3

@@ -42,7 +42,7 @@ def getPrime(x):
 end
 
 get_random_nums = def(min max nums):
-	arr = newArray(nums)
+	arr = new Array(nums)
 	for i = 0, i < nums, ++i :
 		x = rand(min max)
 		if not x in arr

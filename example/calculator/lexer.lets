@@ -5,6 +5,10 @@ def is_digit(c):
 	return c in nums
 end
 
+def token(type val):
+	return { 'type' : type, 'value' : val}
+end
+
 def	Lexer(input):
 
 	tokens = []
@@ -29,9 +33,9 @@ def	Lexer(input):
 				curr = input[i]
 			end
 			--i
-			tokens << { 'type' : 'NUMBER', 'value' : buffer}
+			tokens << token('NUMBER' buffer)
 		elif curr in _operators
-			tokens << { 'type' : _operators[curr], 'value' : curr}
+			tokens << token(_operators[curr] curr)
 		end
 	end
 

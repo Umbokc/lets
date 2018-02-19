@@ -4,3 +4,8 @@ str = new String('this is string')
 
 print str
 print 'type() => ' + str.type()
+
+print 'this is string'.reverse()
+print ' '.is_empty()
+print 'this is string'.has('t', 0)
+print 'this is string'.push(11)

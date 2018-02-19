@@ -1,4 +1,3 @@
-use ['len'] in 'std'
 use ['to_i'] in 'type'
 
 @tokens = []
@@ -9,7 +8,7 @@ use ['to_i'] in 'type'
 def parse(ts):
 	@tokens = ts
 	@pos = 0
-	@size = len(@tokens)
+	@size = @tokens.size
 	return expression()
 end
 

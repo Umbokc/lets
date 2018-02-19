@@ -1,4 +1,4 @@
-
+@a = 1
 return {
 	'user' : 'Walter'
 	'password' : '1234'
