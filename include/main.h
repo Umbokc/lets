@@ -6,8 +6,8 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#ifndef include/main_h
-#define include/main_h
+#ifndef include__main_h
+#define include__main_h
 
 #define lets_vector_t std::vector
 #define lets_map_t std::map
@@ -28,4 +28,4 @@
 
 //#define dbg(s, b) std::cout << "debug: " << s << std::endl; if (b) exit(0);
 
-#endif /* include/main_h */
+#endif /* include__main_h */
