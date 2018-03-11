@@ -27,11 +27,16 @@ void ClassExpression::add_arguments(Expression *arg){
 }
 
 void ClassExpression::execute(){
-	eval();
+	try{
+		eval();
+	} catch(ExecuteException& e){
+		e.row = this->get_position_row();
+		e.col = this->get_position_col();
+		throw e;
+	}
 }
 
 Value *ClassExpression::eval(){
-
 	int size = (int)this->arguments.size();
 	FUNCS_ARGS values;
 	values.reserve(size);
@@ -63,10 +68,9 @@ Value* ClassExpression::consume_class(Expression *expr){
 
 	try{
 		Value* value = expr->eval();
-		if(value->type() == Types::T_CLASS){
-			return dynamic_cast<ClassValue*>(value)->get_value();
-		}
-		return get_class(value->as_string());
+		// if(value->type() == Types::T_CLASS)
+			return value;
+		// return get_class(value->as_string());
 	} catch (VariableDoesNotExistsException& e) {
 		return get_class(e.get_variable());
 	}
@@ -77,11 +81,8 @@ Value* ClassExpression::get_class(lets_str_t key){
 	if(Classes::is_exists(key)) return Classes::get(key);
 
 	if(Variables::is_exists(key)){
-		Value* variable = Variables::get(key);
-		if(variable->type() == Types::T_CLASS){
-			return dynamic_cast<ClassValue*>(variable)->get_value();
-		}
+		return Variables::get(key);
 	}
 
-	throw ExecuteException(NS_Tools::string_format(ExceptionsError::E_UNKNOWN_CLASS, key.c_str()));
+	throw ExecuteException(NS_Tools::string_format(ExceptionsError::E_UNKNOWN_CLASS, key.c_str()), this->get_position_row(), this->get_position_col());
 }

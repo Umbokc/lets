@@ -35,6 +35,7 @@ public:
 	Value *get_always(int);
 	lets_vector_t<Value *> get_all();
 
+	size_t count(Value*);
 	bool has(Value*);
 	bool has(Value*, int);
 

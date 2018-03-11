@@ -9,8 +9,9 @@
 #ifndef include__node_h
 #define include__node_h
 
-#include <iostream> #include "main.h" // for dbg() 
-#include "declaration.h"
+#include <iostream> // for dbg
+#include "main.h" // for dbg
+
 #include "visitors/visitor.h"
 #include "visitors/result_visitor.h"
 

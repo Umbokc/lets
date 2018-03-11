@@ -11,7 +11,6 @@
 
 #include <string>
 #include "main.h"
-#include "declaration.h"
 #include "expression.h"
 
 class Argument {

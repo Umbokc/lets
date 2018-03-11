@@ -15,39 +15,17 @@ use 'std'
 }
 
 def call_operations(ops a b):
-	def print_op(a, b, op):
+	for op in ops :
+		print op
 		echo(a, ' ', op, ' ', b, ' = ', @operations[op](a b))
 	end
-
-	if '' in ops
-		for key, operation in @operations:
-			print_op(a, b, key)
-		end
-	else
-		for op in ops :
-			match op
-				case '+': print_op(a, b, op)
-				case '-': print_op(a, b, op)
-				case '*': print_op(a, b, op)
-				case '/': print_op(a, b, op)
-				case '%': print_op(a, b, op)
-				case '&': print_op(a, b, op)
-				case '|': print_op(a, b, op)
-				case '^': print_op(a, b, op)
-				case '<<': print_op(a, b, op)
-				case '>>': print_op(a, b, op)
-			end
-		end
-	end
-
-	print ''
 end
 
 print "Binary operations with: \n"
 # number
 def number():
 	print "Numbers"
-	call_operations([''] 10 4)
+	call_operations(['+' '*'] 10 4)
 end
 
 # array
@@ -86,6 +64,6 @@ def bitwise():
 end
 
 number()
-array()
+# array()
 # map()
-bitwise()
+# bitwise()

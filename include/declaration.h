@@ -9,7 +9,18 @@
 #ifndef include__declaration_h
 #define include__declaration_h
 
+class Property;
+class PropertiesContainer;
 class Value;
+class Function;
+class BoolValue;
+class NullValue;
+class NumberValue;
+class StringValue;
+class ArrayValue;
+class MapValue;
+class ClassValue;
+class FunctionValue;
 
 class Node;
 class Accessible;

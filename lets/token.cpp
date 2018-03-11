@@ -5,23 +5,32 @@
 //  Created by Dragan Stepan on 30.10.17.
 //  Copyright © 2017 umbokc. All rights reserved.
 //
-#include <iostream> // for dbg
+// #include <iostream> // for dbg
 #include "../include/token.hpp"
-#include "../include/tokentype.h"
+#include "../include/tokentype.h";
 
 Token::Token(){}
 Token& Token::operator=(const Token& t){return *this;}
 
-Token::Token(u_tt_t tt, lets_str_t txt, size_t r, size_t c)
-	:type(std::move(tt)), text(std::move(txt)), row(std::move(r)), col(std::move(c)){}
+Token::Token(u_tt_t tt, u_tt_t k, u_tt_t o, lets_str_t txt, size_t r, size_t c)
+	:type(std::move(tt)), 
+	kw(std::move(k)), op(std::move(o)),
+	text(txt),
+	row(std::move(r)), col(std::move(c)){}
 
-u_tt_t Token::get_type(){ return type; }
+u_tt_t Token::get_kw(){ return this->kw; }
+void Token::set_kw(const u_tt_t& kw){ this->kw = kw; }
+
+u_tt_t Token::get_op(){ return this->op; }
+void Token::set_op(const u_tt_t& op){ this->op = op; }
+
+u_tt_t Token::get_type(){ return this->type; }
 void Token::set_type(const u_tt_t& type){ this->type = type; }
 
-lets_str_t Token::get_text(){ return text; }
+lets_str_t Token::get_text(){ return this->text; }
 void Token::set_text(const lets_str_t& text){ this->text = text; }
 
-lets_str_t Token::to_s(){ 
+lets_str_t Token::to_s(){
 	return TOKEN_TO_STRING(this->type, this->text);
 }
 

@@ -12,7 +12,7 @@
 #include "../../include/exception/execute.h"
 #include "../../include/tools.hpp"
 
-#define UPDATE_SIZE() this->define_prop("size", Variable(new NumberValue(this->size()), false, true));
+#define UPDATE_SIZE() this->define_prop("size", Property(new NumberValue(this->size()), false, true));
 
 ArrayValue::ArrayValue(){
 	this->construct();
@@ -44,6 +44,15 @@ Value* ArrayValue::construct(){
 
 	DEFAULT_METHODS_OF_CLASS()
 
+	ADD_METHOD_TO_CLASS(Array, "join", Join, {
+		return new StringValue(
+			NS_Tools::vector_to_s<Value *>(
+				self->elements,
+				((args.size() == 1) ? args.at(0)->as_string() : ",")
+			)
+		);
+	}, "")
+
 	ADD_METHOD_TO_CLASS(Array, "reverse", Reverse, {
 		std::reverse(std::begin(self->elements), std::end(self->elements));
 		return self;
@@ -65,6 +74,11 @@ Value* ArrayValue::construct(){
 		if(args.size() == 0) throw ExecuteException("Method "+self->get_class_name()+".push(arg*) one args expected");
 		self->add(args.at(0));
 		return args.at(0);
+	}, "arg*")
+
+	ADD_METHOD_TO_CLASS(Array, "count", Count, {
+		if(args.size() == 0) throw ExecuteException("Method "+self->get_class_name()+".count(arg*) one args expected");
+		return new NumberValue((int)self->count(args.at(0)));
 	}, "arg*")
 
 	return this;
@@ -134,16 +148,25 @@ lets_vector_t<Value *> ArrayValue::get_all(){
 	return this->elements;
 }
 
+size_t ArrayValue::count(Value *value){
+
+	lets_vector_t<Value*>::iterator first = this->elements.begin();
+	lets_vector_t<Value*>::iterator last = this->elements.end();
+	size_t res = 0;
+
+	while (first!=last) {
+		if((*first)->equals(value)) res++;
+		++first;
+	}
+
+	return res;
+}
+
 bool ArrayValue::has(Value *value){
 	if (this == value) return false;
 
-	uint size = this->elements.size();
-
-	for (uint i = 0; i < size; ++i){
-		if(!this->get(i)->equals(value)){
-			return false;
-		}
-	}
+	if(this->count(value) == 0)
+		return false;
 
 	return true;
 }

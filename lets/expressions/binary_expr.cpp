@@ -37,10 +37,7 @@ lets_str_t BinaryExpression::to_s(){
 	);
 }
 
-BinaryExpression::~BinaryExpression(){
-	// delete[] expr1;
-	// delete[] expr2;
-}
+BinaryExpression::~BinaryExpression(){}
 
 Value *BinaryExpression::eval(Value *value1, Value *value2){
 	try{
@@ -63,7 +60,7 @@ Value *BinaryExpression::eval(Value *value1, Value *value2){
 //            std::cout << "Error binary operation: " << pe.get_message() << std::endl;
 //            return NullValue::THE_NULL;
 //        } else {
-			throw ExecuteException(pe.get_message());
+			throw ExecuteException(pe.get_message(), this->get_position_row(), this->get_position_col());
 //        }
 	}
 	return NullValue::THE_NULL;

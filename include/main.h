@@ -9,9 +9,14 @@
 #ifndef include__main_h
 #define include__main_h
 
+#include "declaration.h"
+
+#define lets_array_t lets_lib::Array
 #define lets_vector_t std::vector
 #define lets_map_t std::map
 #define lets_str_t std::string
+#define lets_s_ptr_t std::shared_ptr
+
 #define u_tt_t unsigned int
 
 #define to_str(x) std::to_string(x)

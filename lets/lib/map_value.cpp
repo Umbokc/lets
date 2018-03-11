@@ -55,12 +55,19 @@ ArrayValue* MapValue::to_pairs(){
 }
 
 bool MapValue::is_exists(Value *key){
-	return this->elems.find(key->to_s()) != elems.end();
+	return this->has(key->to_s());
+}
+
+Value *MapValue::get(lets_str_t key){
+	if(this->has(key))
+		return this->elems[key];
+
+	return NullValue::THE_NULL;
 }
 
 Value *MapValue::get(Value *key){
 	if(this->is_exists(key))
-		return this->elems[key->to_s()];
+		return this->get(key->to_s());
 
 	return this->get_prop(key);
 

@@ -32,8 +32,6 @@ private:
 	size_t length;
 
 	static lets_str_t OPERATORS_CHARS;
-	static lets_map_t<lets_str_t, u_tt_t> OPERATORS;
-	static lets_map_t<lets_str_t, u_tt_t> KEYWORDS;
 
 public:
 	Lexer() {}
@@ -68,12 +66,16 @@ private:
 
 	void clear_buffer();
 	bool is_word_var(char);
+
+	int find_c(const lets_str_t&, char);
+
+	void add_token_kw(u_tt_t, const lets_str_t&, size_t, size_t);
+	void add_token_op(u_tt_t, const lets_str_t&);
 	void add_token(u_tt_t);
 	void add_token(u_tt_t, size_t, size_t);
-	void add_token(u_tt_t, lets_str_t);
-	void add_token(u_tt_t, lets_str_t, size_t, size_t);
+	void add_token(u_tt_t, const lets_str_t&);
+	void add_token(u_tt_t, const lets_str_t&, size_t, size_t);
 
-	int find_c(lets_str_t, char);
 };
 
 #endif /* include__lexer_hpp */

@@ -23,7 +23,7 @@
 // #include "visitors/assign_validator.h"
 
 #include "../include/optimization/optimizer.hpp"
-
+ 
 #define LETS_SHOW_HELP_MENU \
 	lets_output("Lets version " + VERSION + "\n\n" + \
 		"Usage: lets [options]\n" + \
@@ -40,6 +40,7 @@
 
 #define SHOW_LETS_ERROR_EXCEPTIONS(VAR, MESS) \
 	show_lets_error("Error", Lets::current_file_name, to_str(VAR->get_position_row()), to_str(VAR->get_position_col()), MESS)
+
 #define LETS_BOOT_FUCS_PATTERN(STRING_NAME, TO_STRING, NAME, BODY) \
 	class NAME##LetsBootFuncs :  public Function{ \
 	public: \
@@ -137,7 +138,8 @@ void Lets::run(lets_str_t input){
 	measurement.start("Tokenize time");
 	tokens = Lets::tokenize(input, true);
 	measurement.stop("Tokenize time");
-	if(Lets::options.show_tokens) for(auto t : tokens) lets_output(t.to_s())
+	if(Lets::options.show_tokens)
+		for(auto t : tokens) lets_output(t.to_s())
 
 	measurement.start("Parse time");
 	parsed_program = Lets::parse(tokens, true);
@@ -169,6 +171,8 @@ void Lets::run(lets_str_t input){
 		SHOW_LETS_ERROR_EXCEPTIONS(bs, "'" + bs->to_s() + "' statement not in loop statement")
 	} catch (ContinueStatement*& cs){
 		SHOW_LETS_ERROR_EXCEPTIONS(cs, "'" + cs->to_s() + "' statement not in loop statement")
+	} catch (std::exception & e){
+		show_error("Error", e.what())
 	}
 
 	if(Lets::options.show_measurements){

@@ -8,10 +8,8 @@
 
 #include <iostream>
 #include "../../include/lib/variables.hpp"
+#include "../../include/lib/include_values.h"
 #include "../../include/exception/execute.h"
-#include "../../include/lib/bool_value.hpp"
-#include "../../include/lib/null_value.hpp"
-#include "../../include/lib/number_value.hpp"
 
 #define Lets__FIRST_CHAR_GLOB_VAR '@'
 #define Lets__FIRST_CHAR_CONST_VAR '_'
@@ -22,6 +20,15 @@ Variables::VARIABLE_MAP Variables::global_variables = {
 	{"false", new Variables::VariableContainer(BoolValue::FALSE, true)},
 	{"true", new Variables::VariableContainer(BoolValue::TRUE, true)},
 	{"null", new Variables::VariableContainer(NullValue::THE_NULL, true)},
+
+	// {"Bool", new Variables::VariableContainer(new BoolValue(), true)},
+	// {"Null", new Variables::VariableContainer(new NullValue(), true)},
+	// {"Number", new Variables::VariableContainer(new NumberValue(), true)},
+	// {"String", new Variables::VariableContainer(new StringValue(), true)},
+	// {"Array", new Variables::VariableContainer(new ArrayValue(), true)},
+	// {"Map", new Variables::VariableContainer(new MapValue(), true)},
+
+	// {"Class", new Variables::VariableContainer(new ClassValue(), true)},
 };
 
 void Variables::push() {

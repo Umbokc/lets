@@ -14,8 +14,6 @@
 #include <map>
 #include "main.h"
 
-#include "declaration.h"
-
 #include "tokentype.h"
 #include "token.hpp"
 
@@ -26,7 +24,7 @@
 
 class Parser {
 private:
-	Token TT_EOF_T = Token(TT_EOF, "EOF", 0, 0);
+	Token TT_EOF_T = Token(TT_EOF, 0, 0, "", 0, 0);
 	lets_vector_t<Token> tokens;
 	size_t pos, size;
 	// Statement* parsed_statement;
@@ -34,8 +32,8 @@ public:
 
 	static lets_map_t<u_tt_t, NS_Binary::Operator> ASSIGN_OPERATORS;
 
-	Parser();
-	Parser(lets_vector_t<Token>);
+	// Parser();
+	explicit Parser(lets_vector_t<Token>);
 
 	BlockStatement* parse();
 
@@ -73,6 +71,7 @@ private:
 	Expression* assignment();
 	Expression* get_properties(Expression*);
 	Expression* get_properties_container(Expression*);
+	// bool find_assign_operators(NS_Binary::Operator&, u);
 	Expression* assignment_strict();
 	Expression* include_expression();
 	Expression* in_expression();
@@ -94,12 +93,20 @@ private:
 	lets_vector_t<Expression*> variable_suffix();
 	Expression* value();
 
-	Token consume(u_tt_t);
 
+	Token consume(u_tt_t);
 	bool match(u_tt_t);
 	bool match(lets_vector_t<u_tt_t>);
-
 	bool look_match(int, u_tt_t);
+
+	Token consume_operator(u_tt_t);
+	bool match_operator(u_tt_t);
+	bool look_match_operator(int, u_tt_t);
+
+	Token consume_keyword(u_tt_t);
+	bool match_keyword(u_tt_t);
+	bool match_keywords(lets_vector_t<u_tt_t>);
+	bool look_match_keyword(int, u_tt_t);
 
 	Token get(int);
 

@@ -11,7 +11,7 @@
 #include "../../include/tools.hpp"
 #include "../../include/lib/bool_value.hpp"
 
-const lets_str_t ConditionalExpression::OperatorString[8] =  { "==", "!=", "<", "<=", ">", ">=", "&&", "||" };
+const lets_str_t ConditionalExpression::OperatorString[10] =  { "==", "===", "!=", "!==", "<", "<=", ">", ">=", "&&", "||" };
 
 ConditionalExpression::ConditionalExpression(
 	ConditionalExpression::Operator operation, Expression* expr1, Expression* expr2):
@@ -32,6 +32,11 @@ Value* ConditionalExpression::eval(){
 
 	value2 = this->expr2->eval();
 
+	if(this->operation == ConditionalExpression::I_EQUALS and value1->type() != value2->type())
+		return new BoolValue(false);
+	if(this->operation == ConditionalExpression::I_NOT_EQUALS and value1->type() != value2->type())
+		return new BoolValue(true);
+
 	if(value1->type() == Types::T_STRING){
 		number1 = int(value1->as_string() != value2->as_string());
 		number2 = 0;
@@ -48,7 +53,9 @@ Value* ConditionalExpression::eval(){
 		case ConditionalExpression::LTEQ : result = (number1 <= number2); break;
 		case ConditionalExpression::GT : result = (number1 > number2); break;
 		case ConditionalExpression::GTEQ : result = (number1 >= number2); break;
+		case ConditionalExpression::I_NOT_EQUALS :
 		case ConditionalExpression::NOT_EQUALS : result = (number1 != number2); break;
+		case ConditionalExpression::I_EQUALS :
 		case ConditionalExpression::EQUALS : result = (number1 == number2); break;
 		default:
 			throw ExecuteException("Operation is not supported");

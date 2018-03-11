@@ -16,8 +16,24 @@
 
 class ConditionalExpression : virtual public Expression{
 public:
-	typedef enum {EQUALS, NOT_EQUALS, LT, LTEQ, GT, GTEQ, AND, OR } Operator;
-	static const lets_str_t OperatorString[8];
+
+	typedef enum {
+
+		EQUALS,     // ==
+		I_EQUALS,     // ===
+		NOT_EQUALS, // !=
+		I_NOT_EQUALS, // !==
+
+		LT,         // <
+		LTEQ,       // <=
+		GT,         // >
+		GTEQ,       // >=
+
+		AND,        // &&, and
+		OR          // ||, or
+	} Operator;
+
+	static const lets_str_t OperatorString[10];
 
 	ConditionalExpression::Operator operation;
 	Expression *expr1;

@@ -11,13 +11,10 @@
 #include "value.hpp"
 
 class ClassValue : public Value{
-	Value* value;
 public:
 
 	ClassValue();
-	ClassValue(Value*);
-
-	Value* get_value();
+	// ClassValue(Class*);
 
 	LETS_REQUIRED_METHODS_VALUE_DECL()
 

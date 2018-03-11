@@ -32,6 +32,7 @@ public:
 
 	bool has(lets_str_t);
 	bool has(lets_str_t, Value *);
+	Value *get(lets_str_t);
 
 	void set(Value *, Function *);
 

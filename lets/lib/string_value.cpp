@@ -10,7 +10,7 @@
 #include <cstdlib>
 #include "../../include/lib/include_values.h"
 
-#define UPDATE_LEN() this->define_prop("len", Variable(new NumberValue(this->len()), false, true));
+#define UPDATE_LEN() this->define_prop("len", Property(new NumberValue(this->len()), false, true));
 
 StringValue::StringValue(){
 	this->value = "";

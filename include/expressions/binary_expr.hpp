@@ -60,8 +60,8 @@ private:
 	Value *BO_or(Value*, Value*);
 	Value *BO_xor(Value*, Value*);
 	Value *BO_lshift(Value*, Value*);
-
 	Value *BO_rshift(Value*, Value*);
+
 	void operation_is_not_supported();
 };
 

@@ -9,6 +9,9 @@
 #include "../include/lexer.hpp"
 #include "../include/lets.hpp"
 
+#include "../include/operator.hpp"
+#include "../include/keyword.hpp"
+
 #include "../include/exception/error.h"
 #include "../include/exception/lexer.h"
 
@@ -21,91 +24,10 @@
 #define Lets_PUSH_BUFFER(T) \
 	this->buffer.push_back(T);
 
+#define Lets_PUSH_TOKEN(TYPE, THE_KW, THE_OP, TXT, R, C) \
+	this->tokens.push_back(Token(TYPE, THE_KW, THE_OP, TXT, R, C));
+
 lets_str_t Lexer::OPERATORS_CHARS = "+-*\\/%()[]{}=<>!&|,^~?:.@";
-lets_map_t<lets_str_t, u_tt_t> Lexer::OPERATORS = {
-	{TT_PLUS_TEXT, TT_PLUS},
-	{TT_MINUS_TEXT, TT_MINUS},
-	{TT_STAR_TEXT, TT_STAR},
-	{TT_BACKSLASH_TEXT, TT_BACKSLASH},
-	{TT_SLASH_TEXT, TT_SLASH},
-	{TT_PERCENT_TEXT, TT_PERCENT},
-	{TT_LPAREN_TEXT, TT_LPAREN},
-	{TT_RPAREN_TEXT, TT_RPAREN},
-	{TT_LBRACKET_TEXT, TT_LBRACKET},
-	{TT_RBRACKET_TEXT, TT_RBRACKET},
-	{TT_LBRACE_TEXT, TT_LBRACE},
-	{TT_RBRACE_TEXT, TT_RBRACE},
-	{TT_EQ_TEXT, TT_EQ},
-	{TT_LT_TEXT, TT_LT},
-	{TT_GT_TEXT, TT_GT},
-	{TT_COMMA_TEXT, TT_COMMA},
-	{TT_DOT_TEXT, TT_DOT},
-	{TT_CARET_TEXT, TT_CARET},
-	{TT_TILDE_TEXT, TT_TILDE},
-	{TT_QUESTION_TEXT, TT_QUESTION},
-	{TT_COLON_TEXT, TT_COLON},
-
-	{TT_EXCL_TEXT, TT_EXCL},
-	{TT_AMP_TEXT, TT_AMP},
-	{TT_BAR_TEXT, TT_BAR},
-
-	{TT_EQEQ_TEXT, TT_EQEQ},
-	{TT_EXCLEQ_TEXT, TT_EXCLEQ},
-	{TT_LTEQ_TEXT, TT_LTEQ},
-	{TT_GTEQ_TEXT, TT_GTEQ},
-
-	{TT_PLUSEQ_TEXT, TT_PLUSEQ},
-	{TT_MINUSEQ_TEXT, TT_MINUSEQ},
-	{TT_STAREQ_TEXT, TT_STAREQ},
-	{TT_SLASHEQ_TEXT, TT_SLASHEQ},
-	{TT_PERCENTEQ_TEXT, TT_PERCENTEQ},
-	{TT_AMPEQ_TEXT, TT_AMPEQ},
-	{TT_CARETEQ_TEXT, TT_CARETEQ},
-	{TT_BAREQ_TEXT, TT_BAREQ},
-
-	{TT_PLUSPLUS_TEXT, TT_PLUSPLUS},
-	{TT_MINUSMINUS_TEXT, TT_MINUSMINUS},
-
-	{TT_COLONCOLON_TEXT, TT_COLONCOLON},
-
-	{TT_AMPAMP_TEXT, TT_AMPAMP},
-	{TT_BARBAR_TEXT, TT_BARBAR},
-
-	{TT_LTLT_TEXT, TT_LTLT},
-	{TT_GTGT_TEXT, TT_GTGT},
-
-	{TT_DOTDOT_TEXT, TT_DOTDOT},
-	{TT_STARSTAR_TEXT, TT_STARSTAR},
-	{TT_LTMINUS_TEXT, TT_LTMINUS},
-	{TT_EQGT_TEXT, TT_EQGT},
-};
-lets_map_t<lets_str_t, u_tt_t> Lexer::KEYWORDS = {
-	{TT_KW_PRINT_TEXT, TT_KW_PRINT},
-	{TT_KW_PUT_TEXT, TT_KW_PUT},
-	{TT_KW_IF_TEXT, TT_KW_IF},
-	{TT_KW_ELSE_TEXT, TT_KW_ELSE},
-	{TT_KW_ELIF_TEXT, TT_KW_ELIF},
-	{TT_KW_WHILE_TEXT, TT_KW_WHILE},
-	{TT_KW_FOR_TEXT, TT_KW_FOR},
-	{TT_KW_DO_TEXT, TT_KW_DO},
-	{TT_KW_BREAK_TEXT, TT_KW_BREAK},
-	{TT_KW_CONTINUE_TEXT, TT_KW_CONTINUE},
-	{TT_KW_DEF_TEXT, TT_KW_DEF},
-	{TT_KW_RETURN_TEXT, TT_KW_RETURN},
-	{TT_KW_USE_TEXT, TT_KW_USE},
-	{TT_KW_END_TEXT, TT_KW_END},
-	{TT_KW_IN_TEXT, TT_KW_IN},
-	{TT_KW_INCLUDE_TEXT, TT_KW_INCLUDE},
-	{TT_KW_MODE_TEXT, TT_KW_MODE},
-	{TT_KW_MATCH_TEXT, TT_KW_MATCH},
-	{TT_KW_CASE_TEXT, TT_KW_CASE},
-	{TT_KW_DEFAULT_TEXT, TT_KW_DEFAULT},
-	{TT_KW_AND_TEXT, TT_KW_AND},
-	{TT_KW_OR_TEXT, TT_KW_OR},
-	{TT_KW_NOT_TEXT, TT_KW_NOT},
-	{TT_KW_NEW_TEXT, TT_KW_NEW},
-	{TT_KW_CLASS_TEXT, TT_KW_CLASS},
-};
 
 lets_vector_t<Token> Lexer::tokenize(){
 
@@ -227,8 +149,8 @@ void Lexer::tokenize_word() {
 		current = next();
 	}
 
-	if(KEYWORDS.find(this->buffer) != KEYWORDS.end()){
-		add_token(KEYWORDS[this->buffer], start_row, start_col);
+	if(GET_KW_BY(this->buffer) != GET_KW(NIL)){
+		add_token_kw(GET_KW_BY(this->buffer), this->buffer, start_row, start_col);
 	} else {
 		add_token(TT_IDENTIFIER, this->buffer, start_row, start_col);
 	}
@@ -333,9 +255,8 @@ void Lexer::tokenize_operator() {
 
 	while (true) {
 		text = this->buffer;
-		if(!text.empty() && OPERATORS.find(text + current) == OPERATORS.end()){
-			// if(!text.empty() && find (OPERATORS.begin(), OPERATORS.end(), text + current) == OPERATORS.end()){
-			add_token(OPERATORS[text], text);
+		if(!text.empty() && GET_OP_BY(text + current) == GET_OP(NIL)){
+			add_token_op(GET_OP_BY(text), text);
 			return;
 		}
 
@@ -428,23 +349,31 @@ bool Lexer::is_word_var(char c){
 	return isalpha(c, std::locale()) || (c == '_') || (c == '$') || (c == '@');
 }
 
-int Lexer::find_c(lets_str_t s, char c) {
+int Lexer::find_c(const lets_str_t& s, char c) {
 	std::size_t pos = s.find(c);
 	return (pos == lets_str_t::npos) ? -1 : (int)pos; 
 }
 
+void Lexer::add_token_kw(u_tt_t kw, const lets_str_t& txt, size_t r, size_t c){
+	Lets_PUSH_TOKEN(TT_KEYWORD, kw, GET_OP(NIL), txt, r, c)
+}
+
+void Lexer::add_token_op(u_tt_t op, const lets_str_t& txt){
+	Lets_PUSH_TOKEN(TT_OPERATOR, GET_KW(NIL), op, txt, this->row, this->col)
+}
+
 void Lexer::add_token(u_tt_t tt){
-	add_token(tt, "");
+	this->add_token(tt, "");
 }
 
 void Lexer::add_token(u_tt_t tt, size_t r, size_t c){
-	add_token(tt, "", r, c);
+	this->add_token(tt, "", r, c);
 }
 
-void Lexer::add_token(u_tt_t tt, lets_str_t txt){
-	this->tokens.push_back(Token(tt, txt, this->row, this->col));
+void Lexer::add_token(u_tt_t tt, const lets_str_t& txt){
+	this->add_token(tt, txt, this->row, this->col);
 }
 
-void Lexer::add_token(u_tt_t tt, lets_str_t txt, size_t r, size_t c){
-	this->tokens.push_back(Token(tt, txt, r, c));
+void Lexer::add_token(u_tt_t tt, const lets_str_t& txt, size_t r, size_t c){
+	Lets_PUSH_TOKEN(tt, GET_KW(NIL), GET_OP(NIL), txt, r, c)
 }
