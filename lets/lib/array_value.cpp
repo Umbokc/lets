@@ -9,6 +9,7 @@
 // #include <iostream> // for dbg
 
 #include "../../include/lib/include_values.h"
+#include "../../include/exception/error.h"
 #include "../../include/exception/execute.h"
 #include "../../include/tools.hpp"
 
@@ -68,6 +69,11 @@ Value* ArrayValue::construct(){
 			return self->has(args.at(0), args.at(1)->as_int()) ? BoolValue::TRUE : BoolValue::FALSE;
 		}
 		return self->has(args.at(0)) ? BoolValue::TRUE : BoolValue::FALSE;
+	}, "arg*, pos = null")
+
+	ADD_METHOD_TO_CLASS(Array, "get", Get, {
+		if(args.size() == 0) throw ExecuteException("Method "+self->get_class_name()+".get(arg*) one args expected");
+		return self->get(args.at(0)->as_int());
 	}, "arg*, pos = null")
 
 	ADD_METHOD_TO_CLASS(Array, "push", Push, {
@@ -205,7 +211,7 @@ int ArrayValue::as_int(){
 }
 
 double ArrayValue::as_number(){
-	throw ExecuteException("Cannot cast array to number");
+	throw ExecuteException(ExceptionsError::E_CNN_ARR_TO_NUM);
 }
 
 long ArrayValue::as_long(){

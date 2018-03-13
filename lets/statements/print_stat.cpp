@@ -13,7 +13,9 @@
 PrintStatement::PrintStatement(Expression *expression):expression(std::move(expression)){}
 
 void PrintStatement::execute(){
+	LETS_TRY_EXCEPTION_EXECUTE_START()
 	lets_output(expression->eval()->to_s());
+	LETS_TRY_EXCEPTION_EXECUTE_END()
 }
 
 lets_str_t PrintStatement::to_s(){

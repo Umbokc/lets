@@ -11,9 +11,10 @@
 #include "../../include/tools.hpp"
 
 ArrayExpression::ArrayExpression(lets_vector_t<Expression *> elems)
-	:elements(std::move(elems)){}
+:elements(std::move(elems)){}
 
 Value *ArrayExpression::eval(){
+	LETS_TRY_EXCEPTION_EXECUTE_START()
 
 	int size = (int)elements.size();
 	ArrayValue *array = new ArrayValue(size);
@@ -23,6 +24,8 @@ Value *ArrayExpression::eval(){
 	}
 
 	return array;
+
+	LETS_TRY_EXCEPTION_EXECUTE_END()
 }
 
 lets_str_t ArrayExpression::to_s(){

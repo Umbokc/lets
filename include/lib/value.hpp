@@ -71,7 +71,17 @@ public:
 #define DEFAULT_METHODS_OF_CLASS() \
 	ADD_DEF_METHOD_TO_CLASS("type", Type, { \
 		return new StringValue(TypesString[self->type()]); \
-	}, "")
+	}, "") \
+	ADD_DEF_METHOD_TO_CLASS("to_i", To_i, { \
+		return new NumberValue(self->as_int()); \
+	}, "") \
+	ADD_DEF_METHOD_TO_CLASS("to_s", To_s, { \
+		return new StringValue(self->as_string()); \
+	}, "") \
+	ADD_DEF_METHOD_TO_CLASS("to_a", To_a, { \
+		return new ArrayValue(self); \
+	}, "") \
+
 
 #define ADD_DEF_METHOD_TO_CLASS(L_NAME, NAME, BODY, TO_S_ARG) \
 	class __Lets__Default__Method__##NAME : public Function{ \

@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "../../include/statements/block_stat.hpp"
+#include "../../include/exception/execute.h"
 
 BlockStatement::BlockStatement(){}
 
@@ -16,10 +17,11 @@ void BlockStatement::add(Statement *statement){
 }
 
 void BlockStatement::execute(){
+	LETS_TRY_EXCEPTION_EXECUTE_START()
 	for(auto st : statements){
 		st->execute();
 	}
-
+	LETS_TRY_EXCEPTION_EXECUTE_END()
 }
 
 lets_str_t BlockStatement::to_s(){

@@ -21,14 +21,16 @@ FunctionalExpression::FunctionalExpression(){}
 FunctionalExpression::~FunctionalExpression(){}
 
 FunctionalExpression::FunctionalExpression(Expression* function_expr):
-	function_expr(std::move(function_expr)){}
+function_expr(std::move(function_expr)){}
 
 void FunctionalExpression::add_arguments(Expression *arg){
 	arguments.push_back(arg);
 }
 
 void FunctionalExpression::execute(){
+	LETS_TRY_EXCEPTION_EXECUTE_START()
 	eval();
+	LETS_TRY_EXCEPTION_EXECUTE_END()
 }
 
 Value *FunctionalExpression::eval(){
@@ -100,5 +102,5 @@ Function* FunctionalExpression::get_function(lets_str_t key){
 	throw ExecuteException(
 		NS_Tools::string_format(ExceptionsError::E_UNKNOWN_FUNC, key.c_str()),
 		get_position_row(), get_position_col()
-	);
+		);
 }

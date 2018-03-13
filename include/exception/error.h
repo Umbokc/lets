@@ -26,13 +26,13 @@ namespace ExceptionsError {
 	const lets_str_t E_UNKNOWN_CLASS = "Unknown class '%s' ";
 	const lets_str_t E_CNN_REWRITE_CLASS = "Class '%s' already exists";
 	const lets_str_t E_CNN_REWRITE_CONSTANT = "Cannot assign value to constant '%s' ";
+	const lets_str_t E_CNN_ARR_TO_NUM = "Cannot cast array to number";
 
 	const lets_str_t P_NULL_INDEX_ARR = "Undefined index of array";
 	const lets_str_t P_ARGS_MISSMATCH = "Args count mismatch";
 	const lets_str_t P_ARR_EXPECT = "Array expected";
 	const lets_str_t P_CANNOT_RW_CONSTANTS = "Cannot assign value to constant '%s'";
 	const lets_str_t P_CANNOT_RW_FUNC = "Cannot rewrite defined function '%s'";
-	const lets_str_t P_ARR_TO_NUM = "Cannot cast array to number";
 	const lets_str_t P_VAR_NULL = "Variable '%s' does not exists";
 	const lets_str_t P_FUNC_NULL = "Undefined function '%s'";
 	const lets_str_t P_MODULE_NULL = "Does not found module '%s'";

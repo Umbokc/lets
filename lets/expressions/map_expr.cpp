@@ -9,14 +9,16 @@
 #include "../../include/expressions/map_expr.hpp"
 
 MapExpression::MapExpression(lets_map_t<Expression*, Expression*> elements)
-	:elements(std::move(elements)){}
+:elements(std::move(elements)){}
 
 Value *MapExpression::eval(){
+	LETS_TRY_EXCEPTION_EXECUTE_START()
 	MapValue* map_val = new MapValue();
 	for (auto& elem: elements) {
 		map_val->set(elem.first->eval(), elem.second->eval());
 	}
 	return map_val;
+	LETS_TRY_EXCEPTION_EXECUTE_END()
 }
 
 lets_str_t MapExpression::to_s(){

@@ -37,38 +37,47 @@ void UnaryExpression::execute(){
 }
 
 Value *UnaryExpression::eval() {
+
 	Value *value = expr->eval();
 	switch (operation) {
-		case Operator::INCREMENT_PREFIX:
+		case Operator::INCREMENT_PREFIX:{
 			if(dynamic_cast<Accessible*>(expr)){
 				return dynamic_cast<Accessible*>(expr)->set(UE_increment(value));
 			}
 			return UE_increment(value);
-		case Operator::INCREMENT_POSTFIX:
+		}
+		case Operator::INCREMENT_POSTFIX:{
 			if(dynamic_cast<Accessible*>(expr)){
 				dynamic_cast<Accessible*>(expr)->set(UE_increment(value));
 				return value;
 			}
 			return UE_increment(value);
-		case Operator::DECREMENT_PREFIX:
+		}
+		case Operator::DECREMENT_PREFIX:{
 			if(dynamic_cast<Accessible*>(expr)){
 				return dynamic_cast<Accessible*>(expr)->set(UE_decrement(value));
 			}
 			return UE_decrement(value);
-		case Operator::DECREMENT_POSTFIX:
+		}
+		case Operator::DECREMENT_POSTFIX:{
 			if(dynamic_cast<Accessible*>(expr)){
 				dynamic_cast<Accessible*>(expr)->set(UE_decrement(value));
 				return value;
 			}
 			return UE_decrement(value);
-		case Operator::NEGATE:
+		}
+		case Operator::NEGATE:{
 			return UE_negate(value);
-		case Operator::NOT:
+		}
+		case Operator::NOT:{
 			return UE_not(value);
-		case Operator::COMPLEMENT:
+		}
+		case Operator::COMPLEMENT:{
 			return UE_complement(value);
-		default:
-			throw ExecuteException("Operation Is Not Supported");
+		}
+		default:{
+			throw ExecuteException("Operation Is Not Supported", get_position_row(), get_position_col());
+		}
 	}
 }
 

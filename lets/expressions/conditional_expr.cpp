@@ -15,9 +15,10 @@ const lets_str_t ConditionalExpression::OperatorString[10] =  { "==", "===", "!=
 
 ConditionalExpression::ConditionalExpression(
 	ConditionalExpression::Operator operation, Expression* expr1, Expression* expr2):
-	operation(std::move(operation)), expr1(std::move(expr1)), expr2(std::move(expr2)){}
+operation(std::move(operation)), expr1(std::move(expr1)), expr2(std::move(expr2)){}
 
 Value* ConditionalExpression::eval(){
+	LETS_TRY_EXCEPTION_EXECUTE_START()
 	Value* value1;
 	Value* value2;
 	double number1, number2;
@@ -58,10 +59,11 @@ Value* ConditionalExpression::eval(){
 		case ConditionalExpression::I_EQUALS :
 		case ConditionalExpression::EQUALS : result = (number1 == number2); break;
 		default:
-			throw ExecuteException("Operation is not supported");
+		throw ExecuteException("Operation is not supported");
 	}
 
 	return new BoolValue(result);
+	LETS_TRY_EXCEPTION_EXECUTE_END()
 }
 
 lets_str_t ConditionalExpression::to_s(){
@@ -69,7 +71,7 @@ lets_str_t ConditionalExpression::to_s(){
 		this->expr1->to_s().c_str(),
 		ConditionalExpression::OperatorString[this->operation].c_str(),
 		this->expr2->to_s().c_str()
-	);
+		);
 }
 
 

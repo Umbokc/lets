@@ -12,10 +12,12 @@
 
 AssignmentExpression::AssignmentExpression(
 	NS_Binary::Operator operation, Accessible *target, Expression *expression) :
-	operation(operation), target(std::move(target)), expression(std::move(expression)){}
+operation(operation), target(std::move(target)), expression(std::move(expression)){}
 
 void AssignmentExpression::execute(){
+	LETS_TRY_EXCEPTION_EXECUTE_START()
 	eval();
+	LETS_TRY_EXCEPTION_EXECUTE_END()
 }
 
 Value* AssignmentExpression::eval(){

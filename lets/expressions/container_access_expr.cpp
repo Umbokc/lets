@@ -6,6 +6,7 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
+#include <iostream> // for dbg
 #include "../../include/expressions/container_access_expr.hpp"
 #include "../../include/expressions/variable_expr.hpp"
 #include "../../include/lib/array_value.hpp"
@@ -17,7 +18,8 @@
 ContainerAccessExpression::ContainerAccessExpression(){}
 
 ContainerAccessExpression::ContainerAccessExpression(lets_str_t variable, lets_vector_t<Expression*> indices) {
-	this->root = new VariableExpression(variable),
+	this->root = new VariableExpression(variable);
+	this->root->set_position(this->get_position_row(), this->get_position_col());
 	this->indices = indices;
 }
 
@@ -40,6 +42,7 @@ Value *ContainerAccessExpression::eval(){
 	} catch(ExecuteException& e){
 		e.row = indices.back()->get_position_row();
 		e.col = indices.back()->get_position_col();
+		dbg(indices.at(0))
 		throw e;
 	}
 }
@@ -47,7 +50,8 @@ Value *ContainerAccessExpression::eval(){
 Value *ContainerAccessExpression::get(){
 	Value* container = get_container();
 	Value* last = last_index();
-	return container->get(last);
+	Value*val = container->get(last);
+	return val;
 }
 
 Value *ContainerAccessExpression::set(Value* value){

@@ -15,7 +15,7 @@
 InExpression::InExpression(lets_vector_t<Expression*> e, Expression* c):expressions(std::move(e)), container(std::move(c)){}
 
 Value* InExpression::eval(){
-
+	LETS_TRY_EXCEPTION_EXECUTE_START()
 	bool result = false;
 
 	Value* val = expressions.at(0)->eval();
@@ -41,6 +41,7 @@ Value* InExpression::eval(){
 	}
 
 	return result ? BoolValue::TRUE : BoolValue::FALSE;
+	LETS_TRY_EXCEPTION_EXECUTE_END()
 }
 
 lets_str_t InExpression::to_s(){

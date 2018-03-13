@@ -6,9 +6,16 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
+#include <iostream> // for dbg
 #include <cmath>
 #include "../../include/tools.hpp"
 #include "../../include/expressions/binary_expr.hpp"
+
+#include "../../include/expressions/array_expr.hpp"
+#include "../../include/expressions/container_access_expr.hpp"
+#include "../../include/expressions/variable_expr.hpp"
+#include "../../include/expressions/value_expr.hpp"
+
 #include "../../include/exception/execute.h"
 #include "../../include/lib/array_value.hpp"
 #include "../../include/lib/string_value.hpp"
@@ -17,11 +24,17 @@
 
 
 BinaryExpression::BinaryExpression(NS_Binary::Operator operation, Expression* expr1, Expression* expr2):
-	operation(std::move(operation)), expr1(std::move(expr1)), expr2(std::move(expr2)){}
+operation(std::move(operation)), expr1(std::move(expr1)), expr2(std::move(expr2)){}
 
 Value * BinaryExpression::eval(){
-	Value *value1 = expr1->eval();
-	Value *value2 = expr2->eval();
+	Value *value1, *value2;
+	LETS_TRY_EXCEPTION_EXECUTE_START()
+	value1 = expr1->eval();
+	LETS_TRY_EXCEPTION_EXECUTE_END_POS(expr1)
+	LETS_TRY_EXCEPTION_EXECUTE_START()
+	value2 = expr2->eval();
+	LETS_TRY_EXCEPTION_EXECUTE_END_POS(expr2)
+
 	try{
 		return eval(value1, value2);
 	} catch (std::exception& e){
@@ -55,7 +68,7 @@ Value *BinaryExpression::eval(Value *value1, Value *value2){
 			case NS_Binary::RSHIFT: return bin_op_rshift(value1, value2);
 			case NS_Binary::POWER: return bin_op_power(value1, value2);
 			default:
-				operation_is_not_supported();
+			operation_is_not_supported();
 		}
 	} catch(ExecuteException& pe){
 		throw ExecuteException(pe.get_message(), this->get_position_row(), this->get_position_col());
@@ -67,20 +80,20 @@ Value *BinaryExpression::bin_op_add(Value *value1, Value *value2) {
 
 	switch (value1->type()) {
 		case Types::T_NUMBER:
-			return bin_op_add(dynamic_cast<NumberValue *>(value1), value2);
+		return bin_op_add(dynamic_cast<NumberValue *>(value1), value2);
 		case Types::T_ARRAY:
-			if(value2->type() == Types::T_ARRAY){
-				return NS_ArrayValue::merge(
-											dynamic_cast<ArrayValue *>(value1),
-											dynamic_cast<ArrayValue *>(value2)
-											);
-			} else if(value2->type() == Types::T_STRING){
-				return new StringValue(value1->as_string() + value2->as_string());
-			}
-			throw ExecuteException("Cannot merge non array value to array");
+		if(value2->type() == Types::T_ARRAY){
+			return NS_ArrayValue::merge(
+				dynamic_cast<ArrayValue *>(value1),
+				dynamic_cast<ArrayValue *>(value2)
+				);
+		} else if(value2->type() == Types::T_STRING){
+			return new StringValue(value1->as_string() + value2->as_string());
+		}
+		throw ExecuteException("Cannot merge non array value to array");
 		case Types::T_STRING:
 		default:
-			return new StringValue(value1->as_string() + value2->as_string());
+		return new StringValue(value1->as_string() + value2->as_string());
 	}
 
 }
@@ -89,12 +102,12 @@ Value *BinaryExpression::bin_op_add(NumberValue *value1, Value *value2) {
 	switch (value2->type()) {
 		case Types::T_STRING:{
 			return new StringValue(
-								   value1->as_string() + value2->as_string()
-								   );
+				value1->as_string() + value2->as_string()
+				);
 		}
 		case Types::T_NUMBER:
 		default:
-			return new NumberValue(value1->as_number() + value2->as_number());
+		return new NumberValue(value1->as_number() + value2->as_number());
 	}
 }
 
@@ -133,7 +146,7 @@ Value *BinaryExpression::bin_op_multiply(Value *value1, Value *value2) {
 			return new StringValue(result);
 		}
 		default:
-			operation_is_not_supported();
+		operation_is_not_supported();
 	}
 
 	return NullValue::THE_NULL;
@@ -166,12 +179,12 @@ Value *BinaryExpression::bin_op_xor(Value *value1, Value *value2) {
 Value *BinaryExpression::bin_op_lshift(Value *value1, Value *value2) {
 	switch (value1->type()) {
 		case Types::T_NUMBER:
-			return new NumberValue(value1->as_int() << value2->as_int());
+		return new NumberValue(value1->as_int() << value2->as_int());
 		case Types::T_ARRAY:
-			dynamic_cast<ArrayValue *>(value1)->add(value2);
-			return value1;
+		dynamic_cast<ArrayValue *>(value1)->add(value2);
+		return value1;
 		default:
-			operation_is_not_supported();
+		operation_is_not_supported();
 	}
 
 	return NullValue::THE_NULL;
@@ -209,7 +222,7 @@ Value *BinaryExpression::bin_op_power(Value *value1, Value *value2) {
 		auto res = pow(
 			val1->is_long() ? val1->as_long() : val1->is_double() ? val1->as_double() : val1->as_int(),
 			val2->is_long() ? val2->as_long() : val2->is_double() ? val2->as_double() : val2->as_int()
-		);
+			);
 
 		return new NumberValue(res);
 
@@ -221,5 +234,5 @@ Value *BinaryExpression::bin_op_power(Value *value1, Value *value2) {
 void BinaryExpression::operation_is_not_supported(){
 	throw OperationIsNotSupportedException(
 		NS_Binary::OperatorString[operation]
-	);
+		);
 }

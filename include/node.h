@@ -24,6 +24,18 @@
 		return visitor->visit(this, t); \
 	}
 
+#define LETS_TRY_EXCEPTION_EXECUTE_START() try{
+
+#define LETS_TRY_EXCEPTION_EXECUTE_END_POS(ELEM) \
+	} catch(ExecuteException& e){ \
+		if(e.row == 0) e.row = ELEM->get_position_row(); \
+		if(e.col == 0) e.col = ELEM->get_position_col(); \
+		throw e; \
+	}
+
+#define LETS_TRY_EXCEPTION_EXECUTE_END() \
+	LETS_TRY_EXCEPTION_EXECUTE_END_POS(this)
+
 class Node {
 protected:
 	size_t __node__row = 1;

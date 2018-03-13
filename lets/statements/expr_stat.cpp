@@ -7,11 +7,18 @@
 //
 
 #include "../../include/statements/expr_stat.hpp"
+#include "../../include/exception/execute.h"
 
 ExprStatement::ExprStatement(Expression *function): expr(std::move(function)){}
 
 void ExprStatement::execute(){
-	eval();
+	try {
+		eval();
+	} catch(ExecuteException& e){
+		e.row = this->get_position_row();
+		e.col = this->get_position_col();
+		throw e;
+	}
 }
 
 

@@ -1,6 +1,5 @@
-use 'std'
-use 'type'
-use 'math'
+use ['rand'] in 'std'
+use ['sqrt'] in 'math'
 
 include 'sort-function.lets'
 
@@ -23,7 +22,8 @@ def sumOfCubes(x):
 end
 
 def isPrime(x):
-	for (i = 2, i <= to_i(sqrt(x)), ++i)
+	num = (sqrt(x)).to_i()
+	for (i = 2, i <= num, ++i)
 		if (x % i == 0)
 			return false
 		end
@@ -56,9 +56,9 @@ end
 
 arr = get_random_nums(1 50 40)
 
-# sort = insertion_sort(arr)
+sort = insertion_sort(arr)
 sort = bubble_sort(arr)
-# sort = selection_sort(arr)
+sort = selection_sort(arr)
 print sort
 
 print ''
@@ -69,8 +69,8 @@ print 'sumOfCubes(3) = ' + sumOfCubes(3)
 print 'getPrime(3)   = ' + getPrime(3)
 print ''
 
-print to_i('1') * 5
-print to_s(1) * 5
-print to_a(1) * 5
+print ('1').to_i() * 5
+print (1).to_s() * 5
+print [3.23 [2]].get(0).to_i() ** 5
 
 print 0121

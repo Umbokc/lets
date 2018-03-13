@@ -1,9 +1,6 @@
-use ['len'] in 'std'
-use ['to_s'] in 'type'
-
-# sort
 def insertion_sort(arr) :
-	for i = 1, i < len(arr), i++ :
+	n = arr.size
+	for i = 1, i < n, i++ :
 		newValue = arr[i]
 		j = i
 		while (j > 0 && arr[j - 1] > newValue) :
@@ -16,7 +13,7 @@ def insertion_sort(arr) :
 end
 
 def bubble_sort(a) :
-	n = len(a)
+	n = a.size
 	for i = 0, i < n-1, ++i :
 		changed = false
 		for j = 0, j < n-i-1, ++j :
@@ -35,7 +32,7 @@ def bubble_sort(a) :
 end
 
 def selection_sort(a):
-	n = len(a)
+	n = a.size
 	for(i = 0, i < n, ++i):
 		k = i
 		x = a[i]
