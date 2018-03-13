@@ -16,12 +16,12 @@ class FunctionValue : public Value{
 	Function* value;
 public:
 
-  FunctionValue();
+	FunctionValue();
 	FunctionValue(Function*);
 
 	Function* get_value();
 
-	LETS_REQUIRED_METHODS_VALUE_DECL()
+	LETS_REQUIRED_METHODS_VALUE_DECL();
 
 	~FunctionValue();
 };

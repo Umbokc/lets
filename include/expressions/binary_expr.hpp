@@ -16,16 +16,16 @@
 
 namespace NS_Binary{
 	typedef enum{
-		//	+			-					*				/					%
+	// +      -         *        /        %
 		ADD, SUBTRACT, MULTIPLY, DIVIDE, REMAINDER,
-		// &		|		^			<<		  >>
-		AND, OR, XOR, LSHIFT, RSHIFT, THE_NULL
+	// &   |    ^     <<      >>     **
+		AND, OR, XOR, LSHIFT, RSHIFT, POWER, THE_NULL
 	} Operator;
 
 	const static lets_str_t OperatorString[] = {
 		"+", "-", "*", "/", "%",
 		// Bitwise
-		"&", "|", "^", "<<", ">>", "="
+		"&", "|", "^", "<<", ">>", "**", ""
 	};
 }
 
@@ -50,18 +50,20 @@ private:
 
 	Value *eval(Value*, Value*);
 
-	Value *BO_add(Value*, Value*);
-	Value *BO_add(NumberValue*, Value*);
-	Value *BO_subtract(Value*, Value*);
-	Value *BO_multiply(Value*, Value*);
-	Value *BO_divide(Value*, Value*);
-	Value *BO_remainder(Value*, Value*);
-	Value *BO_and(Value*, Value*);
-	Value *BO_or(Value*, Value*);
-	Value *BO_xor(Value*, Value*);
-	Value *BO_lshift(Value*, Value*);
-	Value *BO_rshift(Value*, Value*);
+	Value *bin_op_add(Value*, Value*);
+	Value *bin_op_add(NumberValue*, Value*);
+	Value *bin_op_subtract(Value*, Value*);
+	Value *bin_op_multiply(Value*, Value*);
+	Value *bin_op_divide(Value*, Value*);
+	Value *bin_op_remainder(Value*, Value*);
+	Value *bin_op_and(Value*, Value*);
+	Value *bin_op_or(Value*, Value*);
+	Value *bin_op_xor(Value*, Value*);
+	Value *bin_op_lshift(Value*, Value*);
+	Value *bin_op_rshift(Value*, Value*);
+	Value *bin_op_power(Value*, Value*);
 
+	int power(int, int);
 	void operation_is_not_supported();
 };
 

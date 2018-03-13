@@ -40,35 +40,35 @@ Value *UnaryExpression::eval() {
 	Value *value = expr->eval();
 	switch (operation) {
 		case Operator::INCREMENT_PREFIX:
-		if(dynamic_cast<Accessible*>(expr)){
-			return dynamic_cast<Accessible*>(expr)->set(UE_increment(value));
-		}
-		return UE_increment(value);
+			if(dynamic_cast<Accessible*>(expr)){
+				return dynamic_cast<Accessible*>(expr)->set(UE_increment(value));
+			}
+			return UE_increment(value);
 		case Operator::INCREMENT_POSTFIX:
-		if(dynamic_cast<Accessible*>(expr)){
-			dynamic_cast<Accessible*>(expr)->set(UE_increment(value));
-			return value;
-		}
-		return UE_increment(value);
+			if(dynamic_cast<Accessible*>(expr)){
+				dynamic_cast<Accessible*>(expr)->set(UE_increment(value));
+				return value;
+			}
+			return UE_increment(value);
 		case Operator::DECREMENT_PREFIX:
-		if(dynamic_cast<Accessible*>(expr)){
-			return dynamic_cast<Accessible*>(expr)->set(UE_decrement(value));
-		}
-		return UE_decrement(value);
+			if(dynamic_cast<Accessible*>(expr)){
+				return dynamic_cast<Accessible*>(expr)->set(UE_decrement(value));
+			}
+			return UE_decrement(value);
 		case Operator::DECREMENT_POSTFIX:
-		if(dynamic_cast<Accessible*>(expr)){
-			dynamic_cast<Accessible*>(expr)->set(UE_decrement(value));
-			return value;
-		}
-		return UE_decrement(value);
+			if(dynamic_cast<Accessible*>(expr)){
+				dynamic_cast<Accessible*>(expr)->set(UE_decrement(value));
+				return value;
+			}
+			return UE_decrement(value);
 		case Operator::NEGATE:
-		return UE_negate(value);
+			return UE_negate(value);
 		case Operator::NOT:
-		return UE_not(value);
+			return UE_not(value);
 		case Operator::COMPLEMENT:
-		return UE_complement(value);
+			return UE_complement(value);
 		default:
-		throw ExecuteException("Operation Is Not Supported");
+			throw ExecuteException("Operation Is Not Supported");
 	}
 }
 
@@ -125,11 +125,10 @@ Value *UnaryExpression::UE_not(Value *value){
 
 
 lets_str_t UnaryExpression::to_s(){
-	return NS_Tools::string_format(
-		"%s%s",
-		OperatorString[operation].c_str(),
-		expr->to_s().c_str()
-	);
+	if(this->operation == INCREMENT_POSTFIX or this->operation == DECREMENT_POSTFIX)
+		return NS_Tools::string_format("%s%s", expr->to_s().c_str(), OperatorString[operation].c_str());
+	else
+		return NS_Tools::string_format("%s%s", OperatorString[operation].c_str(), expr->to_s().c_str());
 }
 
 UnaryExpression::~UnaryExpression(){

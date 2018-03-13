@@ -416,6 +416,7 @@ FunctionalExpression* Parser::function(Expression *qualified_name_expr){
 	size_t row = GET_ROW(-1), col = GET_COL(-1);
 
 	consume_op(LPAREN);
+
 	FunctionalExpression* function = new FunctionalExpression(qualified_name_expr);
 	function->set_position(row, col);
 	while(!match_op(RPAREN)){
@@ -582,34 +583,7 @@ Expression* Parser::assignment(){
 		return assignment;
 	}
 
-	Expression* expr = include_expression();
-
-	// if(look_match_op(0, DOT) || look_match(0, TT_LBRACKET)){
-	if(look_match_op(0, DOT)){
-		return get_properties(expr);
-	}
-
-	return expr;
-}
-
-Expression* Parser::get_properties(Expression* expr){
-	Expression* container = get_properties_container(expr);
-
-	if(look_match_op(0, LPAREN)){
-		return function_chain(container);
-	}
-
-	return container;
-}
-
-Expression* Parser::get_properties_container(Expression* expr){
-	lets_vector_t<Expression*> indices = variable_suffix();
-	if(indices.empty()){
-		dbg("empty")
-		exit(1);
-	} else {
-		NEW_EXPRESSION_RETURN_ARG(ContainerAccess, expr->get_position_row(), expr->get_position_col(), (expr, indices))
-	}
+	return include_expression();
 }
 
 Expression* Parser::assignment_strict(){
@@ -619,6 +593,7 @@ Expression* Parser::assignment_strict(){
 		this->pos = position;
 		return NULL;
 	}
+
 
 	u_tt_t current_op = get(0).get_op();
 
@@ -848,11 +823,10 @@ Expression* Parser::multiplicative(){
 			NEW_EXPRESSION_EQUAL_ARG(result, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::REMAINDER, result, unary()))
 			continue;
 		}
-		// if (match(TT_STARSTAR)) {
-		//  result = new BinaryExpression(NS_Binary::Operator::POWER, result, unary());
-			// NEW_EXPRESSION_EQUAL_ARG(result, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::POWER, result, unary()))
-		//  continue;
-		// }
+		if (match_op(STARSTAR)) {
+			NEW_EXPRESSION_EQUAL_ARG(result, Binary, GET_ROW(0), GET_COL(0), (NS_Binary::Operator::POWER, result, unary()))
+			continue;
+		}
 		break;
 	}
 
@@ -861,13 +835,16 @@ Expression* Parser::multiplicative(){
 
 Expression* Parser::unary(){
 
+	// if (match_op(AMP)) {
+		// NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::INCREMENT_PREFIX, primary(true)))
+		// dbg("pointer")
+	// }
 	if (match_op(PLUSPLUS)) {
 		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::INCREMENT_PREFIX, primary(true)))
 	}
 	if (match_op(MINUSMINUS)) {
 		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::DECREMENT_PREFIX, primary(true)))
 	}
-
 	if(match_op(MINUS)) {
 		NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::NEGATE, primary(false)))
 	}
@@ -887,14 +864,7 @@ Expression* Parser::unary(){
 	return primary(false);
 }
 
-Expression* Parser::primary(bool incr = false) {
-
-	if(match_op(LPAREN)){
-		Expression* result = expression();
-		consume_op(RPAREN);
-		return result;
-	}
-
+Expression* Parser::primary(bool incr) {
 	if(MATCH_KW(MATCH)){
 		return match();
 	}
@@ -910,10 +880,32 @@ Expression* Parser::primary(bool incr = false) {
 		return class_expr();
 	}
 
-	return variable(incr);
+	return suffix(incr);
 }
 
-Expression* Parser::variable(bool incr = false) {
+Expression* Parser::suffix(bool incr){
+	Expression* var = variable(incr);
+
+	lets_vector_t<Expression*> indices = value_suffix();
+
+	if(!indices.empty()){
+		NEW_EXPRESSION_EQUAL_ARG(var, ContainerAccess, var->get_position_row(), var->get_position_col(), (var, indices))
+	}
+
+	if(look_match_op(0, LPAREN)){
+		return function_chain(var);
+	}
+
+	return var;
+}
+
+Expression* Parser::variable(bool incr) {
+
+	if(match_op(LPAREN)){
+		Expression* result = expression();
+		consume_op(RPAREN);
+		return result;
+	}
 
 	if(look_match(0, TT_IDENTIFIER) && look_match_op(1, LPAREN)){
 		Expression* val;
@@ -922,13 +914,12 @@ Expression* Parser::variable(bool incr = false) {
 	}
 
 	Expression* qualified_name_expr = qualified_name();
+
 	if(qualified_name_expr != NULL){
-		// variable(args) || arr["key"](args) || obj.key(args)
 		if(look_match_op(0, LPAREN)){
 			return function_chain(qualified_name_expr);
 		}
 		if(!incr){
-			// postfix increment/decrement
 			if(match_op(PLUSPLUS)){
 				NEW_EXPRESSION_RETURN_ARG(Unary, GET_ROW(0), GET_COL(0), (UnaryExpression::Operator::INCREMENT_POSTFIX, qualified_name_expr))
 			}
@@ -947,13 +938,12 @@ Expression* Parser::variable(bool incr = false) {
 		return map_vals();
 	}
 
-
 	return value();
 }
 
 Expression* Parser::qualified_name(){
-	// var || var.key[index].key2
 	Token current = get(0);
+
 	if(!match(TT_IDENTIFIER))
 		return NULL;
 
@@ -965,10 +955,11 @@ Expression* Parser::qualified_name(){
 }
 
 lets_vector_t<Expression*> Parser::variable_suffix(){
-	// .key1.arr1[expr1][expr2].key2
+
 	if(!look_match_op(0, DOT) && !look_match_op(0, LBRACKET)){
 		return {};
 	}
+
 	lets_vector_t<Expression*> indices;
 	while(look_match_op(0, DOT) || look_match_op(0, LBRACKET)){
 		if(match_op(DOT)){
@@ -981,6 +972,23 @@ lets_vector_t<Expression*> Parser::variable_suffix(){
 			consume_op(RBRACKET);
 		}
 	}
+
+	return indices;
+}
+
+lets_vector_t<Expression*> Parser::value_suffix(){
+
+	if(!look_match_op(0, DOT)){
+		return {};
+	}
+
+	lets_vector_t<Expression*> indices;
+	while(match_op(DOT)){
+		Expression* key;
+		NEW_EXPRESSION_EQUAL_ARG(key, Value, GET_ROW(-1), GET_COL(-1), (consume(TT_IDENTIFIER).get_text()))
+		indices.push_back(key);
+	}
+
 	return indices;
 }
 
@@ -1057,7 +1065,7 @@ Token Parser::consume_operator(u_tt_t op){
 	Token current = get(0);
 
 	if(current.get_type() != TT_OPERATOR or op != current.get_op()){
-		error_pars("Token " + current.to_s() + " dosn't match " + GET_OP_TO_S(op), current);
+		error_pars("Token " + current.to_s() + " dosn't match '" + GET_OP_TO_S(op) + "'", current);
 	}
 
 	pos++;

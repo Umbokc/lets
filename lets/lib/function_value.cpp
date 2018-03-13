@@ -6,7 +6,7 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
-#include <iostream> // for dbg
+// #include <iostream> // for dbg
 #include "../../include/lib/include_values.h"
 // #include "../../include/lib/call_stack.h"
 #include "../../include/exception/execute.h"
@@ -23,9 +23,11 @@ FunctionValue::FunctionValue(Function* value):value(std::move(value)){
 Value* FunctionValue::construct(){
 	this->set_class_name("Function");
 	// DEFAULT_METHODS_OF_CLASS()
+	return NullValue::THE_NULL;
 }
 
 Value* FunctionValue::construct(FUNCS_ARGS args){
+	return NullValue::THE_NULL;
 }
 
 bool FunctionValue::as_bool(){

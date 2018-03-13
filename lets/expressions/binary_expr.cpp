@@ -6,6 +6,7 @@
 //  Copyright © 2017 umbokc. All rights reserved.
 //
 
+#include <cmath>
 #include "../../include/tools.hpp"
 #include "../../include/expressions/binary_expr.hpp"
 #include "../../include/exception/execute.h"
@@ -42,35 +43,31 @@ BinaryExpression::~BinaryExpression(){}
 Value *BinaryExpression::eval(Value *value1, Value *value2){
 	try{
 		switch (operation) {
-			case NS_Binary::ADD: return BO_add(value1, value2);
-			case NS_Binary::SUBTRACT: return BO_subtract(value1, value2);
-			case NS_Binary::MULTIPLY: return BO_multiply(value1, value2);
-			case NS_Binary::DIVIDE: return BO_divide(value1, value2);
-			case NS_Binary::REMAINDER: return BO_remainder(value1, value2);
-			case NS_Binary::AND: return BO_and(value1, value2);
-			case NS_Binary::OR: return BO_or(value1, value2);
-			case NS_Binary::XOR: return BO_xor(value1, value2);
-			case NS_Binary::LSHIFT: return BO_lshift(value1, value2);
-			case NS_Binary::RSHIFT: return BO_rshift(value1, value2);
+			case NS_Binary::ADD: return bin_op_add(value1, value2);
+			case NS_Binary::SUBTRACT: return bin_op_subtract(value1, value2);
+			case NS_Binary::MULTIPLY: return bin_op_multiply(value1, value2);
+			case NS_Binary::DIVIDE: return bin_op_divide(value1, value2);
+			case NS_Binary::REMAINDER: return bin_op_remainder(value1, value2);
+			case NS_Binary::AND: return bin_op_and(value1, value2);
+			case NS_Binary::OR: return bin_op_or(value1, value2);
+			case NS_Binary::XOR: return bin_op_xor(value1, value2);
+			case NS_Binary::LSHIFT: return bin_op_lshift(value1, value2);
+			case NS_Binary::RSHIFT: return bin_op_rshift(value1, value2);
+			case NS_Binary::POWER: return bin_op_power(value1, value2);
 			default:
 				operation_is_not_supported();
 		}
 	} catch(ExecuteException& pe){
-//        if(Mode_Programm::without_stop){
-//            std::cout << "Error binary operation: " << pe.get_message() << std::endl;
-//            return NullValue::THE_NULL;
-//        } else {
-			throw ExecuteException(pe.get_message(), this->get_position_row(), this->get_position_col());
-//        }
+		throw ExecuteException(pe.get_message(), this->get_position_row(), this->get_position_col());
 	}
 	return NullValue::THE_NULL;
 }
 
-Value *BinaryExpression::BO_add(Value *value1, Value *value2) {
+Value *BinaryExpression::bin_op_add(Value *value1, Value *value2) {
 
 	switch (value1->type()) {
 		case Types::T_NUMBER:
-			return BO_add(dynamic_cast<NumberValue *>(value1), value2);
+			return bin_op_add(dynamic_cast<NumberValue *>(value1), value2);
 		case Types::T_ARRAY:
 			if(value2->type() == Types::T_ARRAY){
 				return NS_ArrayValue::merge(
@@ -88,7 +85,7 @@ Value *BinaryExpression::BO_add(Value *value1, Value *value2) {
 
 }
 
-Value *BinaryExpression::BO_add(NumberValue *value1, Value *value2) {
+Value *BinaryExpression::bin_op_add(NumberValue *value1, Value *value2) {
 	switch (value2->type()) {
 		case Types::T_STRING:{
 			return new StringValue(
@@ -101,11 +98,11 @@ Value *BinaryExpression::BO_add(NumberValue *value1, Value *value2) {
 	}
 }
 
-Value *BinaryExpression::BO_subtract(Value *value1, Value *value2) {
+Value *BinaryExpression::bin_op_subtract(Value *value1, Value *value2) {
 	return new NumberValue(value1->as_number() - value2->as_number());
 }
 
-Value *BinaryExpression::BO_multiply(Value *value1, Value *value2) {
+Value *BinaryExpression::bin_op_multiply(Value *value1, Value *value2) {
 
 	switch (value1->type()) {
 		case Types::T_NUMBER:{
@@ -142,7 +139,7 @@ Value *BinaryExpression::BO_multiply(Value *value1, Value *value2) {
 	return NullValue::THE_NULL;
 }
 
-Value *BinaryExpression::BO_divide(Value *value1, Value *value2) {
+Value *BinaryExpression::bin_op_divide(Value *value1, Value *value2) {
 	if(value2->as_number() == 0)
 		// throw ExecuteException("Division by zero is undefined");
 		return NullValue::THE_NULL;
@@ -150,23 +147,23 @@ Value *BinaryExpression::BO_divide(Value *value1, Value *value2) {
 		return new NumberValue(value1->as_number() / value2->as_number());
 }
 
-Value *BinaryExpression::BO_remainder(Value *value1, Value *value2) {
+Value *BinaryExpression::bin_op_remainder(Value *value1, Value *value2) {
 	return new NumberValue(value1->as_int() % value2->as_int());
 }
 
-Value *BinaryExpression::BO_and(Value *value1, Value *value2) {
+Value *BinaryExpression::bin_op_and(Value *value1, Value *value2) {
 	return new NumberValue(value1->as_int() & value2->as_int());
 }
 
-Value *BinaryExpression::BO_or(Value *value1, Value *value2) {
+Value *BinaryExpression::bin_op_or(Value *value1, Value *value2) {
 	return new NumberValue(value1->as_int() | value2->as_int());
 }
 
-Value *BinaryExpression::BO_xor(Value *value1, Value *value2) {
+Value *BinaryExpression::bin_op_xor(Value *value1, Value *value2) {
 	return new NumberValue(value1->as_int() ^ value2->as_int());
 }
 
-Value *BinaryExpression::BO_lshift(Value *value1, Value *value2) {
+Value *BinaryExpression::bin_op_lshift(Value *value1, Value *value2) {
 	switch (value1->type()) {
 		case Types::T_NUMBER:
 			return new NumberValue(value1->as_int() << value2->as_int());
@@ -180,7 +177,7 @@ Value *BinaryExpression::BO_lshift(Value *value1, Value *value2) {
 	return NullValue::THE_NULL;
 }
 
-Value *BinaryExpression::BO_rshift(Value *value1, Value *value2) {
+Value *BinaryExpression::bin_op_rshift(Value *value1, Value *value2) {
 	// if(value1->type() == Types::T_ARRAY ){
 	// 	dynamic_cast<ArrayValue *>(value1)->add_forward(value2);
 	// 		if(value2->type() == Types::T_ARRAY){
@@ -200,6 +197,25 @@ Value *BinaryExpression::BO_rshift(Value *value1, Value *value2) {
 	}
 
 	return new NumberValue(value1->as_int() >> value2->as_int());
+}
+
+Value *BinaryExpression::bin_op_power(Value *value1, Value *value2) {
+	if(value1->type() == Types::T_NUMBER and value2->type() == Types::T_NUMBER){
+
+		Number* val1 = dynamic_cast<NumberValue*>(value1)->get_value();
+		Number* val2 = dynamic_cast<NumberValue*>(value2)->get_value();
+
+
+		auto res = pow(
+			val1->is_long() ? val1->as_long() : val1->is_double() ? val1->as_double() : val1->as_int(),
+			val2->is_long() ? val2->as_long() : val2->is_double() ? val2->as_double() : val2->as_int()
+		);
+
+		return new NumberValue(res);
+
+	} else {
+		throw ExecuteException("Expected numeric values for exponentiation");
+	}
 }
 
 void BinaryExpression::operation_is_not_supported(){

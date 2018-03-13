@@ -115,7 +115,8 @@ int StringValue::len(){
 }
 
 lets_str_t StringValue::as_string(){
-	return value;
+	// return this->value == "" ? "''" : this->value;
+	return this->value;
 }
 
 lets_str_t StringValue::to_s(){

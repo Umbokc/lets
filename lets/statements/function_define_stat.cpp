@@ -22,9 +22,10 @@ void FunctionDefineStatement::execute(){
 }
 
 lets_str_t FunctionDefineStatement::to_s(){
-	lets_str_t result = "def " + this->name;
-	result +=  " ( " + this->args.to_s() + " ) ";
-	result += this->body->to_s();
+  lets_str_t result = "def " + this->name;
+	result +=  " ( " + this->args.to_s() + " ): \n";
+  result += this->body->to_s();
+	result += "end";
 	return result;
 }
 

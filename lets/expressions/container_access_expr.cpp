@@ -72,7 +72,7 @@ Value* ContainerAccessExpression::last_index() {
 }
 
 lets_str_t ContainerAccessExpression::to_s(){
-	return root->to_s() + NS_Tools::vector_to_s<Expression *>(indices, ".");
+	return root->to_s() + "." + NS_Tools::vector_to_s<Expression *>(indices, ".");
 }
 
 ContainerAccessExpression::~ContainerAccessExpression(){}

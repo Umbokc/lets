@@ -88,9 +88,11 @@ private:
 	Expression* multiplicative();
 	Expression* unary();
 	Expression* primary(bool);
+	Expression* suffix(bool);
 	Expression* variable(bool);
 	Expression* qualified_name();
 	lets_vector_t<Expression*> variable_suffix();
+	lets_vector_t<Expression*> value_suffix();
 	Expression* value();
 
 

@@ -15,20 +15,20 @@
 
 class Argument {
 private:
-    lets_str_t name;
-    Expression *value_expr;
+	lets_str_t name;
+	Expression *value_expr;
 public:
-    Argument();
-    Argument(lets_str_t);
-    Argument(lets_str_t, Expression*);
-    
-    lets_str_t get_name();
-    Expression *get_value_expr();
-    
-    lets_str_t to_s();
-    
-    ~Argument();
-    
+	Argument();
+	Argument(lets_str_t);
+	Argument(lets_str_t, Expression*);
+
+	lets_str_t get_name();
+	Expression *get_value_expr();
+
+	lets_str_t to_s();
+
+	~Argument();
+
 };
 
 #endif /* include__argument_hpp */

@@ -16,23 +16,23 @@
 
 class Arguments {
 private:
-    int required;
-    lets_vector_t<Argument> arguments;
+	int required;
+	lets_vector_t<Argument> arguments;
 public:
-    
-    Arguments();
-    
-    void add_required(lets_str_t name);
-    void add_optional(lets_str_t name, Expression* expr);
-    
-    Argument get(int i);
-    
-    int get_required();
-    int get_size();
-    
-    lets_str_t to_s();
-    
-    ~Arguments();
+
+	Arguments();
+
+	void add_required(lets_str_t name);
+	void add_optional(lets_str_t name, Expression* expr);
+
+	Argument get(int i);
+
+	int get_required();
+	int get_size();
+
+	lets_str_t to_s();
+
+	~Arguments();
 };
 
 #endif /* include__arguments_hpp */

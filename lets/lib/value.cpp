@@ -6,7 +6,7 @@
 //  Copyright © 2018 umbokc. All rights reserved.
 //
 
-#include <iostream> // for dbg
+// #include <iostream> // for dbg
 #include "../../include/lib/value.hpp"
 #include "../../include/lib/function.h"
 #include "../../include/tools.hpp"

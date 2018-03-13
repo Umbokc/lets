@@ -10,12 +10,15 @@
 #include <ctime>
 #include <random>
 #include "std.hpp"
-#include "../../include/lib/string_value.hpp"
-#include "../../include/lib/number_value.hpp"
+#include "../../include/lib/include_values.h"
 #include "../../include/lib/functions.hpp"
 #include "../../include/lib/variables.hpp"
 #include "../../include/exception/parse.h"
 #include "../../include/tools.hpp"
+
+#define DEFENITION_CLASS_FUNC_MODULE_STD(F_CLASS, EXECUTE, TO_S) \
+	Value* LetsModule__std::F_##F_CLASS::execute(FUNCS_ARGS args) EXECUTE \
+	lets_str_t LetsModule__std::F_##F_CLASS::to_s() TO_S
 
 bool LetsModule__std::is_done = false;
 
@@ -49,39 +52,48 @@ void LetsModule__std::set(lets_str_t name){
 		throw std::runtime_error("not found");
 }
 
-Value* LetsModule__std::F_Len::execute(FUNCS_ARGS args){
+DEFENITION_CLASS_FUNC_MODULE_STD(Len, {
 	if(args.size() != 1) throw ParseException("Function len(arg*) one args expected");
 	return new NumberValue(args[0]->len());
-}
+}, {
+	return "len";
+})
 
-Value* LetsModule__std::F_Echo::execute(FUNCS_ARGS args){
+DEFENITION_CLASS_FUNC_MODULE_STD(Echo, {
 	for(auto a : args){
 		std::cout.precision(a->to_s().length());
 		std::cout << std::fixed << a->to_s() << " ";
 	}
 	std::cout << std::endl;
-	return NumberValue::ZERO;
-}
+	return NullValue::THE_NULL;
+}, {
+	return "echo";
+})
 
-Value* LetsModule__std::F_Echos::execute(FUNCS_ARGS args){
+DEFENITION_CLASS_FUNC_MODULE_STD(Echos, {
 	for(auto a : args){
 		std::cout.precision(a->to_s().length());
-		std::cout << std::fixed << a->to_s() << std::endl;
+		std::cout << std::fixed << a->to_s() << " ";
 	}
-	return NumberValue::ZERO;
-}
+	std::cout << std::endl;
+	return NullValue::THE_NULL;
+}, {
+	return "echos";
+})
 
-Value* LetsModule__std::F_IsExist::execute(FUNCS_ARGS args){
+DEFENITION_CLASS_FUNC_MODULE_STD(IsExist, {
 	for(auto a : args){
 		lets_str_t name = a->to_s();
 		if(!Variables::is_exists_all(name) && !Functions::is_exists(name)){
-			return NumberValue::ZERO;
+			return BoolValue::FALSE;
 		}
 	}
-	return NumberValue::ONE;
-}
+	return BoolValue::TRUE;
+}, {
+	return "is_exist";
+})
 
-Value* LetsModule__std::F_Rand::execute(FUNCS_ARGS args){
+DEFENITION_CLASS_FUNC_MODULE_STD(Rand, {
 	// std::srand(unsigned(std::time(0)));
 	int min = 0;
 	int max = RAND_MAX;
@@ -98,4 +110,6 @@ Value* LetsModule__std::F_Rand::execute(FUNCS_ARGS args){
 	std::uniform_int_distribution<int> uni(min,max); // guaranteed unbiased
 
 	return new NumberValue(uni(rng));
-}
+}, {
+	return "rand";
+})

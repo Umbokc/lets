@@ -27,11 +27,11 @@ private:
 
 	static void set(lets_str_t);
 
-	class F_Len : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS);};
-	class F_Echo : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS);};
-	class F_Echos : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS);};
-	class F_IsExist : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS);};
-	class F_Rand : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS);};
+	class F_Len : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS); lets_str_t to_s();};
+	class F_Echo : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS); lets_str_t to_s();};
+	class F_Echos : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS); lets_str_t to_s();};
+	class F_IsExist : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS); lets_str_t to_s();};
+	class F_Rand : public ModuleParentClassFunctions{ public: Value* execute(FUNCS_ARGS); lets_str_t to_s();};
 
 };
 

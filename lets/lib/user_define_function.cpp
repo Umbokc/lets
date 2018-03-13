@@ -67,8 +67,8 @@ lets_str_t UserDefineFunction::get_arg_name(int i){
 
 lets_str_t UserDefineFunction::to_s(){
 	if(dynamic_cast<ReturnStatement*>(body)){
-		return NS_Tools::string_format( "def %s = %s", args.to_s().c_str(),
+		return NS_Tools::string_format( "def (%s) <- %s", args.to_s().c_str(),
 			dynamic_cast<ReturnStatement*>(body)->expression->to_s().c_str());
 	}
-	return NS_Tools::string_format( "def %s %s", args.to_s().c_str(), body->to_s().c_str());
+	return NS_Tools::string_format( "def (%s):\n%s\nend", args.to_s().c_str(), body->to_s().c_str());
 }

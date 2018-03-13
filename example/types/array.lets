@@ -15,7 +15,7 @@ print arr.size
 1 >> arr
 arr << 1
 
-print arr 
+print arr
 
 
 print [1.1212, 2.3223].join(', ')

@@ -34,7 +34,15 @@ NumberValue::NumberValue(Number* value):value(std::move(value)){this->construct(
 
 Value* NumberValue::construct(){
 	this->set_class_name("Number");
+
 	DEFAULT_METHODS_OF_CLASS()
+
+	ADD_METHOD_TO_CLASS(Number, "num_type", NumType, {
+		return new StringValue(
+			self->get_value()->is_long() ? "long" : self->get_value()->is_double() ? "double" : "int"
+		);
+	}, "")
+
 }
 
 Value* NumberValue::construct(FUNCS_ARGS args){

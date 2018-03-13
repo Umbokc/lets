@@ -34,14 +34,16 @@ Value* AssignmentExpression::eval(){
 }
 
 lets_str_t AssignmentExpression::to_s(){
-	return NS_Tools::string_format(
-		"%s %s %s",
-		target->to_s().c_str(),
-		NS_Binary::OperatorString[operation].c_str(),
-		expression->to_s().c_str()
-	);
+
+	const char* tg = target->to_s().c_str();
+	const char* op = NS_Binary::OperatorString[operation].c_str();
+	const char* ex = expression->to_s().c_str();
+
+	if(operation == NS_Binary::Operator::THE_NULL)
+		return NS_Tools::string_format("%s = %s", tg, ex);
+	else
+		return NS_Tools::string_format("%s = %s %s %s", tg, tg, op, ex);
+
 }
 AssignmentExpression::~AssignmentExpression(){
-	// delete[] target;
-	// delete[] falseExpr;
 }

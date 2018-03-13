@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <typeinfo>
+// #include <iomanip> // setprecision
+
 #include "../../include/lib/number.hpp"
 
 Number::Number(){}
@@ -28,24 +30,27 @@ long Number::as_long(){
 	return as_number<long>();
 }
 
-bool Number::is_int(){ return (type == NS_Number::TYPE_INT); }
-bool Number::is_double(){ return (type == NS_Number::TYPE_DOUBLE); }
-bool Number::is_long(){ return (type == NS_Number::TYPE_LONG); }
+bool Number::is_int(){ return (this->type == NS_Number::TYPE_INT); }
+bool Number::is_double(){ return (this->type == NS_Number::TYPE_DOUBLE); }
+bool Number::is_long(){ return (this->type == NS_Number::TYPE_LONG); }
 
 lets_str_t Number::as_string(){
 
-	char buff[24];
+	if(this->is_double()){
 
-	if(is_double()){
-		sprintf(buff, "%.14g", this->val.d);
-	} else if (is_long()){
-		sprintf(buff, "%ld", this->val.l);
+		// std::ostringstream sstream;
+		// sstream << std::setprecision(17) << this->val.d;
+		// return sstream.str();
+
+		char buff[24];
+		sprintf(buff, "%.16g", this->val.d);
+		lets_str_t r = buff;
+		return r;
+
 	} else {
-		sprintf(buff, "%d", this->val.i);
+		return to_str(this->is_long() ? (long)this->val.l : (int)this->val.i);
 	}
 
-	lets_str_t s = buff;
-	return s;
 }
 
 lets_str_t Number::to_s(){

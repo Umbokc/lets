@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include "../../include/expressions/functional_expr.hpp"
+#include "../../include/expressions/variable_expr.hpp"
 #include "../../include/lib/functions.hpp"
 #include "../../include/lib/function_value.hpp"
 #include "../../include/lib/variables.hpp"
@@ -32,15 +33,27 @@ void FunctionalExpression::execute(){
 
 Value *FunctionalExpression::eval(){
 
+
 	int size = (int)arguments.size();
 	FUNCS_ARGS values;
 	values.reserve(size);
+
 
 	for (Expression *argument : arguments){
 		values.push_back(argument->eval());
 	}
 
-	Function *f = consume_function(function_expr);
+	Expression* expr;
+
+	if(dynamic_cast<VariableExpression*>(function_expr)){
+		expr = new VariableExpression(dynamic_cast<VariableExpression*>(function_expr)->name);
+	} else {
+		expr = function_expr;
+	}
+
+	// expr = function_expr->copy();
+
+	Function *f = consume_function(expr);
 	CallStack::enter(function_expr->to_s(), f);
 	Value* result = f->execute(values);
 	CallStack::exit();
@@ -74,7 +87,8 @@ Function* FunctionalExpression::consume_function(Expression *expr){
 
 Function* FunctionalExpression::get_function(lets_str_t key){
 
-	if(Functions::is_exists(key)) return Functions::get(key);
+	if(Functions::is_exists(key))
+		return Functions::get(key);
 
 	if(Variables::is_exists(key)){
 		Value* variable = Variables::get(key);
@@ -82,7 +96,6 @@ Function* FunctionalExpression::get_function(lets_str_t key){
 			return dynamic_cast<FunctionValue*>(variable)->get_value();
 		}
 	}
-
 
 	throw ExecuteException(
 		NS_Tools::string_format(ExceptionsError::E_UNKNOWN_FUNC, key.c_str()),
