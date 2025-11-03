@@ -73,13 +73,13 @@ namespace NS_Tools {
 		return value;
 	}
 
-	inline bool fils_exists (const lets_str_t& name) {
-		struct stat buffer;   
-		return (stat (name.c_str(), &buffer) == 0); 
-	}
+        inline bool file_exists (const lets_str_t& name) {
+                struct stat buffer;
+                return (stat (name.c_str(), &buffer) == 0);
+        }
 
-	lets_str_t get_path( const lets_str_t& str){
-		if(fils_exists(str))
+        lets_str_t get_path( const lets_str_t& str){
+                if(file_exists(str))
 			return realpath(str.c_str(), NULL);
 		else
 			throw std::runtime_error("File '"+ str +"' not found");
