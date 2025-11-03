@@ -15,9 +15,9 @@ namespace lets_lib{
 	template<typename T>
 	class Array{
 	private:
-		size_t size_;
+                size_t size_;
 
-		T *data = new T[0];
+                T *data = nullptr;
 	public:
 
 
@@ -88,23 +88,31 @@ namespace lets_lib{
 		}
 
 	private:
-		void incr_resize(){
-			T *new_data = new T[this->size()+1];
-			std::copy(this->data, this->data + this->size(), new_data);
-			this->data = new_data;
-			this->size_++;
-			delete[] new_data;
-		}
+                void incr_resize(){
+                        T *old_data = this->data;
+                        T *new_data = new T[this->size()+1];
+                        if(old_data != nullptr)
+                                std::copy(old_data, old_data + this->size(), new_data);
+                        this->data = new_data;
+                        this->size_++;
+                        delete[] old_data;
+                }
 
-		void incr_resize(const size_t& new_size_){
-			size_t new_size = new_size_ + 1;
-			T *new_data = new T[new_size];
-			std::copy(this->data, this->data + this->size(), new_data);
-			this->data = new_data;
-			this->size_ = new_size;
-			delete[] new_data;
-		}
-	};
+                void incr_resize(const size_t& new_size_){
+                        size_t new_size = new_size_ + 1;
+                        T *old_data = this->data;
+                        T *new_data = new T[new_size];
+                        if(old_data != nullptr)
+                                std::copy(old_data, old_data + this->size(), new_data);
+                        this->data = new_data;
+                        this->size_ = new_size;
+                        delete[] old_data;
+                }
+        public:
+                ~Array(){
+                        delete[] this->data;
+                }
+        };
 }
 
 #endif /* lib__array_h */
