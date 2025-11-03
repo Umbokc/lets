@@ -42,7 +42,7 @@ namespace NS_Tools{
 
 	Number* create_number(lets_str_t);
 
-	inline bool fils_exists (const lets_str_t&);
+        inline bool file_exists (const lets_str_t&);
 	lets_str_t get_path( const lets_str_t&);
 	lets_str_t splitpath( const lets_str_t&);
 	lets_str_t get_curr_dir();
