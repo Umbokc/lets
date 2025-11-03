@@ -83,28 +83,41 @@ namespace lets_lib{
 			return this->at(index);
 		}
 
-		const size_t size() const{
+                size_t size() const{
 			return this->size_;
 		}
 
 	private:
-		void incr_resize(){
-			T *new_data = new T[this->size()+1];
-			std::copy(this->data, this->data + this->size(), new_data);
-			this->data = new_data;
-			this->size_++;
-			delete[] new_data;
-		}
+                void incr_resize(){
+                        size_t new_size = this->size() + 1;
+                        T *old_data = this->data;
+                        T *new_data = new T[new_size];
 
-		void incr_resize(const size_t& new_size_){
-			size_t new_size = new_size_ + 1;
-			T *new_data = new T[new_size];
-			std::copy(this->data, this->data + this->size(), new_data);
-			this->data = new_data;
-			this->size_ = new_size;
-			delete[] new_data;
-		}
-	};
+                        if (old_data != nullptr) {
+                                std::copy(old_data, old_data + this->size(), new_data);
+                        }
+
+                        this->data = new_data;
+                        this->size_ = new_size;
+
+                        delete[] old_data;
+                }
+
+                void incr_resize(const size_t& new_size_){
+                        size_t new_size = new_size_ + 1;
+                        T *old_data = this->data;
+                        T *new_data = new T[new_size];
+
+                        if (old_data != nullptr) {
+                                std::copy(old_data, old_data + this->size(), new_data);
+                        }
+
+                        this->data = new_data;
+                        this->size_ = new_size;
+
+                        delete[] old_data;
+                }
+        };
 }
 
 #endif /* lib__array_h */

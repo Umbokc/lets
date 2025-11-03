@@ -23,6 +23,8 @@
 // #include "visitors/assign_validator.h"
 
 #include "../include/optimization/optimizer.hpp"
+
+#include <cstring>
  
 #define LETS_SHOW_HELP_MENU \
 	lets_output("Lets version " + VERSION + "\n\n" + \

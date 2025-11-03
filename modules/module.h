@@ -9,6 +9,8 @@
 #ifndef modules__module_h
 #define modules__module_h
 
+#include <typeinfo>
+
 #define CHECK_AND_DEFINE_FUNC_MODULE(F_NAME, F_CLASS) \
 	if(name == F_NAME || name == "*"){ \
 		Functions::set_lets_funcs(F_NAME, new F_##F_CLASS(), true); if(name != "*") return; \
