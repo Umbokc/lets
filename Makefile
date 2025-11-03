@@ -7,11 +7,11 @@ OBJ=$(patsubst %.cpp, %.o, $(SRC))
 
 all: $(OBJ)
 	@mkdir -p bin
-	$(CC) -o $(BIN) $(OBJ)
+	$(CC) $(FL) -o $(BIN) $(OBJ)
 
 %.o: %.cpp
-	$(CC) -c $(FL) $< -lstdc++ -o $@
+	$(CC) -c $(FL) $< -o $@
 
 clean:
 	rm -f $(OBJ)
-	rm $(BIN)
+	rm -f $(BIN)
